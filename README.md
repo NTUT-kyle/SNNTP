@@ -1,7 +1,7 @@
 # SNNTP
 Simple Neural Network Training Platform
 
-NN Framwork : Keras(Base on tanserflow)
+NN Framwork : Keras(Based on tanserflow)
 
 CNN model design:
   1. Convolution layers:
@@ -37,3 +37,7 @@ CNN model design:
      - Cropping2D layer(Optional)
      - UpSampling2D layer(Optional)
      - ZeroPadding2D layer(Optional)
+
+資料集:
+  1. MNIST
+  2. CIFAR10
