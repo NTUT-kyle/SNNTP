@@ -41,3 +41,5 @@ CNN model design:
 資料集:
   1. MNIST
   2. CIFAR10
+
+模型儲存 format: h5, tf
