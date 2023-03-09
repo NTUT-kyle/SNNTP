@@ -2,9 +2,10 @@
 Simple Neural Network Training Platform
 
 NN Framwork : Keras(Base on tanserflow)
+
 CNN model design:
   1.Convolution Layer:
    - Activation function:
-      - Sigmoid
+   - Sigmoid
       - ReLU
       - Leaky ReLU
