@@ -1,6 +1,8 @@
 # SNNTP
 Simple Neural Network Training Platform
 
+Figma: https://www.figma.com/file/oHCtfONsjfdgkAsljYOnYL/SNNTP?node-id=0%3A1&t=IjL9565CJUpxedQd-1
+
 NN Framwork : Keras(Based on tanserflow)
 
 CNN model design:
