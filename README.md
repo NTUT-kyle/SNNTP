@@ -33,6 +33,7 @@ CNN model design:
   
   5. Core layers:
      - Dense layer
+     - Dropout layer
 
   6. Reshaping layers:
      - Flatten layer
