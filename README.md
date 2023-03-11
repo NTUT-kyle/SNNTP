@@ -6,6 +6,9 @@ Figma: https://www.figma.com/file/oHCtfONsjfdgkAsljYOnYL/SNNTP?node-id=0%3A1&t=I
 NN Framwork : Keras(Based on tanserflow)
 
 CNN model design:
+  Sequential model
+  
+CNN layers design:
   1. Convolution layers:
      - Conv2D layer
      - SeparableConv2D layer
