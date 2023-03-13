@@ -3,7 +3,39 @@ Simple Neural Network Training Platform
 
 Figma: https://www.figma.com/file/oHCtfONsjfdgkAsljYOnYL/SNNTP?node-id=0%3A1&t=IjL9565CJUpxedQd-1
 
-NN Framwork : Keras(Based on tanserflow)
+NN Framwork : Keras(Based on tanserflow)     
+
+Python version : python 3.9.13      
+Keras version : 2.11.0     
+Flask : 
+
+## Install
+### Require Environment:    
+1. Python 3.9
+   * You can install from [here](https://www.python.org/downloads/release/python-3913/)
+   * Enter `python` in the console to check the version
+2. pipenv
+   * When the first one is done, Enter `pip install pipenv` in the console.
+   * Enter `pipenv --version` in the console to check the version
+
+### Install:
+1. Complete all required environments
+2. Enter `python -m pipenv shell` in the console to enter the virtual environment
+3. If you want to confirm your current environment, do the first step again, it will show `No module named pipenv`
+4. Enter `pipenv install` in the console to download & install the packages
+5. If no errors show up, you're all done!
+
+### Other way:
+1. Complete all required environments
+2. Enter `.\StartSciprt` in the console 
+3. Input `1` then input `2`
+4. If no errors show up, you're all done!
+
+## Run server
+* Enter `flask run` in the console to start the program
+* Or you can Enter `.\StartScript.bat` in the console then input `3` to start program
+
+---
 
 ## CNN model design:
 ### Sequential model
