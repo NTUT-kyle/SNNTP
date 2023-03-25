@@ -7,7 +7,7 @@ NN Framwork : Keras(Based on tanserflow)
 
 Python version : python 3.9.13      
 Keras version : 2.11.0     
-Flask : 
+Flask : 2.2.3
 
 ## Install
 ### Require Environment:    
