@@ -1,41 +1,45 @@
-import os
-
 """
 用於 Project 相關的 method，有：
-    Set_Folder(path:str, name:str, replace = False, rename = "") -> bool
+    init_Projects()
+    Create_Project(projectName:str) -> bool
+    Modify_Project_Name(beforeName:str, afterName:str) -> bool
     Get_Projects() -> list
+    Get_Project_By_Keys(key:str) -> list
 """
 
-def Set_Folder(path:str, name:str, replace = False, rename = "") -> bool:
+import os
+from project.project import Project
+import common.FileFolder as ComMethod
+
+Projects = {}
+
+def init_Projects():
+    if ComMethod.Create_Folder('./', 'projects'):
+        if not ComMethod.Check_Folder_Exist('./', 'projects'):
+            raise Exception("初始化資料夾無法建立")
+
+    All_Projects = Get_Projects()
+    for Project_Name in All_Projects:
+        Projects[Project_Name] = Project(Project_Name)
+
+def Create_Project(projectName:str) -> bool:
     """
-    設定 Project 的 Folder 
-    param:  path -> 路徑
-            name -> Project 名(或原名)
-            replace -> 是否改名成新名稱(預設為 False)
-            rename -> 改名後的新名稱(預設為 "")
-    return: True -> 設定成功
-            False -> 發生未知錯誤
-            Exception -> 以 Exception Message 當作錯誤原因
+    建立一個 Project
+    param: projectName -> Project 名稱
+    return: True -> 建立成功
+            False -> 建立失敗
     """
-    try:
-        if name == '':
-            raise Exception("Name cannot empty!!!")
-        if not os.path.exists(path + name):
-            # Create it
-            os.mkdir(path + name)
-        if not os.path.isdir(path + name):
-            # Not a Directory
-            raise Exception("This directory has a file with the same name!!!")
-        if replace:
-            # Want rename
-            if rename == '':
-                raise Exception("Rename cannot empty!!!")
-            os.rename(path + name, path + rename)
-            return True
-        return True
-    except Exception as e:
-        # Unknown error
-        raise e
+    ComMethod.Create_Folder('./projects/', projectName)
+
+def Modify_Project_Name(beforeName:str, afterName:str) -> bool:
+    """
+    修改 Project 名稱
+    param:  beforeName -> Project 原名稱
+            afterName ->
+    return: True -> 建立成功
+            False -> 建立失敗
+    """
+    ComMethod.Modify_File_Folder_Name('./projects/', beforeName, afterName)
 
 def Get_Projects() -> list:
     """
@@ -43,12 +47,12 @@ def Get_Projects() -> list:
     return: list -> 包含所有 Project 名稱的 list
             Exception -> 以 Exception Message 當作錯誤原因
     """
-    try:
-        Projects = []
-        dirs = os.listdir('./projects/')
-        for file in dirs:
-            if os.path.isdir(f'./projects/{file}'):
-                Projects.append(file)
-        return Projects
-    except:
-        raise Exception('Get Projects Fail!!!')
+    return ComMethod.Get_All_Folder_From_Path('./projects/')
+
+def Get_Project_By_Keys(key:str) -> object:
+    """
+    使用 key 來獲取 Project Object 
+    return: object -> key 對應的 Project
+            None -> 找不到 key 對應的 Project
+    """
+    return Projects.get(key, None)

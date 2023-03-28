@@ -1,8 +1,9 @@
 import log
 import project.project_service as project_service
-# --- 建立 Projects Folder ---
+
+# --- 初始化 projects
 try:
-    project_service.Set_Folder('./', 'projects')
+    project_service.init_Projects()
 except Exception as e:
     log.printLog(str(e), True)
 
