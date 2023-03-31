@@ -84,13 +84,20 @@ Flask : 2.2.3
   
 ### 5. Core layers:
 #### &nbsp;&nbsp;&nbsp;◆ Dense layer
-#### &nbsp;&nbsp;&nbsp;◆ Dropout layer
 
 ### 6. Reshaping layers:
 #### &nbsp;&nbsp;&nbsp;◆ Flatten layer
 #### &nbsp;&nbsp;&nbsp;◆ Cropping2D layer(Optional)
 #### &nbsp;&nbsp;&nbsp;◆ UpSampling2D layer(Optional)
 #### &nbsp;&nbsp;&nbsp;◆ ZeroPadding2D layer(Optional)
+
+### 7. Regularization  layers:
+#### &nbsp;&nbsp;&nbsp;◆ Dropout layer
+
+| Parameter | Formate | Example |
+|-----|-----|-----|
+| rate   | An double between 0~1 | 0.66 |
+| seed   | An integer | 3 |
 
 資料集:
   1. MNIST
