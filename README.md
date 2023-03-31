@@ -118,35 +118,64 @@ Flask : 2.2.3
 ## CNN model.json example:
 ```yaml
 {
-  "product": "Live JSON generator",
-  "version": 3.1,
-  "releaseDate": "2014-06-25T00:00:00.000Z",
-  "demo": true,
-  "person": {
-    "id": 12345,
-    "name": "John Doe",
-    "phones": {
-      "home": "800-123-4567",
-      "mobile": "877-123-1234"
-    },
-    "email": [
-      "jd@example.com",
-      "jd@example.org"
-    ],
-    "dateOfBirth": "1980-01-02T00:00:00.000Z",
-    "registered": true,
-    "emergencyContacts": [
+  "Model": {
+    "type": "CNN",
+    "name": "MNIST_classifier",
+    "buildDate": "2023-03-31T00:00:00.000Z",
+    "modelPath": "",
+    "ModelLayer": [
       {
-        "name": "Jane Doe",
-        "phone": "888-555-1212",
-        "relationship": "spouse"
+        "layerType": "Conv2D",
+        "filters": "32",
+        "kernel_size": "(3, 3)",
+        "strides": "(1, 1)",
+        "padding": "valid"
       },
       {
-        "name": "Justin Doe",
-        "phone": "877-123-1212",
-        "relationship": "parent"
+        "layerType": "MaxPooling2D",
+        "pool_size": "2",
+        "strides": "(1, 1)",
+        "padding": "valid"
+      },
+      {
+        "layerType": "Conv2D",
+        "filters": "64",
+        "kernel_size": "(3, 3)",
+        "strides": "(1, 1)",
+        "padding": "valid"
+      },
+      {
+        "layerType": "Activation",
+        "type": "hard_sigmoid"
+      },
+      {
+        "layerType": "AveragePooling2D",
+        "pool_size": "2",
+        "strides": "(1, 1)",
+        "padding": "valid"
+      },
+      {
+        "layerType": "Flatten"
+      },
+      {
+        "layerType": "Dropout",
+        "rate": "0.5",
+        "seed": "123"
+      },
+      {
+        "layerType": "Dense",
+        "units": "10",
+        "use_bias": "False"
       }
     ]
+  },
+  "ModelSetting": {
+    "batchSize": "128",
+    "epochs": "10",
+    "lossFunction": "poisson",
+    "optimizer": "SGD",
+    "validationSplit": "0.1",
+    "inputShape": "(28, 28, 1)"
   }
 }
 ```
