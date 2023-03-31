@@ -121,61 +121,61 @@ Flask : 2.2.3
   "Model": {
     "type": "CNN",
     "name": "MNIST_classifier",
-    "buildDate": "2023-03-31T00:00:00.000Z",
-    "modelPath": "",
-    "ModelLayer": [
+    "build_date": "2023-03-31T00:00:00.000Z",
+    "model_path": "",
+    "Model_layer": [
       {
-        "layerType": "Conv2D",
+        "layer_type": "Conv2D",
         "filters": "32",
         "kernel_size": "(3, 3)",
         "strides": "(1, 1)",
         "padding": "valid"
       },
       {
-        "layerType": "MaxPooling2D",
+        "layer_type": "MaxPooling2D",
         "pool_size": "2",
         "strides": "(1, 1)",
         "padding": "valid"
       },
       {
-        "layerType": "Conv2D",
+        "layer_type": "Conv2D",
         "filters": "64",
         "kernel_size": "(3, 3)",
         "strides": "(1, 1)",
         "padding": "valid"
       },
       {
-        "layerType": "Activation",
+        "layer_type": "Activation",
         "type": "hard_sigmoid"
       },
       {
-        "layerType": "AveragePooling2D",
+        "layer_type": "AveragePooling2D",
         "pool_size": "2",
         "strides": "(1, 1)",
         "padding": "valid"
       },
       {
-        "layerType": "Flatten"
+        "layer_type": "Flatten"
       },
       {
-        "layerType": "Dropout",
+        "layer_type": "Dropout",
         "rate": "0.5",
         "seed": "123"
       },
       {
-        "layerType": "Dense",
+        "layer_type": "Dense",
         "units": "10",
         "use_bias": "False"
       }
     ]
   },
   "ModelSetting": {
-    "batchSize": "128",
+    "batch_size": "128",
     "epochs": "10",
-    "lossFunction": "poisson",
+    "loss_function": "poisson",
     "optimizer": "SGD",
-    "validationSplit": "0.1",
-    "inputShape": "(28, 28, 1)"
+    "validation_split": "0.1",
+    "input_shape": "(28, 28, 1)"
   }
 }
 ```
