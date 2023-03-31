@@ -54,12 +54,9 @@ Flask : 2.2.3
 #### &nbsp;&nbsp;&nbsp;◆ SeparableConv2D layer
 #### &nbsp;&nbsp;&nbsp;◆ Conv2DTranspose layer
 ### 2. Activation layers:
-#### &nbsp;&nbsp;&nbsp;◆ ReLU layer
-#### &nbsp;&nbsp;&nbsp;◆ Softmax layer
-#### &nbsp;&nbsp;&nbsp;◆ LeakyReLU layer
-#### &nbsp;&nbsp;&nbsp;◆ PReLU layer
-#### &nbsp;&nbsp;&nbsp;◆ ELU layer
-#### &nbsp;&nbsp;&nbsp;◆ ThresholdedReLU layer
+| Parameter | Formate | Example |
+|-----|-----|-----|
+| active_type   | String | "softmax", "elu", "selu", "softplus", "softsign", "relu", "tanh", "sigmoid", "hard_sigmoid", "exponential", "linear", "elu", "PReLU ", "LeakyReLU" |
      
 ### 3. Normalization layers:
 #### &nbsp;&nbsp;&nbsp;◆ BatchNormalization layer
@@ -69,6 +66,12 @@ Flask : 2.2.3
  
 ### 4. Pooling layers:
 #### &nbsp;&nbsp;&nbsp;◆ MaxPooling
+
+| Parameter | Formate | Example |
+|-----|-----|-----|
+| pool_size   | An integer or tuple/list of 2 integers | 3 or (3, 3) |
+| strides   | An integer or tuple/list of 2 integers  | 3 or (3, 3) |
+| padding |"valid"or"same" |"valid" |
 #### &nbsp;&nbsp;&nbsp;◆ AveragePooling
 #### &nbsp;&nbsp;&nbsp;◆ GlobalMaxPooling
 #### &nbsp;&nbsp;&nbsp;◆ GlobalAveragePooling
