@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <title>SNNTP</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro%3A400%2C500"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins%3A400%2C500"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+  <link rel="stylesheet" href={{ url_for('static', filename='style/index.css') }}/>
+</head>
+<body>
+  <div class="Title" onclick="BackToIndex()">Simple Neural Network Training Platform </div>
+  <div class="MyProject">My Project</div>
+  <!-- Project Not Exist Board -->
+  <div id="ProjectNotExist" class="ProjectNotExist" onclick="CreateProject()">
+      <a href="#">
+      <div class="Create">
+          <img class="CreateCross" src={{ url_for('static', filename='assets/CreateProject_cross.png') }}/>
+          <p class="CreateText">Create Project</p>
+      </div>
+      </a>
+  </div>
+
+  <!-- Select Model Type Board -->
+  <div id="SelectModelType" class="BackgroundBoard">
+      <div class="BackgroundBoardTitle">Model Type</div>
+      <div class="SelectModelType_Item" onclick="SelectModel('CNN')">CNN</div>
+  </div>
+  
+  <!-- Type Project Name Board -->
+  <div id="TypeBoard" class="BackgroundBoard">
+      <p class="BackgroundBoardTitle">Project Name</p>
+      <input type="text" id="TypeInput" placeholder=" Type name here......">
+      <div class="TypeOK" onclick="TypeOKFromBoard()">OK</div>
+  </div>
+
+  <script type="text/javascript" src={{ url_for('static', filename='script/index.js') }}></script>
+</body>

@@ -6,23 +6,13 @@ SET_FOLDER_ERROR = 1
 MODIFY_NAME_SUCCESS = 2
 
 class Project(object):
-    def __init__(self, name = 'test', model = None):
+    def __init__(self, name = 'test', model_type = 'CNN', model = None):
         self.name = name
+        self.model_type = model_type
         self.model = model
         self.modify_time = datetime.datetime.now()
-        self.setFolder()
 
-    def setFolder(self, name = 'test') -> bool:
-        """
-        設定 Project 的 Folder 
-        param:  name -> Project 名(預設為初始設定的名稱)
-        return: True -> 設定成功
-                False -> 發生未知錯誤
-                Exception -> 以 Exception Message 當作錯誤原因
-        """
-        return project_service.Create_Project('./projects/', name)
-
-    def modifyName(self, afterName:str) -> int:
+    def Modify_Name(self, afterName:str) -> int:
         """
         修改 Project Folder 的名稱 
         param:  afterName -> Project 名(預設為初始設定的名稱)

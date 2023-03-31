@@ -13,7 +13,7 @@ import common.FileFolder as ComMethod
 
 Projects = {}
 
-def init_Projects():
+def Init_Projects():
     if ComMethod.Create_Folder('./', 'projects'):
         if not ComMethod.Check_Folder_Exist('./', 'projects'):
             raise Exception("初始化資料夾無法建立")
@@ -22,14 +22,18 @@ def init_Projects():
     for Project_Name in All_Projects:
         Projects[Project_Name] = Project(Project_Name)
 
-def Create_Project(projectName:str) -> bool:
+def Create_Project(projectName:str, modelType:str) -> bool:
     """
     建立一個 Project
-    param: projectName -> Project 名稱
+    param:  projectName -> Project 名稱
+            modelType -> Model Type
     return: True -> 建立成功
             False -> 建立失敗
     """
-    ComMethod.Create_Folder('./projects/', projectName)
+    if ComMethod.Create_Folder('./projects/', projectName):
+        Projects[projectName] = Project(projectName, modelType)
+    else:
+        raise Exception("Create Project Fail!!")
 
 def Modify_Project_Name(beforeName:str, afterName:str) -> bool:
     """
