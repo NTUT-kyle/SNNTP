@@ -42,7 +42,7 @@ Flask : 2.2.3
   
 ## CNN layers design:
 ### 1. Convolution layers:
-#### &nbsp;&nbsp;&nbsp;◆ Conv2D layer
+#### &nbsp;&nbsp;&nbsp;◇ Conv2D layer
 
 | Parameter | Formate | Example |
 |-----|-----|-----|
@@ -53,7 +53,7 @@ Flask : 2.2.3
 
 #### &nbsp;&nbsp;&nbsp;◆ SeparableConv2D layer
 #### &nbsp;&nbsp;&nbsp;◆ Conv2DTranspose layer
-### 2. Activation layers:
+### ◇2. Activation layers:
 | Parameter | Formate | Example |
 |-----|-----|-----|
 | active_type   | String | "softmax", "elu", "selu", "softplus", "softsign", "relu", "tanh", "sigmoid", "hard_sigmoid", "exponential", "linear", "elu", "PReLU ", "LeakyReLU" |
@@ -65,14 +65,14 @@ Flask : 2.2.3
 #### &nbsp;&nbsp;&nbsp;◆ GroupNormalization layer
  
 ### 4. Pooling layers:
-#### &nbsp;&nbsp;&nbsp;◆ MaxPooling
+#### &nbsp;&nbsp;&nbsp;◇ MaxPooling
 
 | Parameter | Formate | Example |
 |-----|-----|-----|
 | pool_size   | An integer or tuple/list of 2 integers | 3 or (3, 3) |
 | strides   | An integer or tuple/list of 2 integers  | 3 or (3, 3) |
 | padding |"valid"or"same" |"valid" |
-#### &nbsp;&nbsp;&nbsp;◆ AveragePooling
+#### &nbsp;&nbsp;&nbsp;◇ AveragePooling
 
 | Parameter | Formate | Example |
 |-----|-----|-----|
@@ -83,20 +83,20 @@ Flask : 2.2.3
 #### &nbsp;&nbsp;&nbsp;◆ GlobalAveragePooling
   
 ### 5. Core layers:
-#### &nbsp;&nbsp;&nbsp;◆ Dense layer
+#### &nbsp;&nbsp;&nbsp;◇ Dense layer
 
 | Parameter | Formate | Example |
 |-----|-----|-----|
 | units(不開放)   | An integer | 3 |
 | use_bias   | Bool  | True |
 ### 6. Reshaping layers:
-#### &nbsp;&nbsp;&nbsp;◆ Flatten layer
+#### &nbsp;&nbsp;&nbsp;◇ Flatten layer
 #### &nbsp;&nbsp;&nbsp;◆ Cropping2D layer(Optional)
 #### &nbsp;&nbsp;&nbsp;◆ UpSampling2D layer(Optional)
 #### &nbsp;&nbsp;&nbsp;◆ ZeroPadding2D layer(Optional)
 
 ### 7. Regularization  layers:
-#### &nbsp;&nbsp;&nbsp;◆ Dropout layer
+#### &nbsp;&nbsp;&nbsp;◇ Dropout layer
 
 | Parameter | Formate | Example |
 |-----|-----|-----|
