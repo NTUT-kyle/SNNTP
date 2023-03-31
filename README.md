@@ -73,6 +73,12 @@ Flask : 2.2.3
 | strides   | An integer or tuple/list of 2 integers  | 3 or (3, 3) |
 | padding |"valid"or"same" |"valid" |
 #### &nbsp;&nbsp;&nbsp;◆ AveragePooling
+
+| Parameter | Formate | Example |
+|-----|-----|-----|
+| pool_size   | An integer or tuple/list of 2 integers | 3 or (3, 3) |
+| strides   | An integer or tuple/list of 2 integers  | 3 or (3, 3) |
+| padding |"valid"or"same" |"valid" |
 #### &nbsp;&nbsp;&nbsp;◆ GlobalMaxPooling
 #### &nbsp;&nbsp;&nbsp;◆ GlobalAveragePooling
   
