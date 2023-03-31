@@ -36,6 +36,18 @@ Flask : 2.2.3
 * Or you can Enter `.\StartScript.bat` in the console then input `3` to start program
 
 ---
+## CNN model setting:
+### 1. Probabilistic losses:
+
+| Parameter | Formate | Example |
+|-----|-----|-----|
+| loss_type | String | "binary_crossentropy", "categorical_crossentropy", "sparse_categorical_crossentropy", "poisson" |
+
+### 2. Optimizers:
+
+| Parameter | Formate | Example |
+|-----|-----|-----|
+| optimizers_type | String | "SGD", "RMSprop", "Adam", "AdamW", "Adadelta", "Adagrad", "Adamax", "Adafactor", "Nadam", "Ftrl" |
 
 ## CNN model design:
 ### Sequential model
