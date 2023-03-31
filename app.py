@@ -1,4 +1,4 @@
-import log
+import common.log as log
 import project.project_service as project_service
 
 # --- 初始化 projects
@@ -18,10 +18,12 @@ from project.project_route import projectCon
 app.register_blueprint(projectCon, url_prefix="/project")
 
 @app.route("/projects", methods = ['GET'])
+@log.log_decorator
 def getProjects():
     return project_service.Get_Projects()
 
 @app.route("/", methods = ['GET'])
+@log.log_decorator
 def index():
     return render_template('home.html')
 

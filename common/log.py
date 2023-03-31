@@ -1,6 +1,18 @@
 from colorama import Fore, Style
 import os, datetime
 
+from functools import wraps
+
+def log_decorator(func):
+    @wraps(func)
+    def decorated(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            printLog(str(e), isError = True)
+            return str(e), 500
+    return decorated
+
 def printLog(msg:str, isError = False):
     """
     統一輸出格式，並記錄至 log file 中
