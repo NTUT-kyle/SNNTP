@@ -85,6 +85,10 @@ Flask : 2.2.3
 ### 5. Core layers:
 #### &nbsp;&nbsp;&nbsp;◆ Dense layer
 
+| Parameter | Formate | Example |
+|-----|-----|-----|
+| units(不開放)   | An integer | 3 |
+| use_bias   | Bool  | True |
 ### 6. Reshaping layers:
 #### &nbsp;&nbsp;&nbsp;◆ Flatten layer
 #### &nbsp;&nbsp;&nbsp;◆ Cropping2D layer(Optional)
