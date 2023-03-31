@@ -122,7 +122,8 @@ Flask : 2.2.3
     "type": "CNN",
     "name": "MNIST_classifier",
     "build_date": "2023-03-31T00:00:00.000Z",
-    "model_path": "",
+    "model_type": "",
+    "model_path": "sequential",
     "Model_layer": [
       {
         "layer_type": "Conv2D",
