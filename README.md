@@ -36,13 +36,25 @@ Flask : 2.2.3
 * Or you can Enter `.\StartScript.bat` in the console then input `3` to start program
 
 ---
+## CNN model setting:
+### 1. Probabilistic losses:
+
+| Parameter | Formate | Example |
+|-----|-----|-----|
+| loss_type | String | "binary_crossentropy", "categorical_crossentropy", "sparse_categorical_crossentropy", "poisson" |
+
+### 2. Optimizers:
+
+| Parameter | Formate | Example |
+|-----|-----|-----|
+| optimizers_type | String | "SGD", "RMSprop", "Adam", "AdamW", "Adadelta", "Adagrad", "Adamax", "Adafactor", "Nadam", "Ftrl" |
 
 ## CNN model design:
 ### Sequential model
   
 ## CNN layers design:
 ### 1. Convolution layers:
-#### &nbsp;&nbsp;&nbsp;◆ Conv2D layer
+#### &nbsp;&nbsp;&nbsp;◇ Conv2D layer
 
 | Parameter | Formate | Example |
 |-----|-----|-----|
@@ -53,13 +65,10 @@ Flask : 2.2.3
 
 #### &nbsp;&nbsp;&nbsp;◆ SeparableConv2D layer
 #### &nbsp;&nbsp;&nbsp;◆ Conv2DTranspose layer
-### 2. Activation layers:
-#### &nbsp;&nbsp;&nbsp;◆ ReLU layer
-#### &nbsp;&nbsp;&nbsp;◆ Softmax layer
-#### &nbsp;&nbsp;&nbsp;◆ LeakyReLU layer
-#### &nbsp;&nbsp;&nbsp;◆ PReLU layer
-#### &nbsp;&nbsp;&nbsp;◆ ELU layer
-#### &nbsp;&nbsp;&nbsp;◆ ThresholdedReLU layer
+### ◇2. Activation layers:
+| Parameter | Formate | Example |
+|-----|-----|-----|
+| active_type   | String | "softmax", "elu", "selu", "softplus", "softsign", "relu", "tanh", "sigmoid", "hard_sigmoid", "exponential", "linear", "elu", "PReLU ", "LeakyReLU" |
      
 ### 3. Normalization layers:
 #### &nbsp;&nbsp;&nbsp;◆ BatchNormalization layer
@@ -68,22 +77,110 @@ Flask : 2.2.3
 #### &nbsp;&nbsp;&nbsp;◆ GroupNormalization layer
  
 ### 4. Pooling layers:
-#### &nbsp;&nbsp;&nbsp;◆ MaxPooling
-#### &nbsp;&nbsp;&nbsp;◆ AveragePooling
+#### &nbsp;&nbsp;&nbsp;◇ MaxPooling
+
+| Parameter | Formate | Example |
+|-----|-----|-----|
+| pool_size   | An integer or tuple/list of 2 integers | 3 or (3, 3) |
+| strides   | An integer or tuple/list of 2 integers  | 3 or (3, 3) |
+| padding |"valid"or"same" |"valid" |
+#### &nbsp;&nbsp;&nbsp;◇ AveragePooling
+
+| Parameter | Formate | Example |
+|-----|-----|-----|
+| pool_size   | An integer or tuple/list of 2 integers | 3 or (3, 3) |
+| strides   | An integer or tuple/list of 2 integers  | 3 or (3, 3) |
+| padding |"valid"or"same" |"valid" |
 #### &nbsp;&nbsp;&nbsp;◆ GlobalMaxPooling
 #### &nbsp;&nbsp;&nbsp;◆ GlobalAveragePooling
   
 ### 5. Core layers:
-#### &nbsp;&nbsp;&nbsp;◆ Dense layer
-#### &nbsp;&nbsp;&nbsp;◆ Dropout layer
+#### &nbsp;&nbsp;&nbsp;◇ Dense layer
 
+| Parameter | Formate | Example |
+|-----|-----|-----|
+| units(不開放)   | An integer | 3 |
+| use_bias   | Bool  | True |
 ### 6. Reshaping layers:
-#### &nbsp;&nbsp;&nbsp;◆ Flatten layer
+#### &nbsp;&nbsp;&nbsp;◇ Flatten layer
 #### &nbsp;&nbsp;&nbsp;◆ Cropping2D layer(Optional)
 #### &nbsp;&nbsp;&nbsp;◆ UpSampling2D layer(Optional)
 #### &nbsp;&nbsp;&nbsp;◆ ZeroPadding2D layer(Optional)
 
-資料集:
+### 7. Regularization  layers:
+#### &nbsp;&nbsp;&nbsp;◇ Dropout layer
+
+| Parameter | Formate | Example |
+|-----|-----|-----|
+| rate   | An double between 0~1 | 0.66 |
+| seed   | An integer | 3 |
+
+## CNN model.json example:
+```yaml
+{
+  "Model": {
+    "type": "CNN",
+    "name": "MNIST_classifier",
+    "build_date": "2023-03-31T00:00:00.000Z",
+    "model_type": "",
+    "model_path": "sequential",
+    "Model_layer": [
+      {
+        "layer_type": "Conv2D",
+        "filters": "32",
+        "kernel_size": "(3, 3)",
+        "strides": "(1, 1)",
+        "padding": "valid"
+      },
+      {
+        "layer_type": "MaxPooling2D",
+        "pool_size": "2",
+        "strides": "(1, 1)",
+        "padding": "valid"
+      },
+      {
+        "layer_type": "Conv2D",
+        "filters": "64",
+        "kernel_size": "(3, 3)",
+        "strides": "(1, 1)",
+        "padding": "valid"
+      },
+      {
+        "layer_type": "Activation",
+        "type": "hard_sigmoid"
+      },
+      {
+        "layer_type": "AveragePooling2D",
+        "pool_size": "2",
+        "strides": "(1, 1)",
+        "padding": "valid"
+      },
+      {
+        "layer_type": "Flatten"
+      },
+      {
+        "layer_type": "Dropout",
+        "rate": "0.5",
+        "seed": "123"
+      },
+      {
+        "layer_type": "Dense",
+        "units": "10",
+        "use_bias": "False"
+      }
+    ]
+  },
+  "ModelSetting": {
+    "batch_size": "128",
+    "epochs": "10",
+    "loss_function": "poisson",
+    "optimizer": "SGD",
+    "validation_split": "0.1",
+    "input_shape": "(28, 28, 1)"
+  }
+}
+```
+## 資料集:
   1. MNIST
   2. CIFAR10
 
