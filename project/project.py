@@ -1,10 +1,6 @@
 import datetime, os
 import project.project_service as project_service
 
-MODIFY_SAME_NAME = 0
-SET_FOLDER_ERROR = 1
-MODIFY_NAME_SUCCESS = 2
-
 class Project(object):
     def __init__(self, name = 'test', modify_time = datetime.datetime.today(), model_type = 'CNN', model = None):
         self.name = name
