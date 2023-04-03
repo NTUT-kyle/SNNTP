@@ -124,7 +124,7 @@ Flask : 2.2.3
     "build_date": "2023-03-31T00:00:00.000Z",
     "model_type": "sequential",
     "model_path": "",
-    "Model_layer": [
+    "Model_layers": [
       {
         "layer_type": "Conv2D",
         "filters": "32",
