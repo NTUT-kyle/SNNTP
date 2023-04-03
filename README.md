@@ -170,7 +170,7 @@ Flask : 2.2.3
       }
     ]
   },
-  "ModelSetting": {
+  "Model_Setting": {
     "batch_size": "128",
     "epochs": "10",
     "loss_function": "poisson",
