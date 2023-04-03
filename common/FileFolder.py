@@ -1,21 +1,40 @@
 import os
+from datetime import datetime
 
 
 def Create_File(path:str, filename:str, msg = "") -> bool:
     """
     建立 File (也可以覆蓋檔案)
     param:  path -> 路徑
-            filename -> 名稱
+            filename -> 檔案名稱
             msg -> 寫入的資料
     return: True -> 建立成功
-            False -> 發生錯誤
+            Exception -> 以 Exception Message 當作錯誤原因
     """
     try:
         file = open(path + filename, 'w')
         file.write(msg)
         file.close()
     except Exception as e:
-        return False
+        raise Exception("Create_File 錯誤 : {}".format(e))
+    return True
+
+def Delete_File(path:str, filename:str) -> bool:
+    """
+    刪除 File
+    param:  path -> 路徑
+            filename -> 檔案名稱
+    return: True -> 刪除成功
+            False -> File 不存在
+            Exception -> 以 Exception Message 當作錯誤原因
+    """
+    try:
+        if Check_File_Exist(path, filename):
+            os.remove(path + filename)
+        else:
+            return False
+    except Exception as e:
+        raise Exception("Delete_File 錯誤 : {}".format(e))
     return True
 
 def Check_File_Exist(path:str, file:str) -> bool:
@@ -37,14 +56,14 @@ def Add_Msg_To_File(path:str, filename:str, mgs = "") -> bool:
             filename -> 名稱
             msg -> 新增的資料
     return: True -> 新增成功
-            False -> 發生錯誤
+            Exception -> 以 Exception Message 當作錯誤原因
     """
     try:
         file = open(path + filename, 'a')
         file.write(msg)
         file.close()
     except Exception as e:
-        return False
+        raise Exception("Add_Msg_To_File 錯誤 : {}".format(e))
     return True
 
 def Create_Folder(path:str, dirname:str) -> bool:
@@ -53,13 +72,33 @@ def Create_Folder(path:str, dirname:str) -> bool:
     param:  path -> 路徑
             dirname -> 資料夾名稱
     return: True -> 建立成功
-            False -> 發生錯誤
+            Exception -> 以 Exception Message 當作錯誤原因
     """
     try:
         os.mkdir(path + dirname)
     except Exception as e:
-        return False
+        raise Exception("Create_Folder 錯誤 : {}".format(e))
     return True
+
+
+def Delete_Folder(path:str, dirname:str) -> bool:
+    """
+    刪除 Folder
+    param:  path -> 路徑
+            dirname -> 資料夾名稱
+    return: True -> 刪除成功
+            False -> Folder 不存在
+            Exception -> 以 Exception Message 當作錯誤原因
+    """
+    try:
+        if Check_Folder_Exist(path, dirname):
+            os.removedirs(path + dirname)
+        else:
+            return False
+    except Exception as e:
+        raise Exception("Delete_Folder 錯誤 : {}".format(e))
+    return True
+    
 
 def Check_Folder_Exist(path:str, dirname:str) -> bool:
     """
@@ -80,14 +119,15 @@ def Modify_File_Folder_Name(path:str, beforeName:str, afterName:str) -> bool:
             beforeName -> 原名稱
             afterName -> 新名稱
     return: True -> 修改成功
-            False -> 發生錯誤
+            False -> 新舊名稱相同
+            Exception -> 以 Exception Message 當作錯誤原因
     """
     try:
-        if beforeName == afterName: 
+        if beforeName == afterName or afterName == "": 
             return False
         os.rename(path + beforeName, path + afterName)
     except Exception as e:
-        return False
+        raise Exception("Modify_File_Folder_Name 錯誤 : {}".format(e))
     return True
 
 def Get_All_File_From_Path(path:str) -> list:
@@ -118,3 +158,15 @@ def Get_All_Folder_From_Path(path:str) -> list:
         return all_folder
     except Exception as e:
         raise Exception("Get_All_Folder_From_Path 錯誤 : {}".format(e))
+    
+def check_File_Folder_Modify_Time(path:str) -> str:
+    """
+    獲取路徑中檔案或資料夾的修改時間
+    param:  path -> 路徑
+    return: str -> 時間 (date object)
+            Exception -> 以 Exception Message 當作錯誤原因
+    """
+    if not os.path.isdir(path) and not os.path.isfile(path):
+        raise Exception("check_File_Folder_Modify_Time 錯誤 : 檔案或資料夾不存在")
+    file_time = datetime.fromtimestamp(os.path.getmtime(path))
+    return file_time
