@@ -28,9 +28,12 @@ def Get_Project(projectName:str):
 @projectCon.route("/<projectName>", methods = ['PUT'])
 @log.log_decorator
 def Update_Project(projectName:str):
-    return f'Success {projectName} PUT'
+    data = request.get_json()
+    project_service.Modify_Project_Name(projectName, data['Rename'])
+    return 'Success Rename {} to {}'.format(projectName, data['Rename'])
 
 @projectCon.route("/<projectName>", methods = ['DELETE'])
 @log.log_decorator
 def Delete_Project(projectName:str):
+    project_service.Delete_Project(projectName)
     return f'Success {projectName} DELETE'

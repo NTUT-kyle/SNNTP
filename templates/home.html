@@ -32,23 +32,23 @@
   <!-- List Start -->
   <div id="ProjectExistList">
 
-    {% for Project in ProjectList %}
+    {% for key, project in ProjectList.items() %}
 
-    <div id="{{Project}}" class="ProjectExistItem">
+    <div id="{{project.name}}" class="ProjectExistItem">
       <div class="ProjectExistItem_Top">
-        <div class="ProjectExistItem_File" onclick="ModelItem('{{Project}}')">
+        <div class="ProjectExistItem_File" onclick="ModelItem('{{project.name}}')">
           <img src={{ url_for('static', filename='assets/ProjectFile.png') }} title="File"/>
         </div>
-        <div class="ProjectExistItem_Menu_Area" onclick="Item_Menu('{{Project}}')">
+        <div class="ProjectExistItem_Menu_Area" onclick="Item_Menu('{{project.name}}')">
           <img class="ProjectExistItem_Menu" src={{ url_for('static', filename='assets/ProjectMenu.png') }} title="Menu"/>
         </div>
         <div class="MenuClick">
-          <div class="MenuClick_Item MenuClick_Delete" onclick="ModelDelete('{{Project}}')">Delete model</div>
-          <div class="MenuClick_Item MenuClick_Rename" onclick="ModelRename('{{Project}}')">Rename model</div>
+          <div class="MenuClick_Item MenuClick_Delete" onclick="ModelDelete('{{project.name}}')">Delete model</div>
+          <div class="MenuClick_Item MenuClick_Rename" onclick="ModelRename('{{project.name}}')">Rename model</div>
         </div>
       </div>
-      <div class="ProjectExistItem_Name" onclick="ModelItem('{{Project}}')">{{Project}}</div>
-      <div class="ProjectExistItem_Date" onclick="ModelItem('{{Project}}')">Modified date</div>
+      <div class="ProjectExistItem_Name" onclick="ModelItem('{{project.name}}')">{{project.name}}</div>
+      <div class="ProjectExistItem_Date" onclick="ModelItem('{{project.name}}')">{{project.modify_time}}</div>
     </div>
     
     {% endfor %}
@@ -82,7 +82,7 @@
   <!-- Type Project Name Board -->
   <div id="TypeBoard" class="BackgroundBoard">
       <p class="BackgroundBoardTitle">Project Name</p>
-      <input type="text" id="TypeInput" placeholder=" Type name here......">
+      <input id="TypeInput" type="text" required="" placeholder=" Type name here......">
       <div class="TypeOK" onclick="TypeOKFromBoard()">OK</div>
   </div>
   

@@ -2,10 +2,7 @@ import common.log as log
 import project.project_service as project_service
 
 # --- 初始化 projects
-try:
-    project_service.Init_Projects()
-except Exception as e:
-    log.printLog(str(e), True)
+project_service.Init_Projects()
 
 # --- 建立 Flask Server ---
 
@@ -21,8 +18,8 @@ app.register_blueprint(modelCon, url_prefix="/model")
 
 @app.route("/projects", methods = ['GET'])
 @log.log_decorator
-def getProjects():
-    return project_service.Get_Projects()
+def getProjectsName():
+    return project_service.Get_Projects_Name()
 
 @app.route("/", methods = ['GET'])
 @log.log_decorator
