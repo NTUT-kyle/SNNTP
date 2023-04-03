@@ -23,7 +23,8 @@ def Create_Project(projectName:str):
 @projectCon.route("/<projectName>", methods = ['GET'])
 @log.log_decorator
 def Get_Project(projectName:str):
-    return f'Success {projectName} GET'
+    result = project_service.Get_Project_By_Key_Return_Json(projectName)
+    return jsonify(result)
 
 @projectCon.route("/<projectName>", methods = ['PUT'])
 @log.log_decorator

@@ -24,3 +24,10 @@ class Project(object):
             return True
         except Exception as e:
             return False
+        
+    def to_json(self) -> dict:
+        return {
+            'name': self.name,
+            'modify_time': self.modify_time,
+            'model_type': self.model_type
+        }

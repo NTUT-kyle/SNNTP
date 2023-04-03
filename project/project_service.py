@@ -101,14 +101,22 @@ def Get_Projects() -> list:
     global Projects
     return Projects
 
-def Get_Project_By_Keys(key:str) -> object:
+def Get_Project_By_Key(key:str) -> object:
     """
     使用 key 來獲取 Project Object 
     return: object -> key 對應的 Project
             None -> 找不到 key 對應的 Project
     """
     global Projects
+    
     return Projects.get(key, None)
+
+def Get_Project_By_Key_Return_Json(key:str) -> dict:
+    project = Get_Project_By_Key(key)
+    if project:
+        return project.to_json()
+    else:
+        return {}
 
 def Get_Project_Modify_Time_By_Key(Project_Name:str) -> object:
     return ComMethod.check_File_Folder_Modify_Time(f'./projects/{Project_Name}')
