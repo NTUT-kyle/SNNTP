@@ -14,11 +14,11 @@ class Assembler:
     def assemble_layers(self):
         layers_list = self.decoder.get_model_layers
         for layer_dic in layers_list:
-            self.builder(layer_dic)
+            self.builder.build_layer(layer_dic)
             
-    def get_model(self):
+    def init_model(self):
         model_type = self.decoder.get_model["model_type"]
-        self.model = self.builder.build_model(model_type)
+        self.builder.build_model(model_type)
     
     def get_result(self) -> Model:
-        return self.model
+        return self.builder.get_result
