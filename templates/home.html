@@ -13,29 +13,78 @@
 </head>
 <body>
   <div class="Title" onclick="BackToIndex()">Simple Neural Network Training Platform </div>
-  <div class="MyProject">My Project</div>
-  <!-- Project Not Exist Board -->
-  <div id="ProjectNotExist" class="ProjectNotExist" onclick="CreateProject()">
-      <a href="#">
+
+  {% if ProjectList %}
+  <!-- 
+      | Project Exist |
+  -->
+
+  <div class="ProjectExist">
+    <div class="MyProject">My Project</div> 
+    <div id="ProjectExistCreate" onclick="CreateProject()">
       <div class="Create">
-          <img class="CreateCross" src={{ url_for('static', filename='assets/CreateProject_cross.png') }}/>
+        <img class="CreateCross" src={{ url_for('static', filename='assets/CreateProject_cross.png') }} title="Create Project"/>
+        <div class="CreateText">Create project</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- List Start -->
+  <div id="ProjectExistList">
+
+    {% for Project in ProjectList %}
+
+    <div id="{{Project}}" class="ProjectExistItem">
+      <div class="ProjectExistItem_Top">
+        <div class="ProjectExistItem_File" onclick="ModelItem('{{Project}}')">
+          <img src={{ url_for('static', filename='assets/ProjectFile.png') }} title="File"/>
+        </div>
+        <div class="ProjectExistItem_Menu_Area" onclick="Item_Menu('{{Project}}')">
+          <img class="ProjectExistItem_Menu" src={{ url_for('static', filename='assets/ProjectMenu.png') }} title="Menu"/>
+        </div>
+        <div class="MenuClick">
+          <div class="MenuClick_Item MenuClick_Delete" onclick="ModelDelete('{{Project}}')">Delete model</div>
+          <div class="MenuClick_Item MenuClick_Rename" onclick="ModelRename('{{Project}}')">Rename model</div>
+        </div>
+      </div>
+      <div class="ProjectExistItem_Name" onclick="ModelItem('{{Project}}')">{{Project}}</div>
+      <div class="ProjectExistItem_Date" onclick="ModelItem('{{Project}}')">Modified date</div>
+    </div>
+    
+    {% endfor %}
+
+  </div>
+  <!-- List End -->
+
+  {% else %}
+  <!-- 
+      | Project Not Exist |
+  -->
+
+  <div class="MyProject">My Project</div>
+  <div id="ProjectNotExist" class="ProjectNotExist" onclick="CreateProject()">
+    <a href="#">
+      <div class="Create">
+          <img class="CreateCross" src={{ url_for('static', filename='assets/CreateProject_cross.png') }} title="Create Project"/>
           <p class="CreateText">Create Project</p>
       </div>
-      </a>
+    </a>
   </div>
+
+  {% endif %}
 
   <!-- Select Model Type Board -->
   <div id="SelectModelType" class="BackgroundBoard">
-      <div class="BackgroundBoardTitle">Model Type</div>
-      <div class="SelectModelType_Item" onclick="SelectModel('CNN')">CNN</div>
+    <div class="BackgroundBoardTitle">Model Type</div>
+    <div class="SelectModelType_Item" onclick="SelectModel('CNN')">CNN</div>
   </div>
-  
+
   <!-- Type Project Name Board -->
   <div id="TypeBoard" class="BackgroundBoard">
       <p class="BackgroundBoardTitle">Project Name</p>
       <input type="text" id="TypeInput" placeholder=" Type name here......">
       <div class="TypeOK" onclick="TypeOKFromBoard()">OK</div>
   </div>
-
+  
   <script type="text/javascript" src={{ url_for('static', filename='script/index.js') }}></script>
 </body>

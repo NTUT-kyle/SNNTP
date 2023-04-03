@@ -25,7 +25,7 @@ def getProjects():
 @app.route("/", methods = ['GET'])
 @log.log_decorator
 def index():
-    return render_template('home.html')
+    return render_template('home.html', ProjectList = project_service.Get_Projects())
 
 if __name__ == '__main__':
     app.run()
