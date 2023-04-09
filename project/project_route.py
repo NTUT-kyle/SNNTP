@@ -18,7 +18,7 @@ def Index():
 def Create_Project(projectName:str):
     data = request.get_json()
     project_service.Create_Project(projectName, data['Type'])
-    return f'Success {projectName} POST'
+    return projectName
 
 @projectCon.route("/<projectName>", methods = ['GET'])
 @log.log_decorator
@@ -37,4 +37,4 @@ def Update_Project(projectName:str):
 @log.log_decorator
 def Delete_Project(projectName:str):
     project_service.Delete_Project(projectName)
-    return f'Success {projectName} DELETE'
+    return projectName
