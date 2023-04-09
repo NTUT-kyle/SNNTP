@@ -2,6 +2,27 @@ function BackToIndex() {
     document.location.href = "/";
 }
 
+function success_index(data) {
+    $('#msgbox').html(data);
+    $('#msgbox').css('background-color', '#46ffac');
+    $('#msgbox').toggle("blind");
+    setTimeout(() => {
+        $('#msgbox').toggle("blind");
+        document.location.href = "/";
+    }, 1500);
+}
+
+function error_index(xhr, textStatus, errorThrown) {
+    console.log('[Error ' + xhr.status + ']: ' + textStatus);
+    console.log(errorThrown);
+    $('#msgbox').html('[Error ' + xhr.status + ']: ' + errorThrown);
+    $('#msgbox').css('background-color', 'red');
+    $('#msgbox').toggle("blind");
+    setTimeout(() => {
+        $('#msgbox').toggle("blind");
+    }, 1500);
+}
+
 /*
 
     Project Not Exist
@@ -40,22 +61,13 @@ function TypeOKFromBoard() {
         alert("輸入值不能是空的");
         return;
     }
-    $.ajax({
-        url: "project/" + $("#TypeInput").val(),
-        type: "POST",
-        contentType: 'application/json',
-        data: JSON.stringify({
-            Type: SelectType
-        }),
-        success: function(data) {
-            alert(`新增 Project : ${$("#TypeInput").val()} 成功`);
-            document.location.href = "/";
-        },
-        error: function(xhr, textStatus, errorThrown) {
-            console.log('[Error ' + xhr.status + ']: ' + textStatus);
-            console.log(errorThrown);
-        }
-    });
+    ajax_func(
+        "project/" + $("#TypeInput").val(),
+        "POST",
+        {Type: SelectType},
+        success_index,
+        error_index
+    );
 }
 
 /*
@@ -83,18 +95,13 @@ function Item_Menu(project_name) {
 
 // Menu Delete
 function ModelDelete(project_name) {
-    $.ajax({
-        url: "project/" + project_name,
-        type: "DELETE",
-        success: function(data) {
-            alert('Project : ' + project_name + ' delete Success');
-            document.location.href = "/";
-        },
-        error: function(xhr, textStatus, errorThrown) {
-            console.log('[Error ' + xhr.status + ']: ' + textStatus);
-            console.log(errorThrown);
-        }
-    });
+    ajax_func(
+        "project/" + project_name,
+        "DELETE",
+        {},
+        success_index,
+        error_index
+    );
 }
 
 // Menu Rename
@@ -115,23 +122,13 @@ function ModelRenameSend(project_name) {
         alert("輸入值不能是空的");
         return;
     }
-    $.ajax({
-        url: "project/" + project_name,
-        type: "PUT",
-        contentType: 'application/json',
-        data: JSON.stringify({
-            Rename: $("#TypeInput").val()
-        }),
-        success: function(data) {
-            console.log(data);
-            alert(data);
-            document.location.href = "/";
-        },
-        error: function(xhr, textStatus, errorThrown) {
-            console.log('[Error ' + xhr.status + ']: ' + textStatus);
-            console.log(errorThrown);
-        }
-    });
+    ajax_func(
+        "project/" + project_name,
+        "PUT",
+        {Rename: $("#TypeInput").val()},
+        success_index,
+        error_index
+    );
 }
 
 // Clicking on all elements except Select_Now makes Select_Now disappear

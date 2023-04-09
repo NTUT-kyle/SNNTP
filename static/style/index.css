@@ -1,34 +1,19 @@
 
-html {
-	font-size:62.5%;
-}
-
-* {
-	margin: 0;
-	padding: 0;
-}
-
-input {
-	border: none;
-}
-body {
-  background-color: #212332;
-  width: 100%;
-}
-a {
-  text-decoration: none;
-  color: white;
-}
-.Title {
-  margin: 10px 0 1px 1%;
-  font-size: 6rem;
-  font-weight: 500;
-  line-height: 1.5;
-  color: #ffffff;
+.Message {
+  display: none;
+  position: fixed;
+  top: 1%;
+  left: 35%;
+  width: 30%;
+  z-index: 10;
+  font-size: x-large;
+  background-color: #46ffac;
+  text-align: center;
+  padding: 10px;
   font-family: Poppins, 'Source Sans Pro';
-  white-space: nowrap;
-  cursor: pointer;
+  border-radius: 1rem;
 }
+
 .MyProject {
   margin-left: 10%;
   font-size: 4rem;

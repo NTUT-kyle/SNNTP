@@ -1,20 +1,16 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <link rel="icon" href="/favicon.ico" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#000000" />
-  <title>SNNTP</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro%3A400%2C500"/>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins%3A400%2C500"/>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-  <link rel="stylesheet" href={{ url_for('static', filename='style/index.css') }}/>
-</head>
-<body>
-  <div class="Title" onclick="BackToIndex()">Simple Neural Network Training Platform </div>
+{% extends "base.html" %}
 
+{% block title %}SNNTP-Index{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href={{ url_for('static', filename='style/index.css') }}/>
+{% endblock %}
+
+{% block content %}
   {% if ProjectList %}
+  <div id="msgbox" class="Message">
+  </div>
+
   <!-- 
       | Project Exist |
   -->
@@ -85,6 +81,7 @@
       <input id="TypeInput" type="text" required="" placeholder=" Type name here......">
       <div class="TypeOK" onclick="TypeOKFromBoard()">OK</div>
   </div>
-  
+
   <script type="text/javascript" src={{ url_for('static', filename='script/index.js') }}></script>
-</body>
+
+{% endblock %}
