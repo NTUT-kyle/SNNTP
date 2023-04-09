@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, render_template
 import common.log as log
 
 """
@@ -12,15 +12,15 @@ modelCon = Blueprint("model", __name__)
 def Index():
     return "You are in model"
 
+@modelCon.route("/<projectName>", methods = ['GET'])
+@log.log_decorator
+def Get_Model(projectName:str):
+    return render_template('model.html', projectName = projectName)
+
 @modelCon.route("/<projectName>", methods = ['POST'])
 @log.log_decorator
 def Create_Model(projectName:str):
     return f'Success POST {projectName} Model'
-
-@modelCon.route("/<projectName>", methods = ['GET'])
-@log.log_decorator
-def Get_Model(projectName:str):
-    return f'Success GET {projectName} Model'
 
 @modelCon.route("/<projectName>", methods = ['PUT'])
 @log.log_decorator

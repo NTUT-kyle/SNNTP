@@ -10,7 +10,6 @@
   background-color: #46ffac;
   text-align: center;
   padding: 10px;
-  font-family: Poppins, 'Source Sans Pro';
   border-radius: 1rem;
 }
 
@@ -20,7 +19,6 @@
   font-weight: 500;
   line-height: 1.5;
   color: #ffffff;
-  font-family: Poppins, 'Source Sans Pro';
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -73,7 +71,6 @@
   font-weight: 400;
   line-height: 1.5;
   color: #ffffff;
-  font-family: Poppins, 'Source Sans Pro';
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -99,7 +96,6 @@
   font-weight: 500;
   line-height: 1.5;
   color: #ffffff;
-  font-family: Poppins, 'Source Sans Pro';
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -111,7 +107,6 @@
   font-weight: 400;
   line-height: 1.5;
   color: #ffffff;
-  font-family: Poppins, 'Source Sans Pro';
   white-space: nowrap;
   display: flex;
   align-items: center;
@@ -130,7 +125,6 @@
   font-weight: 300;
   line-height: 1.5;
   color: #a9a9a9;
-  font-family: Poppins, 'Source Sans Pro';
   white-space: nowrap;
   display: flex;
   align-items: center;
@@ -147,7 +141,6 @@
   font-weight: 400;
   line-height: 1.5;
   color: #ffffff;
-  font-family: Poppins, 'Source Sans Pro';
   white-space: nowrap;
   display: flex;
   align-items: center;
@@ -237,7 +230,6 @@
   font-weight: 400;
   line-height: 1.5;
   color: #ffffff;
-  font-family: Poppins, 'Source Sans Pro';
   white-space: nowrap;
   display: flex;
   align-items: center;
@@ -262,7 +254,6 @@
   font-weight: 500;
   line-height: 1.5;
   color: #b5c9da;
-  font-family: Poppins, 'Source Sans Pro';
   white-space: nowrap;
   cursor: pointer;
 }
@@ -272,7 +263,6 @@
   font-weight: 400;
   line-height: 1.5;
   color: #b5c9da;
-  font-family: Poppins, 'Source Sans Pro';
   white-space: nowrap;
   cursor: pointer;
 }

@@ -79,7 +79,15 @@ function TypeOKFromBoard() {
 
 // Into Project
 function ModelItem(project_name) {
-    alert(project_name);
+    ajax_func(
+        '/project/' + project_name + '/model',
+        "GET",
+        {},
+        (data) => { 
+            document.location.href = data;
+        },
+        error_index
+    );
 }
 
 // Menu Select

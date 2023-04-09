@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}SNNTP-Model{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href={{ url_for('static', filename='style/model.css') }}/>
+{% endblock %}
+
+{% block content %}
+
+<div class="TopItemList">
+    <div class="MyProject">{{projectName}}</div>
+    <div class="SelectItemChooseList">
+        <div id="ChooseTrain" class="SelectItem">Choose training data</div>
+        <div id="ChooseValidation" class="SelectItem">Choose validation data</div>
+        <div id="ChooseTest" class="SelectItem">Choose test data</div>
+    </div>
+    <div class="SelectItem SelectItemRight">
+        <img src={{ url_for('static', filename='assets/train.png') }} title="Create Project"/>
+        <p>Train model</p>
+    </div>
+</div>
+<div class="bottom">
+    <div class="modelshow">
+
+    </div>
+    <div class="layer">
+        <div class="layerTitle">Layer</div>
+        <div class="layerCategory">
+            <div>
+                <div>
+                    <img>
+                    <p>Test</p>
+                </div>
+                <div>Test-1</div>
+                <div>Test-2</div>
+                <div>Test-3</div>
+            </div>
+            <div>
+                <div>
+                    <img>
+                    <p>Test</p>
+                </div>
+                <div>Test-1</div>
+                <div>Test-2</div>
+                <div>Test-3</div>
+            </div>
+            <div>
+                <div>
+                    <img>
+                    <p>Test</p>
+                </div>
+                <div>Test-1</div>
+                <div>Test-2</div>
+                <div>Test-3</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="CenterBoard">
+    <div id="CenterBoardText">Training data path</div>
+    <div id="CBFileButton" class="CenterBoardContent">選擇檔案</div>
+    <input id="CBFile" type="file" name="data" accept=".pdf" placeholder="Select a file">
+    <div id="CBContent" class="CenterBoardContent"></div>
+    <div id="CenterBoardButton">Upload</div>
+</div>
+<script src={{ url_for('static', filename='script/model.js') }}></script>
+
+{% endblock %}

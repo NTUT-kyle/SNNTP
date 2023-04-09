@@ -13,18 +13,27 @@ projectCon = Blueprint("project", __name__)
 def Index():
     return "You are in project"
 
-@projectCon.route("/<projectName>", methods = ['POST'])
+@projectCon.route("/<projectName>/model", methods = ['GET'])
 @log.log_decorator
-def Create_Project(projectName:str):
-    data = request.get_json()
-    project_service.Create_Project(projectName, data['Type'])
-    return projectName
+def Get_Project_Model(projectName:str):
+    project = project_service.Get_Project_By_Key(projectName)
+    if project:
+        return f'/model/{projectName}'
+    else:
+        return f'Project {projectName} Not found'
 
 @projectCon.route("/<projectName>", methods = ['GET'])
 @log.log_decorator
 def Get_Project(projectName:str):
     result = project_service.Get_Project_By_Key_Return_Json(projectName)
     return jsonify(result)
+
+@projectCon.route("/<projectName>", methods = ['POST'])
+@log.log_decorator
+def Create_Project(projectName:str):
+    data = request.get_json()
+    project_service.Create_Project(projectName, data['Type'])
+    return projectName
 
 @projectCon.route("/<projectName>", methods = ['PUT'])
 @log.log_decorator

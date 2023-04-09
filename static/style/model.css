@@ -1,0 +1,223 @@
+/*
+    Top Element
+*/
+
+.TopItemList {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.MyProject {
+    margin-left: 10%;
+    font-size: 4rem;
+    font-weight: 500;
+    line-height: 1.5;
+    color: #ffffff;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.SelectItem {
+    display: flex;
+    padding: 0 4px;
+    align-items: center;
+    background-color: #843386;
+    box-sizing: border-box;
+    border-radius: 1rem;
+    cursor: pointer;
+}
+
+.SelectItem img {
+    margin-left: 10px;
+    margin-right: 3px;
+    width: 2.2835rem;
+    height: 2.1rem;
+    position: relative;
+    object-fit: contain;
+    vertical-align: top;
+}
+
+.SelectItem p, .SelectItemChooseList div {
+    font-size: 2rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #ffffff;
+    white-space: nowrap;
+}
+
+.SelectItemChooseList {
+    width: 50%;
+    background-color: unset;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.SelectItemChooseList div {
+    padding: 0 6px;
+    background-color: #c48a1a;
+}
+
+.SelectItemRight {
+    margin-right: 3%;
+    padding-right: 10px;
+}
+
+.SelectItemRight p {
+    font-size: 3rem;
+}
+
+/*
+    Bottom Element
+*/
+
+.bottom {
+    display: flex;
+}
+
+.modelshow {
+    margin: 1rem 1rem;
+    box-sizing: border-box;
+    background-color: #2a2d3e;
+    width: calc(98% - 21.3rem);
+    height: 775px;
+}
+
+.layer {
+    margin: 1rem 0.5rem;
+    width: 21.3rem;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.layerTitle {
+    font-size: 4rem;
+    font-weight: 500;
+    line-height: 1.5;
+    color: #ffffff;
+    
+    white-space: nowrap;
+}
+
+.layerCategory {
+    box-sizing: border-box;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: #2a2d3e;
+}
+
+.layerCategory div {
+    margin: 0.3rem 0;
+    width: 100%;
+    row-gap: 0.4rem;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+/* LayerCategory First Element */
+.layerCategory div div:first-child {
+    width: calc(100% - 0.7rem);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.layerCategory div div:first-child img {
+    margin: 0 1.3rem;
+    width: 1.3rem;
+    height: 1.4rem;
+    object-fit: contain;
+    vertical-align: top;
+}
+
+.layerCategory div div:first-child p {
+    font-size: 1.6rem;
+    font-weight: 500;
+    line-height: 1.5;
+    color: #ffffff;
+    white-space: nowrap;
+}
+
+/* LayerCategory Not First Element */
+.layerCategory div div:not(:first-child) {
+    margin-left: 10px;
+    width: 85%;
+    font-size: 1.3rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #ffffff;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #9f3730;
+    border-radius: 1rem;
+    cursor: pointer;
+}
+
+/* Center Board */
+#CenterBoard {
+    position: fixed;
+    top: calc(50% - 14.7rem);
+    left: 35%;
+    box-sizing: border-box;
+    width: 30%;
+    height: 29.4rem;
+    align-items: center;
+    display: none;
+    justify-content: space-around;
+    flex-direction: column;
+    background-color: #212332;
+    border-radius: 1rem;
+    z-index: 20;
+}
+
+#CenterBoardText {
+    font-size: 3rem;
+    font-weight: 500;
+    line-height: 1.5;
+    color: #ffffff;
+    white-space: nowrap;
+}
+
+.CenterBoardContent {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+    height: 5.0512rem;
+    font-size: 2rem;
+    font-weight: 300;
+    line-height: 1.5;
+    background-color: #409eff;;
+    color: #fff;
+    border-radius: 1rem;
+    cursor: pointer;
+}
+
+#CBFile {
+    display: none;
+}
+
+#CBContent {
+    padding-left: 0px;
+    display: none;
+    background-color: unset;
+}
+
+#CenterBoardButton {
+    padding: 10px;
+    width: 20rem;
+    font-size: 2rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #ffffff;
+    text-align: center;
+    background-color: #858736;
+    border-radius: 1rem;
+    cursor: pointer;
+}
