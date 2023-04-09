@@ -19,6 +19,22 @@ def Create_File(path:str, filename:str, msg = "") -> bool:
         raise Exception("Create_File 錯誤 : {}".format(e))
     return True
 
+def Get_File(path:str, filename:str) -> str:
+    """
+    獲取 File 內容
+    param:  path -> 路徑
+            filename -> 檔案名稱
+    return: data -> 回傳讀取後的資料
+            Exception -> 以 Exception Message 當作錯誤原因
+    """
+    try:
+        file = open(path + filename, 'r')
+        data = file.read()
+        file.close()
+        return data
+    except Exception as e:
+        raise Exception("Get_File 錯誤 : {}".format(e))
+
 def Delete_File(path:str, filename:str) -> bool:
     """
     刪除 File
