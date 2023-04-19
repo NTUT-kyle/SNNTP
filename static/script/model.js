@@ -176,34 +176,8 @@ $(".droparea").droppable({
 
                 // if it select two point, make line
                 if (dropItemPointDown.length == 2) {
-                    let c1 = getConnectElementIndex(dropItemPointDown[0]);
-                    let c2 = getConnectElementIndex(dropItemPointDown[1]);
-                    // check if two points is connected?
-                    if (c1 != -1 && c1 == c2) {
-                        alert_func("Line is connected.", "yellow");
-                        $(dropItemPointDown[0]).css(
-                            "background-color",
-                            "unset"
-                        );
-                        dropItemPointDown = [];
-                        return;
-                    }
-                    // check if two points parent same
-                    if (
-                        $(dropItemPointDown[0]).parent().attr("id") ==
-                        $(dropItemPointDown[1]).parent().attr("id")
-                    ) {
-                        alert_func(
-                            "Same layer cannot connect together.",
-                            "yellow"
-                        );
-                        $(dropItemPointDown[0]).css(
-                            "background-color",
-                            "unset"
-                        );
-                        dropItemPointDown = [];
-                        return;
-                    }
+                    // check if two-point connection is valid
+                    if (!twoPointCheck()) return;
 
                     // draw
                     drawOneLine(
@@ -263,6 +237,31 @@ $(".droparea").droppable({
         who_are_dragging = "";
     },
 });
+
+function twoPointCheck() {
+    let c1 = getConnectElementIndex(dropItemPointDown[0]);
+    let c2 = getConnectElementIndex(dropItemPointDown[1]);
+
+    // check if two-point is connected
+    if (c1 != -1 && c1 == c2) {
+        alert_func("Line is connected.", "yellow");
+        $(dropItemPointDown[0]).css("background-color", "unset");
+        dropItemPointDown = [];
+        return false;
+    }
+
+    // check if two-point parent is same
+    if (
+        $(dropItemPointDown[0]).parent().attr("id") ==
+        $(dropItemPointDown[1]).parent().attr("id")
+    ) {
+        alert_func("Same layer cannot connect together.", "yellow");
+        $(dropItemPointDown[0]).css("background-color", "unset");
+        dropItemPointDown = [];
+        return false;
+    }
+    return true;
+}
 
 // reset drop area size method
 function setDropAreaSize() {
