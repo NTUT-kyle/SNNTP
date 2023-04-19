@@ -4,6 +4,8 @@
 
 {% block head %}
   <link rel="stylesheet" href={{ url_for('static', filename='style/model.css') }}/>
+  <link rel="stylesheet" href={{ url_for('static', filename='style/layer.css') }}/>
+  <script type="text/javascript" src={{ url_for('static', filename='script/jquery.connectingLine.js') }}></script>
 {% endblock %}
 
 {% block content %}
@@ -22,7 +24,7 @@
 </div>
 <div class="bottom">
     <div class="modelshow">
-
+        <div id="droparea" class="droparea"></div>
     </div>
     <div class="layer">
         <div class="layerTitle">Layer</div>
@@ -30,29 +32,28 @@
             <div>
                 <div>
                     <img>
-                    <p>Test</p>
+                    <p>In/Out layer</p>
                 </div>
-                <div id="Test-1" class="TestItem">Test-1</div>
-                <div id="Test-2" class="TestItem">Test-2</div>
-                <div id="Test-3" class="TestItem">Test-3</div>
+                <div class="input_layer">Input</div>
+                <div class="output_layer">Output</div>
             </div>
             <div>
                 <div>
                     <img>
                     <p>Test</p>
                 </div>
-                <div>Test-1</div>
-                <div>Test-2</div>
-                <div>Test-3</div>
+                <div class="">Test-4</div>
+                <div class="">Test-5</div>
+                <div class="">Test-6</div>
             </div>
             <div>
                 <div>
                     <img>
                     <p>Test</p>
                 </div>
-                <div>Test-1</div>
-                <div>Test-2</div>
-                <div>Test-3</div>
+                <div class="">Test-7</div>
+                <div class="">Test-8</div>
+                <div class="">Test-9</div>
             </div>
         </div>
     </div>
@@ -65,6 +66,7 @@
     <div id="CBContent" class="CenterBoardContent"></div>
     <div id="CenterBoardButton">Upload</div>
 </div>
+<div id="AlertDialog">Message</div>
 <script src={{ url_for('static', filename='script/model.js') }}></script>
 
 {% endblock %}
