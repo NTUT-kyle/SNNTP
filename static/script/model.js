@@ -66,7 +66,7 @@ $("#CenterBoardButton").click(() => {
 });
 
 $(".SelectItem").click(() => {
-    graphyPackage();
+    console.log(ModelPackage());
 });
 
 /* 
@@ -95,6 +95,7 @@ let dropItemPointDown = []; // record select item point
 let connectingLine = []; // record two point vector
 let isInputLayerPlace = false;
 let isOutputLayerPlace = false;
+let SettingOpen = null;
 
 // Set drop event
 $(".droparea").droppable({
@@ -110,7 +111,8 @@ $(".droparea").droppable({
         // set drop element html
         if (who_are_dragging == "Input") {
             if (isInputLayerPlace) {
-                alert_func("Cannot place more than two Input Layer", "red");
+                // Cannot place more than two Input Layer
+                alert_func("無法放置一個以上的 Input Layer", "red", 3000);
                 return;
             }
             clone.html(`
@@ -122,7 +124,8 @@ $(".droparea").droppable({
             isInputLayerPlace = true;
         } else if (who_are_dragging == "Output") {
             if (isOutputLayerPlace) {
-                alert_func("Cannot place more than two Output Layer", "red");
+                // Cannot place more than two Output Layer
+                alert_func("無法放置一個以上的 Output Layer", "red", 3000);
                 return;
             }
             clone.html(`
@@ -139,6 +142,10 @@ $(".droparea").droppable({
                 <div id="p${
                     initPointID + 1
                 }" class="dropItemPoint dropItemPointRight"></div>
+                <div class="dropItemMenu">
+                    <div>Setting</div>
+                    ${layerParameter(clone.html())}
+                </div>
             `);
             initPointID += 2;
         }
@@ -147,6 +154,14 @@ $(".droparea").droppable({
         let offset = $(this).offset();
         clone.css("top", `calc(${clone.css("top")} - ${offset.top}px)`);
         clone.css("left", `calc(${clone.css("left")} - ${offset.left}px)`);
+
+        // right click menu
+        clone.on("contextmenu", (event) => {
+            event.preventDefault();
+            $(".dropItemMenu").css("display", "none");
+            $(clone).children(".dropItemMenu").css("display", "flex");
+            SettingOpen = $(clone).children(".dropItemMenu");
+        });
 
         // click event for drop element
         clone.click((event) => {
@@ -176,24 +191,7 @@ $(".droparea").droppable({
 
                 // if it select two point, make line
                 if (dropItemPointDown.length == 2) {
-                    // check if two-point connection is valid
-                    if (!twoPointCheck()) return;
-
-                    // draw
-                    drawOneLine(
-                        dropItemPointDown[0],
-                        dropItemPointDown[1],
-                        "#ff8d8d"
-                    );
-                    // append vector
-                    connectingLine.push([
-                        dropItemPointDown[0],
-                        dropItemPointDown[1],
-                    ]);
-                    // clear value
-                    $(dropItemPointDown[0]).css("background-color", "unset");
-                    $(dropItemPointDown[1]).css("background-color", "unset");
-                    dropItemPointDown = [];
+                    connectTwoLine(dropItemPointDown[0], dropItemPointDown[1]);
                 } else {
                     $(event.target).css("background-color", "yellow");
                 }
@@ -205,9 +203,18 @@ $(".droparea").droppable({
                     dropItemPointDown[0].css("background-color", "unset");
                     dropItemPointDown = [];
                 }
-                // set selectItem to target & set target border
-                selectItem = event.target;
-                $(selectItem).css("border", "1px dashed white");
+
+                // check if click dropItem
+                if (
+                    !(
+                        $(event.target).parent().hasClass("dropItemMenu") ||
+                        $(event.target).parent().hasClass("dropItemMenuLine")
+                    )
+                ) {
+                    // set selectItem to target & set target border
+                    selectItem = event.target;
+                    $(selectItem).css("border", "1px dashed white");
+                }
             }
         });
 
@@ -238,29 +245,50 @@ $(".droparea").droppable({
     },
 });
 
-function twoPointCheck() {
-    let c1 = getConnectElementIndex(dropItemPointDown[0]);
-    let c2 = getConnectElementIndex(dropItemPointDown[1]);
+function twoPointCheck(p1, p2) {
+    let c1 = getConnectElementIndex(p1);
+    let c2 = getConnectElementIndex(p2);
 
     // check if two-point is connected
     if (c1 != -1 && c1 == c2) {
-        alert_func("Line is connected.", "yellow");
-        $(dropItemPointDown[0]).css("background-color", "unset");
+        // Line is connected.
+        alert_func("線已經連接", "yellow", 3000);
+        $(p1).css("background-color", "unset");
         dropItemPointDown = [];
         return false;
     }
 
     // check if two-point parent is same
-    if (
-        $(dropItemPointDown[0]).parent().attr("id") ==
-        $(dropItemPointDown[1]).parent().attr("id")
-    ) {
-        alert_func("Same layer cannot connect together.", "yellow");
-        $(dropItemPointDown[0]).css("background-color", "unset");
+    if ($(p1).parent().attr("id") == $(p2).parent().attr("id")) {
+        // Same layer cannot connect together.
+        alert_func("相同 Layer 無法連在一起", "yellow", 3000);
+        $(p1).css("background-color", "unset");
         dropItemPointDown = [];
         return false;
     }
+
+    // check if one point connected
+    if (c1 != -1) {
+        deleteOneLine(p1);
+    }
+    if (c2 != -1) {
+        deleteOneLine(p2);
+    }
     return true;
+}
+
+function connectTwoLine(p1, p2) {
+    if (!twoPointCheck(p1, p2)) {
+        return;
+    }
+    // draw
+    drawOneLine(p1, p2, "#ff8d8d");
+    // append vector
+    connectingLine.push([p1, p2]);
+    // clear value
+    $(p1).css("background-color", "unset");
+    $(p2).css("background-color", "unset");
+    dropItemPointDown = [];
 }
 
 // reset drop area size method
@@ -307,6 +335,25 @@ function drawOneLine(p1, p2, colorCode) {
     });
 }
 
+function deleteOneLine(pointId) {
+    let index = getConnectElementIndex(pointId);
+    if (index != -1) {
+        // trigger canvas deleteLine
+        mySVG.deleteLine({
+            left_node: "#" + $(connectingLine[index][0]).attr("id"),
+            right_node: "#" + $(connectingLine[index][1]).attr("id"),
+        });
+
+        // delete element from List
+        connectingLine.splice(index, 1);
+
+        // redraw canvas
+        mySVG.redrawLines();
+        return true;
+    }
+    return false;
+}
+
 // check if element exists
 function getConnectElementIndex(point) {
     return connectingLine.findIndex(
@@ -318,7 +365,9 @@ function getConnectElementIndex(point) {
 
 // get another element from vector
 function getAnotherPoint(vector, point) {
-    return vector[0] == point ? vector[1] : vector[0];
+    return $(vector[0]).attr("id") == $(point).attr("id")
+        ? vector[1]
+        : vector[0];
 }
 
 function putSetIntoMap(LayerMap, parent1, parent2, point1_id) {
@@ -353,6 +402,47 @@ function graphyPackage() {
         LayerMap = putSetIntoMap(LayerMap, ano_parent, parent, ano_point_id);
     });
     console.log(LayerMap);
+}
+
+function ModelPackage() {
+    let point = $(".input_layer").children(".dropItemPointRight");
+    let output_point = $(".output_layer").children(".dropItemPointLeft");
+    let index = getConnectElementIndex(point);
+    let layerList = [{ layer_type: "Input" }];
+
+    // traverse the entire path
+    while (index != -1) {
+        // get another point and push layer name to layerList
+        let ano_point = getAnotherPoint(connectingLine[index], point);
+        let parent = $(ano_point).parent();
+        let tempDict = { layer_type: parent.attr("name") };
+        parent
+            .children(".dropItemMenu")
+            .children(".dropItemMenuLine")
+            .each((key, value) => {
+                let temp = $(value).children("input");
+                tempDict[temp.attr("name")] = temp.val();
+            });
+        layerList.push(tempDict);
+
+        // check if ano_point is Output layer point
+        if ($(ano_point).attr("id") == $(output_point).attr("id")) break;
+
+        // set item left point or right point
+        if ($(ano_point).hasClass("dropItemPointLeft")) {
+            point = parent.children(".dropItemPointRight");
+        } else {
+            point = parent.children(".dropItemPointLeft");
+        }
+
+        index = getConnectElementIndex(point);
+    }
+
+    if (index == -1) {
+        alert_func("Input, Output Layer 兩者間需要連通", "red", 3000);
+        return [];
+    }
+    return layerList;
 }
 
 /*
@@ -394,23 +484,10 @@ function del_func() {
 
     if (dropItemPointDown.length > 0) {
         // Check is element connected
-        let findIndex = getConnectElementIndex(dropItemPointDown[0]);
-        if (findIndex != -1) {
+        if (deleteOneLine(dropItemPointDown[0])) {
             // If it connected, clear dropItemPointDown list
             dropItemPointDown[0].css("background-color", "unset");
             dropItemPointDown = [];
-
-            // trigger canvas deleteLine
-            mySVG.deleteLine({
-                left_node: "#" + $(connectingLine[findIndex][0]).attr("id"),
-                right_node: "#" + $(connectingLine[findIndex][1]).attr("id"),
-            });
-
-            // delete element from List
-            connectingLine.splice(findIndex, 1);
-
-            // redraw canvas
-            mySVG.redrawLines();
         }
     }
 }
@@ -421,14 +498,14 @@ function del_func() {
 
 */
 
-function alert_func(msg, color) {
+function alert_func(msg, color, closeTime) {
     $("#AlertDialog").css("background-color", color);
     $("#AlertDialog").html(msg);
     $("#AlertDialog").toggle("blind");
     $("#AlertDialog").effect("bounce");
     setTimeout(() => {
         $("#AlertDialog").toggle("blind");
-    }, 3000);
+    }, closeTime);
 }
 
 /*
@@ -486,6 +563,13 @@ $(document).on("click", function (event) {
         }
     }
 
+    if (SettingOpen != null) {
+        if (!$(event.target).closest(SettingOpen).length) {
+            $(SettingOpen).css("display", "none");
+            SettingOpen = null;
+        }
+    }
+
     // drop item of droparea
     if (dropItemPointDown.length > 0) {
         if (
@@ -509,3 +593,21 @@ $(document).on("click", function (event) {
         OpenCloseCenterBoard(false, "");
     }
 });
+
+function layerParameter(layerName) {
+    let parameter = layerDict[layerName];
+    let tempHtml = "";
+    if (Array.isArray(parameter)) {
+        parameter.forEach((val) => {
+            tempHtml += `
+                <div class="dropItemMenuLine">
+                    <div>${val.name}：</div>
+                    <input type="${val.type}" name="${val.name}" value="${val.initVal}" />
+                </div>`;
+        });
+        return tempHtml;
+    } else {
+        console.log(layerName + "Not a List");
+        return "";
+    }
+}

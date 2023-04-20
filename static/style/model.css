@@ -108,6 +108,28 @@
     opacity: 0.7;
 }
 
+.dropItemMenu {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    margin-left: 1px;
+    background-color: #2f3245;
+    border: 1px solid black;
+    text-align: center;
+    flex-direction: column;
+}
+.dropItemMenuLine {
+    display: flex;
+    flex-direction: row;
+    margin: 1px;
+}
+
+.dropItemMenuLine input {
+    margin: 1px;
+    width: 60px;
+}
+
 .dropItemPointLeft {
     text-align: left;
     border-right: 1px solid black;

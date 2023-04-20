@@ -67,6 +67,27 @@
     <div id="CenterBoardButton">Upload</div>
 </div>
 <div id="AlertDialog">Message</div>
+<script>
+    /* Layer Parameter */
+    let layerDict = {
+        "Test-4": [{ name: "Name", type: "int", initVal: 0 }],
+    };
+    /*
+    layerName = Layer 名稱
+    keyName = 數值名稱
+    keyType = 數值類型 (number, text)
+    keyVal = 數值初始值
+    {
+        layerName:[
+            {
+                name: "keyName",
+                type: "keyType",
+                initVal: "keyVal"
+            }
+        ]
+    }
+    */
+</script>
 <script src={{ url_for('static', filename='script/model.js') }}></script>
 
 {% endblock %}
