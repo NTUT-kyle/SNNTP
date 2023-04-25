@@ -1,10 +1,10 @@
 import json
 
 class Decoder:
-    def __init__(self, file_path):
+    def load_file(self, file_path):
         with open(file_path, 'r') as file:
             self.data = json.load(file)
-
+            
     def get_model(self) -> dict:
         return self.data["Model"]
     

@@ -1,9 +1,10 @@
 import common.log as log
 import project.project_service as project_service
+import model.model_service as model_service
 
 # --- 初始化 projects
 project_service.Init_Projects()
-
+model_service.Init_ModelService()
 # --- 建立 Flask Server ---
 
 from flask import Flask, render_template

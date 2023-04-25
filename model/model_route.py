@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template
 import common.log as log
+import model.model_service as model_service
 
 """
 Model Controller
@@ -12,22 +13,10 @@ modelCon = Blueprint("model", __name__)
 def Index():
     return "You are in model"
 
-@modelCon.route("/<projectName>", methods = ['GET'])
+@modelCon.route("/createModel/<modelPath>", methods = ['GET'])
 @log.log_decorator
-def Get_Model(projectName:str):
-    return render_template('model.html', projectName = projectName)
-
-@modelCon.route("/<projectName>", methods = ['POST'])
-@log.log_decorator
-def Create_Model(projectName:str):
-    return f'Success POST {projectName} Model'
-
-@modelCon.route("/<projectName>", methods = ['PUT'])
-@log.log_decorator
-def Update_Model(projectName:str):
-    return f'Success UPDATE {projectName} Model'
-
-@modelCon.route("/<projectName>", methods = ['DELETE'])
-@log.log_decorator
-def Delete_Model(projectName:str):
-    return f'Success DELETE {projectName} Model'
+def Create_Model(modelPath:str):
+    model_service.Load_Model_File(modelPath)
+    model_service.Init_Model()
+    model_service.Create_Model()
+    return f'Success create Model'
