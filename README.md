@@ -44,7 +44,8 @@ Flask : 2.2.3
 ## Run tests:
 
 -   Enter `pytest` in the console to see the test results
--   Or enter `pytest --cov` to see the test coverage
+-   Or you can Enter `.\StartScript.bat` in the console then input `4` to start testing
+-   If you want testing with coverage, enter `pytest --cov` to see the test coverage
 -   If you want more detailed information, you can directly enter `pytest --cov --cov-report=html` to generate a test report in the `htmlcov` folder
 
 ---
