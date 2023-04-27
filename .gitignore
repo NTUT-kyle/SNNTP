@@ -1,2 +1,5 @@
 log
 projects
+.pytest_cache
+htmlcov
+.coverage
