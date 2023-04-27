@@ -7,7 +7,8 @@ echo Choice an option:
 echo 1) Enter Virtual Environment
 echo 2) Environment Install
 echo 3) Run Flask Server
-echo 4) Exit
+echo 4) Run test with coverage
+echo 5) Exit
 echo ------------------------------
 
 set /p choice=Input your choice:
@@ -18,6 +19,8 @@ if %choice%==1 (
 ) else if %choice%==3 (
     goto :RunFlask
 ) else if %choice%==4 (
+    goto :RunTest
+) else if %choice%==5 (
     goto :Finish
 ) else (
     goto :while
@@ -33,6 +36,10 @@ goto :while
 
 :RunFlask
 flask Run
+goto :while
+
+:RunTest
+pytest --cov
 goto :while
 
 :Finish
