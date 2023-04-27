@@ -1,5 +1,5 @@
 import datetime, os
-import project.project_service as project_service
+import common.FileFolder as ComMethod
 
 class Project(object):
     def __init__(self, name = 'test', modify_time = datetime.datetime.today(), model_type = 'CNN', model = None):
@@ -16,7 +16,7 @@ class Project(object):
         
     def reflash_modify_time(self) -> bool:
         try:
-            self.modify_time = project_service.Get_Project_Modify_Time_By_Key(self.name)
+            self.modify_time = ComMethod.check_File_Folder_Modify_Time(f'./projects/{self.name}')
             return True
         except Exception as e:
             return False
