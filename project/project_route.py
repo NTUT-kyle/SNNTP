@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, render_template
 import project.project_service as project_service
 import common.log as log
 
@@ -12,15 +12,6 @@ projectCon = Blueprint("project", __name__)
 @log.log_decorator
 def Index():
     return "You are in project"
-
-@projectCon.route("/<projectName>/model", methods = ['GET'])
-@log.log_decorator
-def Get_Project_Model(projectName:str):
-    project = project_service.Get_Project_By_Key(projectName)
-    if project:
-        return f'/model/{projectName}'
-    else:
-        return f'Project {projectName} Not found'
 
 @projectCon.route("/<projectName>", methods = ['GET'])
 @log.log_decorator
@@ -47,3 +38,19 @@ def Update_Project(projectName:str):
 def Delete_Project(projectName:str):
     project_service.Delete_Project(projectName)
     return projectName
+
+@projectCon.route("/<projectName>/model/check", methods = ['GET'])
+@log.log_decorator
+def Get_Project_Model(projectName:str):
+    project = project_service.Get_Project_By_Key(projectName)
+    if project:
+        return "Success"
+    else:
+        return "Fail"
+
+@projectCon.route("/<projectName>/model", methods = ['GET'])
+@log.log_decorator
+def Index_Model(projectName:str):
+    if project_service.Get_Project_By_Key(projectName):
+        return render_template('model.html', projectName = projectName)
+    return "Project not exist!!!"

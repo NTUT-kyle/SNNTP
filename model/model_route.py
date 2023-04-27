@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint
 import common.log as log
 import model.model_service as model_service
 
