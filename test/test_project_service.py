@@ -82,7 +82,7 @@ def test_Modify_Project_Name(mocker):
         return_value = True
     )
     mocker.patch(
-        'project.project_service.Get_Project_Modify_Time_By_Key',
+        'common.FileFolder.check_File_Folder_Modify_Time',
         return_value = datetime.datetime.today()
     )
     assert project_service.Modify_Project_Name("test1", change_name) == True
