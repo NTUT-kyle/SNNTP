@@ -33,6 +33,6 @@ def printLog(msg:str, isError = False):
     print(Style.RESET_ALL)
     
 def writeLog(msg:str, isError = False):
-    file = open(f'{os.getcwd()}\log', 'a')
+    file = open(f'{os.getcwd()}/log', 'a')
     file.write(msg + '\n')
     file.close()
