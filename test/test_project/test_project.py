@@ -5,10 +5,10 @@ from project import project
 
 def test_Project_init(mocker):
     now_time = datetime.datetime.today()
-    mock_datetime = mocker.patch('project.project.datetime')
-    mock_datetime.datetime.now.return_value = now_time
     name_1 = "test1"
-    project_1 = project.Project(name_1)
+    project_1 = project.Project(
+        name_1, now_time
+    )
     
     assert project_1.name == name_1
     assert project_1.model_type == "CNN"
@@ -50,13 +50,13 @@ def test_Project_reflash_modify_time_Fail(mocker):
     project_1 = project.Project("test1")
     
     assert project_1.reflash_modify_time() == False
-    
+
 def test_Project_to_json(mocker):
     now_time = datetime.datetime.today()
-    mock_datetime = mocker.patch('project.project.datetime')
-    mock_datetime.datetime.now.return_value = now_time
     name_1 = "test1"
-    project_1 = project.Project(name_1)
+    project_1 = project.Project(
+        name_1, now_time
+    )
     actual = project_1.to_json()
     
     assert actual['name'] == name_1
