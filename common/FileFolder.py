@@ -1,4 +1,4 @@
-import os
+import os, shutil
 from datetime import datetime
 
 
@@ -108,7 +108,7 @@ def Delete_Folder(path:str, dirname:str) -> bool:
     """
     try:
         if Check_Folder_Exist(path, dirname):
-            os.removedirs(path + dirname)
+            shutil.rmtree(path + dirname)
         else:
             return False
     except Exception as e:
