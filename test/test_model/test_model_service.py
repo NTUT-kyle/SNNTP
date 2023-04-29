@@ -12,8 +12,7 @@ def test_Init_ModelService(mocker):
     assert model_service.assembler == result
 
 def test_Load_Model_File(mocker):
-    if model_service.assembler == None:
-        model_service.assembler = Assembler()
+    model_service.assembler = Assembler()
     expect_name = "test1"
     mock_load_file = mocker.patch('builder.assembler.Assembler.load_file')
     model_service.Load_Model_File(expect_name)
@@ -21,16 +20,14 @@ def test_Load_Model_File(mocker):
     mock_load_file.assert_called_once_with(f"./projects/{expect_name}/model.json")
 
 def test_Init_Model(mocker):
-    if model_service.assembler == None:
-        model_service.assembler = Assembler()
+    model_service.assembler = Assembler()
     mock_init_model = mocker.patch('builder.assembler.Assembler.init_model')
     model_service.Init_Model()
     
     mock_init_model.assert_called_once_with()
     
 def test_Create_Model(mocker):
-    if model_service.assembler == None:
-        model_service.assembler = Assembler()
+    model_service.assembler = Assembler()
     mock_assemble = mocker.patch('builder.assembler.Assembler.assemble')
     model_service.Create_Model()
     
