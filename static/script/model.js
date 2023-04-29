@@ -46,7 +46,7 @@ function OpenCloseCenterBoard(openOrNot, titleValue) {
 
 function successSendFile(data) {
     console.log(data);
-    alert_func("send success", "green", 3000);
+    alert_func("send success", "#0dff00", 3000);
 }
 
 function error_func(xhr, textStatus, errorThrown) {
@@ -57,28 +57,32 @@ function error_func(xhr, textStatus, errorThrown) {
 
 $("#CenterBoardButton").click(() => {
     if (uploadStatus == "") return;
-    ajax_func(
-        "/model/" + projectName + "/" + uploadStatus,
-        "POST",
-        formData,
-        successSendFile,
-        error_func
-    );
+    // ajax_func(
+    //     "/model/" + projectName + "/" + uploadStatus,
+    //     "POST",
+    //     formData,
+    //     successSendFile,
+    //     error_func
+    // );
+    alert(uploadStatus);
+    console.log(uploadStatus);
+    console.log(formData);
 });
 
 $("#build_model").click(() => {
     let model_package = {
         model_List: ModelPackage(),
     };
+    console.log("build model sending");
     console.log(model_package);
-    if (model_package.length) {
-        // ajax_func(
-        //     "/model/" + projectName + "/build",
-        //     "POST",
-        //     model_package,
-        //     successSendFile,
-        //     error_func
-        // );
+    if (model_package.model_List.length) {
+        ajax_func(
+            "/model/" + projectName + "/build",
+            "POST",
+            model_package,
+            successSendFile,
+            error_func
+        );
     }
 });
 
@@ -168,7 +172,7 @@ $(".droparea").droppable({
                     <div>Setting</div>
                     <div class="dropItemMenuLine">
                         <div>units：</div>
-                        <input type="Number" name="units" value="10" />
+                        <input type="number" name="units" value="10" />
                     </div>
                     <div class="dropItemMenuLine">
                         <div>use_bias：</div>
