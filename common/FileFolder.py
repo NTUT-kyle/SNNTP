@@ -65,7 +65,7 @@ def Check_File_Exist(path:str, file:str) -> bool:
         return True
     return False
 
-def Add_Msg_To_File(path:str, filename:str, mgs = "") -> bool:
+def Add_Msg_To_File(path:str, filename:str, msg = "") -> bool:
     """
     新增資料至 File
     param:  path -> 路徑
