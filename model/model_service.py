@@ -14,8 +14,8 @@ def Init_ModelService():
     assembler = Assembler()
     return assembler
     
-def Load_Model_File(modelPath:str):
-    assembler.load_file(modelPath)
+def Load_Model_File(projectName:str):
+    assembler.load_file(f"./projects/{projectName}/model.json")
 
 def Init_Model():
     assembler.init_model()
@@ -40,6 +40,14 @@ def Build_Model(projectName, data):
     iw = data[0]['width']
     ih = data[0]['height']
     data.pop(0) # remove input layer
+    for index, layer in enumerate(data):
+        if "kernel_size" in layer:
+            kernel_size = layer["kernel_size"]
+            layer["kernel_size"] = (kernel_size, kernel_size)
+        if "strides" in layer:
+            strides = layer["strides"]
+            layer["strides"] = (strides, strides)
+        
     data_json = Model_Json_Template(
         projectObj.model_type, projectName, data,
         batch_size = 128, epochs = 10, loss_function = "poisson",

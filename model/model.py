@@ -5,7 +5,6 @@ class Model(object):
     def __init__(self, model_dic, model_setting_dic) :
         self.modelName = model_dic["name"]
         self.buildDate = model_dic["build_date"]
-        self.modelPath = model_dic["model_path"]
         self.type = model_dic["type"]
         
         self.batch_size = model_setting_dic["batch_size"]

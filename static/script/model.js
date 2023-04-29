@@ -87,7 +87,13 @@ $("#build_model").click(() => {
 });
 
 $("#train_model").click(() => {
-    alert("train model");
+    ajax_func(
+        "/model/" + projectName + "/create",
+        "GET",
+        {},
+        successSendFile,
+        error_func
+    );
 });
 
 $("#save_graphy").click(() => {

@@ -13,10 +13,10 @@ modelCon = Blueprint("model", __name__)
 def Index():
     return "You are in model"
 
-@modelCon.route("/createModel/<modelPath>", methods = ['GET'])
+@modelCon.route("/<projectName>/create", methods = ['GET'])
 @log.log_decorator
-def Create_Model(modelPath:str):
-    model_service.Load_Model_File(modelPath)
+def Create_Model(projectName:str):
+    model_service.Load_Model_File(projectName)
     model_service.Init_Model()
     model_service.Create_Model()
     return f'Success create Model'
