@@ -40,7 +40,12 @@ def Build_Model(projectName, data):
     iw = data[0]['width']
     ih = data[0]['height']
     data.pop(0) # remove input layer
-    for index, layer in enumerate(data):
+    # layer process
+    for layer in data: 
+        # Pooling process
+        if "Pooling" in layer["layer_type"]:
+            layer["layer_type"] += "2D"
+        # tuple process
         if "kernel_size" in layer:
             kernel_size = layer["kernel_size"]
             layer["kernel_size"] = (kernel_size, kernel_size)

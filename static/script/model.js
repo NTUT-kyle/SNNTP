@@ -211,9 +211,11 @@ $(".droparea").droppable({
         // right click menu
         clone.on("contextmenu", (event) => {
             event.preventDefault();
-            $(".dropItemMenu").css("display", "none");
+            closeDropMenu();
             $(clone).children(".dropItemMenu").css("display", "flex");
             SettingOpen = $(clone).children(".dropItemMenu");
+            $(clone).css("z-index", 20);
+            $(clone).css("opacity", 1);
         });
 
         // click event for drop element
@@ -373,6 +375,15 @@ function setDropAreaSize() {
         $(".droparea").height(maxHeight);
     } else {
         $(".droparea").height($(".modelshow").height());
+    }
+}
+
+function closeDropMenu() {
+    $(".dropItemMenu").css("display", "none");
+    if (SettingOpen != null) {
+        $(SettingOpen).parent().css("z-index", 10);
+        $(SettingOpen).parent().css("opacity", 0.7);
+        SettingOpen = null;
     }
 }
 
@@ -641,8 +652,7 @@ $(document).on("click", function (event) {
 
     if (SettingOpen != null) {
         if (!$(event.target).closest(SettingOpen).length) {
-            $(SettingOpen).css("display", "none");
-            SettingOpen = null;
+            closeDropMenu();
         }
     }
 
