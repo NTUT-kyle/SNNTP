@@ -32,7 +32,7 @@ def printLog(msg:str, isError = False):
         writeLog(nowTime + ' : ' + msg)
     print(Style.RESET_ALL)
     
-def writeLog(msg:str, isError = False):
+def writeLog(msg:str):
     file = open(f'{os.getcwd()}/log', 'a')
     file.write(msg + '\n')
     file.close()
