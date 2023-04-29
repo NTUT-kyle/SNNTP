@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}SNNTP-Model{% endblock %}
+{% block title %}SNNTP-{{projectName}}{% endblock %}
 
 {% block head %}
   <link rel="stylesheet" href={{ url_for('static', filename='style/model.css') }}/>
@@ -17,7 +17,8 @@
         <div id="ChooseValidation" class="SelectItem">Choose validation data</div>
         <div id="ChooseTest" class="SelectItem">Choose test data</div>
     </div>
-    <div class="SelectItem SelectItemRight">
+    <div id="build_model" class="SelectItem BuildItem">Build model</div>
+    <div id="train_model" class="SelectItem SelectItemRight">
         <img src={{ url_for('static', filename='assets/train.png') }} title="Create Project"/>
         <p>Train model</p>
     </div>
@@ -31,31 +32,56 @@
         <div class="layerCategory">
             <div>
                 <div>
-                    <img>
-                    <p>In/Out layer</p>
+                    <img />
+                    <p>Input layer</p>
                 </div>
                 <div class="input_layer">Input</div>
-                <div class="output_layer">Output</div>
             </div>
             <div>
                 <div>
-                    <img>
+                    <img />
+                    <p>Convolution layer</p>
+                </div>
+                <div class="conv_layer">Conv2D</div>
+            </div>
+            <div>
+                <div>
+                    <img />
+                    <p>Activation layer</p>
+                </div>
+                <div class="activation_layer">Activation</div>
+            </div>
+            <div>
+                <div>
+                    <img />
+                    <p>Pooling layer</p>
+                </div>
+                <div class="pooling_layer">MaxPooling</div>
+                <div class="pooling_layer">AveragePooling</div>
+            </div>
+            <div>
+                <div>
+                    <img />
+                    <p>Regularization layer</p>
+                </div>
+                <div class="regularization_layer">Dropout</div>
+            </div>
+            <div>
+                <div>
+                    <img />
+                    <p>Core layer</p>
+                </div>
+                <div class="core_layer">Dense</div>
+            </div>
+            <!-- <div>
+                <div>
+                    <img />
                     <p>Test</p>
                 </div>
                 <div class="">Test-4</div>
-                <div class="">Test-5</div>
-                <div class="">Test-6</div>
-            </div>
-            <div>
-                <div>
-                    <img>
-                    <p>Test</p>
-                </div>
-                <div class="">Test-7</div>
-                <div class="">Test-8</div>
-                <div class="">Test-9</div>
-            </div>
+            </div> -->
         </div>
+        <div id="save_graphy" class="layerCategoryBottom">Save</div>
     </div>
 </div>
 
@@ -70,7 +96,69 @@
 <script>
     /* Layer Parameter */
     let layerDict = {
-        "Test-4": [{ name: "Name", type: "int", initVal: 0 }],
+        // "Test-4": [{ name: "Name", type: "number", initVal: 0 }],
+        Conv2D: [
+            { name: "filters", type: "number", initVal: 32 },
+            { name: "kernel_size", type: "number", initVal: 3 },
+            { name: "strides", type: "number", initVal: 1 },
+            {
+                name: "padding",
+                type: "select",
+                initVal: ["valid", "same"],
+            },
+        ],
+        Activation: [
+            {
+                name: "active_type",
+                type: "select",
+                initVal: [
+                    "softmax",
+                    "elu",
+                    "selu",
+                    "softplus",
+                    "softsign",
+                    "relu",
+                    "tanh",
+                    "sigmoid",
+                    "hard_sigmoid",
+                    "exponential",
+                    "linear",
+                    "elu",
+                    "PReLU ",
+                    "LeakyReLU",
+                ],
+            },
+        ],
+        MaxPooling: [
+            { name: "pool_size", type: "number", initVal: 2 },
+            { name: "strides", type: "number", initVal: 1 },
+            {
+                name: "padding",
+                type: "select",
+                initVal: ["valid", "same"],
+            },
+        ],
+        AveragePooling: [
+            { name: "pool_size", type: "number", initVal: 2 },
+            { name: "strides", type: "number", initVal: 1 },
+            {
+                name: "padding",
+                type: "select",
+                initVal: ["valid", "same"],
+            },
+        ],
+        Dense: [{ name: "use_bias", type: "checkbox", initVal: 0 }],
+        Dropout: [
+            {
+                name: "rate",
+                type: "number",
+                initVal: 0.66,
+                step: 0.01,
+                min: 0,
+                max: 1,
+            },
+            { name: "seed", type: "number", initVal: 3 },
+        ],
     };
     /*
     layerName = Layer 名稱

@@ -63,6 +63,13 @@
     background-color: #c48a1a;
 }
 
+.BuildItem {
+    margin-right: 6px;
+    font-size: 3rem;
+    background-color: #746aff;
+    color: white;
+}
+
 .SelectItemRight {
     margin-right: 3%;
     padding-right: 10px;
@@ -115,7 +122,6 @@
     left: 100%;
     margin-left: 1px;
     background-color: #2f3245;
-    border: 1px solid black;
     text-align: center;
     flex-direction: column;
 }
@@ -186,6 +192,23 @@ canvas {
     align-items: center;
     display: flex;
     flex-direction: column;
+}
+
+.layerCategoryBottom {
+    margin-top: 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #409eff;
+    width: 95%;
+    height: 50px;
+    font-size: xx-large;
+    border-radius: 1rem;
+    cursor: pointer;
+}
+
+.layerCategoryBottom:hover {
+    background-color: #96c4f2;
 }
 
 /* LayerCategory First Element */

@@ -45,13 +45,14 @@ function OpenCloseCenterBoard(openOrNot, titleValue) {
 }
 
 function successSendFile(data) {
-    alert(data);
+    console.log(data);
+    alert_func("send success", "green", 3000);
 }
 
 function error_func(xhr, textStatus, errorThrown) {
     console.log("[Error " + xhr.status + "]: " + textStatus);
     console.log(errorThrown);
-    alert("error");
+    alert_func(errorThrown, "red", 3000);
 }
 
 $("#CenterBoardButton").click(() => {
@@ -65,8 +66,28 @@ $("#CenterBoardButton").click(() => {
     );
 });
 
-$(".SelectItem").click(() => {
-    console.log(ModelPackage());
+$("#build_model").click(() => {
+    let model_package = {
+        model_List: ModelPackage(),
+    };
+    console.log(model_package);
+    if (model_package.length) {
+        // ajax_func(
+        //     "/model/" + projectName + "/build",
+        //     "POST",
+        //     model_package,
+        //     successSendFile,
+        //     error_func
+        // );
+    }
+});
+
+$("#train_model").click(() => {
+    alert("train model");
+});
+
+$("#save_graphy").click(() => {
+    alert("save graphy");
 });
 
 /* 
@@ -119,19 +140,41 @@ $(".droparea").droppable({
                 <div></div>
                 ${clone.html()}
                 <div id="p${initPointID}" class="dropItemPoint dropItemPointRight"></div>
+                <div class="dropItemMenu">
+                    <div>Setting</div>
+                    <div class="dropItemMenuLine">
+                        <div>Width：</div>
+                        <input type="Number" name="Width" value="32" />
+                    </div>
+                    <div class="dropItemMenuLine">
+                        <div>Height：</div>
+                        <input type="Number" name="Height" value="32" />
+                    </div>
+                </div>
             `);
             initPointID += 1;
             isInputLayerPlace = true;
-        } else if (who_are_dragging == "Output") {
+        } else if (who_are_dragging == "Dense") {
             if (isOutputLayerPlace) {
                 // Cannot place more than two Output Layer
-                alert_func("無法放置一個以上的 Output Layer", "red", 3000);
+                alert_func("無法放置一個以上的 Dense Layer", "red", 3000);
                 return;
             }
             clone.html(`
                 <div id="p${initPointID}" class="dropItemPoint dropItemPointLeft"></div>
                 ${clone.html()}
                 <div></div>
+                <div class="dropItemMenu">
+                    <div>Setting</div>
+                    <div class="dropItemMenuLine">
+                        <div>units：</div>
+                        <input type="Number" name="units" value="10" />
+                    </div>
+                    <div class="dropItemMenuLine">
+                        <div>use_bias：</div>
+                        <input type="checkbox" name="use_bias" />
+                    </div>
+                </div>
             `);
             initPointID += 1;
             isOutputLayerPlace = true;
@@ -208,7 +251,8 @@ $(".droparea").droppable({
                 if (
                     !(
                         $(event.target).parent().hasClass("dropItemMenu") ||
-                        $(event.target).parent().hasClass("dropItemMenuLine")
+                        $(event.target).parent().hasClass("dropItemMenuLine") ||
+                        $(event.target).hasClass("dropItemMenu")
                     )
                 ) {
                     // set selectItem to target & set target border
@@ -230,10 +274,10 @@ $(".droparea").droppable({
 
                 // set scrollbar position
                 let offset = $(this).offset();
-                // $(".modelshow").scrollTop(offset.top);
-                // $(".modelshow").scrollLeft(offset.left);
+                $(".modelshow").scrollTop(offset.top);
+                $(".modelshow").scrollLeft(offset.left);
             },
-            cancel: "div.dropItemPoint",
+            cancel: "div .dropItemPoint, input, select",
             scroll: true,
             cursor: "move",
             snap: true,
@@ -404,47 +448,6 @@ function graphyPackage() {
     console.log(LayerMap);
 }
 
-function ModelPackage() {
-    let point = $(".input_layer").children(".dropItemPointRight");
-    let output_point = $(".output_layer").children(".dropItemPointLeft");
-    let index = getConnectElementIndex(point);
-    let layerList = [{ layer_type: "Input" }];
-
-    // traverse the entire path
-    while (index != -1) {
-        // get another point and push layer name to layerList
-        let ano_point = getAnotherPoint(connectingLine[index], point);
-        let parent = $(ano_point).parent();
-        let tempDict = { layer_type: parent.attr("name") };
-        parent
-            .children(".dropItemMenu")
-            .children(".dropItemMenuLine")
-            .each((key, value) => {
-                let temp = $(value).children("input");
-                tempDict[temp.attr("name")] = temp.val();
-            });
-        layerList.push(tempDict);
-
-        // check if ano_point is Output layer point
-        if ($(ano_point).attr("id") == $(output_point).attr("id")) break;
-
-        // set item left point or right point
-        if ($(ano_point).hasClass("dropItemPointLeft")) {
-            point = parent.children(".dropItemPointRight");
-        } else {
-            point = parent.children(".dropItemPointLeft");
-        }
-
-        index = getConnectElementIndex(point);
-    }
-
-    if (index == -1) {
-        alert_func("Input, Output Layer 兩者間需要連通", "red", 3000);
-        return [];
-    }
-    return layerList;
-}
-
 /*
 
 {
@@ -463,6 +466,69 @@ function ModelPackage() {
 
 */
 
+function ModelPackage() {
+    let point = $(".input_layer").children(".dropItemPointRight");
+    let output_point = $(".core_layer").children(".dropItemPointLeft");
+    let index = getConnectElementIndex(point);
+    let input_parameter = $(".input_layer")
+        .children(".dropItemMenu")
+        .find("input");
+    let layerList = [
+        {
+            layer_type: "Input",
+            width: parseInt(input_parameter.eq(0).val()),
+            height: parseInt(input_parameter.eq(1).val()),
+        },
+    ];
+
+    // traverse the entire path
+    while (index != -1) {
+        // get another point and push layer name to layerList
+        let ano_point = getAnotherPoint(connectingLine[index], point);
+        let parent = $(ano_point).parent();
+        let tempDict = { layer_type: parent.attr("name") };
+        parent
+            .children(".dropItemMenu")
+            .children(".dropItemMenuLine")
+            .each((key, value) => {
+                let temp = $(value).children("input");
+                if (temp.length) {
+                    // case for checkbox and normal input
+                    if (temp.attr("type") == "checkbox") {
+                        tempDict[temp.attr("name")] = temp.is(":checked");
+                    } else if (temp.attr("type") == "number") {
+                        tempDict[temp.attr("name")] = parseFloat(temp.val());
+                    } else {
+                        tempDict[temp.attr("name")] = temp.val();
+                    }
+                } else {
+                    // case for select
+                    temp = $(value).children("select");
+                    tempDict[temp.attr("name")] = temp.val();
+                }
+            });
+        layerList.push(tempDict);
+
+        // check if ano_point is Output layer point
+        if ($(ano_point).attr("id") == $(output_point).attr("id")) break;
+
+        // set item left point or right point
+        if ($(ano_point).hasClass("dropItemPointLeft")) {
+            point = parent.children(".dropItemPointRight");
+        } else {
+            point = parent.children(".dropItemPointLeft");
+        }
+
+        index = getConnectElementIndex(point);
+    }
+
+    if (index == -1) {
+        alert_func("Input, Dense Layer 兩者間需要連通", "red", 3000);
+        return [];
+    }
+    return layerList;
+}
+
 // key del method
 function del_func() {
     if (selectItem != null) {
@@ -470,7 +536,7 @@ function del_func() {
 
         if ($(selectItem).html().indexOf("Input")) {
             isInputLayerPlace = false;
-        } else if ($(selectItem).html().indexOf("Output")) {
+        } else if ($(selectItem).html().indexOf("Dense")) {
             isOutputLayerPlace = false;
         }
         selectItem = null;
@@ -599,11 +665,30 @@ function layerParameter(layerName) {
     let tempHtml = "";
     if (Array.isArray(parameter)) {
         parameter.forEach((val) => {
-            tempHtml += `
+            if (val.type == "select") {
+                option_html = "";
+                val.initVal.forEach((element) => {
+                    option_html += `<option value="${element}">${element}</option>`;
+                });
+                tempHtml += `
                 <div class="dropItemMenuLine">
                     <div>${val.name}：</div>
-                    <input type="${val.type}" name="${val.name}" value="${val.initVal}" />
+                    <select name="${val.name}">${option_html}</select>
                 </div>`;
+            } else {
+                tempHtml += `
+                <div class="dropItemMenuLine">
+                    <div>${val.name}：</div>
+                    <input 
+                        type="${val.type}" 
+                        name="${val.name}" 
+                        value="${val.initVal}" 
+                        ${"min" in val ? "min=" + val.min : ""}
+                        ${"max" in val ? "max=" + val.max : ""}
+                        ${"step" in val ? "step=" + val.step : ""}
+                    />
+                </div>`;
+            }
         });
         return tempHtml;
     } else {

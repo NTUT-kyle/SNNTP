@@ -2,6 +2,22 @@
     background-color: #307d9e;
 }
 
-.output_layer {
-    background-color: #9e3730;
+.conv_layer {
+    background-color: #5ecf5c;
+}
+
+.activation_layer {
+    background-color: #8ce1f4;
+}
+
+.pooling_layer {
+    background-color: #eb8a83;
+}
+
+.core_layer {
+    background-color: #00e1ff;
+}
+
+.regularization_layer {
+    background-color: #8396eb;
 }
