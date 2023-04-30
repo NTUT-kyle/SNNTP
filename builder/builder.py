@@ -27,7 +27,7 @@ class Builder:
     def build_model(self, model_dic, model_setting_dic):
         self.model = Model(model_dic, model_setting_dic)
         print(model_setting_dic["input_shape"])
-        layer = class_dict["InputLayer"](model_setting_dic["input_shape"])
+        layer = class_dict["InputLayer"](model_setting_dic)
         self.model.add_layer(layer.get_layer())
         
     def build_layer(self, layer_dic):

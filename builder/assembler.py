@@ -10,9 +10,6 @@ class Assembler:
     def load_file(self, file_path):
         self.decoder.load_file(file_path)
         
-    def assemble(self):
-        self.assemble_layers()
-    
     def assemble_layers(self):
         layers_list = self.decoder.get_model_layers()
         for layer_dic in layers_list:

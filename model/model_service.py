@@ -21,7 +21,7 @@ def Init_Model():
     assembler.init_model()
     
 def Create_Model():
-    assembler.assemble()
+    assembler.assemble_layers()
 
 def Build_Model(projectName, data):
     """

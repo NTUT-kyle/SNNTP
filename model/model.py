@@ -12,7 +12,7 @@ class Model(object):
         self.loss_function = model_setting_dic["loss_function"]
         self.optimizer = model_setting_dic["optimizer"]
         self.validation_split = model_setting_dic["validation_split"]
-        self.input_shape = eval(model_setting_dic["input_shape"])
+        self.input_shape = model_setting_dic["input_shape"]
         
         self.model = keras.Sequential()
     
