@@ -28,7 +28,7 @@ def test_Init_Model(mocker):
     
 def test_Create_Model(mocker):
     model_service.assembler = Assembler()
-    mock_assemble = mocker.patch('builder.assembler.Assembler.assemble')
+    mock_assemble = mocker.patch('builder.assembler.Assembler.assemble_layers')
     model_service.Create_Model()
     
     mock_assemble.assert_called_once_with()

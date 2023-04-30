@@ -15,7 +15,7 @@ def test_init_Model():
     loss_function = "poisson"
     optimizer = "SGD"
     validation_split = 0.1
-    input_shape ="(30, 30, 1)"
+    input_shape =(30, 30, 1)
     result = model.Model(
         {
             "name": modelName,
@@ -40,7 +40,7 @@ def test_init_Model():
     assert result.loss_function == loss_function
     assert result.optimizer == optimizer
     assert result.validation_split == validation_split
-    assert result.input_shape == eval(input_shape)
+    assert result.input_shape == input_shape
     assert isinstance(result.model, keras.Sequential)
     
 def test_add_layer(mocker):
