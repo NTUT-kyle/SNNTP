@@ -155,60 +155,66 @@ Flask : 2.2.3
 
 ```yaml
 {
-    "Model":
+    "Model": {
+      "type": "CNN",
+      "name": "MNIST_classifier",
+      "build_date": "2023-03-31T00:00:00.000Z",
+      "model_type": "sequential",
+      "model_path": "",
+      "Model_layers": [
         {
-            "type": "CNN",
-            "name": "MNIST_classifier",
-            "build_date": "2023-03-31T00:00:00.000Z",
-            "model_type": "sequential",
-            "model_path": "",
-            "Model_layers":
-                [
-                    {
-                        "layer_type": "Conv2D",
-                        "filters": "32",
-                        "kernel_size": "(3, 3)",
-                        "strides": "(1, 1)",
-                        "padding": "valid",
-                    },
-                    {
-                        "layer_type": "MaxPooling2D",
-                        "pool_size": "2",
-                        "strides": "(1, 1)",
-                        "padding": "valid",
-                    },
-                    {
-                        "layer_type": "Conv2D",
-                        "filters": "64",
-                        "kernel_size": "(3, 3)",
-                        "strides": "(1, 1)",
-                        "padding": "valid",
-                    },
-                    { "layer_type": "Activation", "type": "hard_sigmoid" },
-                    {
-                        "layer_type": "AveragePooling2D",
-                        "pool_size": "2",
-                        "strides": "(1, 1)",
-                        "padding": "valid",
-                    },
-                    { "layer_type": "Flatten" },
-                    { "layer_type": "Dropout", "rate": "0.5", "seed": "123" },
-                    {
-                        "layer_type": "Dense",
-                        "units": "10",
-                        "use_bias": "False",
-                    },
-                ],
+          "layer_type": "Conv2D",
+          "filters": 32,
+          "kernel_size": 3,
+          "strides": 1,
+          "padding": "valid"
         },
-    "Model_Setting":
         {
-            "batch_size": "128",
-            "epochs": "10",
-            "loss_function": "poisson",
-            "optimizer": "SGD",
-            "validation_split": "0.1",
-            "input_shape": "(28, 28, 1)",
+          "layer_type": "MaxPooling2D",
+          "pool_size": 2,
+          "strides": 1,
+          "padding": "valid"
         },
+        {
+          "layer_type": "Conv2D",
+          "filters": 64,
+          "kernel_size": 3,
+          "strides": 1,
+          "padding": "valid"
+        },
+        {
+          "layer_type": "Activation",
+          "type": "hard_sigmoid"
+        },
+        {
+          "layer_type": "AveragePooling2D",
+          "pool_size": 2,
+          "strides": 1,
+          "padding": "valid"
+        },
+        {
+          "layer_type": "Flatten"
+        },
+        {
+          "layer_type": "Dropout",
+          "rate": 0.5,
+          "seed": 123
+        },
+        {
+          "layer_type": "Dense",
+          "units": 10,
+          "use_bias": "False"
+        }
+      ]
+    },
+    "Model_Setting": {
+      "batch_size": 128,
+      "epochs": 10,
+      "loss_function": "poisson",
+      "optimizer": "SGD",
+      "validation_split": 0.1,
+      "input_shape": "(28, 28, 1)"
+    }
 }
 ```
 
