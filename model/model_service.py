@@ -45,19 +45,12 @@ def Build_Model(projectName, data):
         # Pooling process
         if "Pooling" in layer["layer_type"]:
             layer["layer_type"] += "2D"
-        # tuple process
-        if "kernel_size" in layer:
-            kernel_size = layer["kernel_size"]
-            layer["kernel_size"] = (kernel_size, kernel_size)
-        if "strides" in layer:
-            strides = layer["strides"]
-            layer["strides"] = (strides, strides)
         
     data_json = Model_Json_Template(
         projectObj.model_type, projectName, data,
         batch_size = 128, epochs = 10, loss_function = "poisson",
         optimizer = "SGD", validation_split = 0.1,
-        input_shape = "({}, {}, 1)".format(iw, ih)
+        input_shape = [iw, ih, 1]
     )
     
     # step 3. save file
