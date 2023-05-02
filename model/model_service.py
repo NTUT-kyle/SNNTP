@@ -22,6 +22,7 @@ def Init_Model():
     
 def Build_Model():
     assembler.assemble_layers()
+    return "Success Build Model"
 
 def Create_Model_File(projectName, data):
     """
