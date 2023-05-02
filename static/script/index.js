@@ -3,6 +3,7 @@ function BackToIndex() {
 }
 
 function success_index(data) {
+    console.log(data);
     $("#msgbox").html(data);
     $("#msgbox").css("background-color", "#46ffac");
     $("#msgbox").toggle("blind");
@@ -117,15 +118,27 @@ function Item_Menu(project_name) {
 }
 
 // Menu Delete
+let deleteProjectName = "";
 function ModelDelete(project_name) {
-    ajax_func(
-        "project/" + project_name,
-        "DELETE",
-        {},
-        success_index,
-        error_index,
-        () => {}
-    );
+    $("#DeleteBoard").fadeIn(250);
+    $("#DeleteBoard").css("display", "flex");
+    setTimeout(() => {
+        Select_Now = "#DeleteBoard";
+    }, 100);
+    deleteProjectName = project_name;
+}
+
+function DeleteOKFromBoard() {
+    if (deleteProjectName != "") {
+        ajax_func(
+            "project/" + deleteProjectName,
+            "DELETE",
+            {},
+            success_index,
+            error_index,
+            () => {}
+        );
+    }
 }
 
 // Menu Rename
@@ -173,5 +186,6 @@ $(document).on("click", function (event) {
             IsModelRename = false;
         }
         Select_Now = "";
+        deleteProjectName = "";
     }
 });

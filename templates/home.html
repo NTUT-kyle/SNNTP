@@ -7,9 +7,9 @@
 {% endblock %}
 
 {% block content %}
-  {% if ProjectList %}
   <div id="msgbox" class="Message">
   </div>
+  {% if ProjectList %}
 
   <!-- 
       | Project Exist |
@@ -80,6 +80,13 @@
       <p class="BackgroundBoardTitle">Project Name</p>
       <input id="TypeInput" type="text" required="" placeholder=" Type name here......">
       <div class="TypeOK" onclick="TypeOKFromBoard()">OK</div>
+  </div>
+
+  <!-- Delete Project Board -->
+  <div id="DeleteBoard" class="BackgroundBoard">
+      <p class="BackgroundBoardTitle">Delete Project</p>
+      <div class="deleteText">Are you sure you want to <span style="color:red;">Delete</span> it?</div>
+      <div class="TypeOK" onclick="DeleteOKFromBoard()">OK</div>
   </div>
 
   <script type="text/javascript" src={{ url_for('static', filename='script/index.js') }}></script>
