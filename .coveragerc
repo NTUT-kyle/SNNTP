@@ -1,2 +1,3 @@
 [run]
-omit = app.py
+omit =  app.py
+        test\*
