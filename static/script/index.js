@@ -66,7 +66,8 @@ function TypeOKFromBoard() {
         "POST",
         { Type: SelectType },
         success_index,
-        error_index
+        error_index,
+        () => {}
     );
 }
 
@@ -94,7 +95,8 @@ function ModelItem(project_name) {
                 }, 1500);
             }
         },
-        error_index
+        error_index,
+        () => {}
     );
 }
 
@@ -121,7 +123,8 @@ function ModelDelete(project_name) {
         "DELETE",
         {},
         success_index,
-        error_index
+        error_index,
+        () => {}
     );
 }
 
@@ -154,7 +157,8 @@ function ModelRenameSend(project_name) {
         "PUT",
         { Rename: $("#TypeInput").val() },
         success_index,
-        error_index
+        error_index,
+        () => {}
     );
 }
 

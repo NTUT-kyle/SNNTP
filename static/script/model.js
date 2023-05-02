@@ -1,4 +1,5 @@
 let projectName = $(".MyProject").html();
+let isErrorHappen = false;
 
 /* 
 
@@ -46,13 +47,13 @@ function OpenCloseCenterBoard(openOrNot, titleValue) {
 
 function successSendFile(data) {
     console.log(data);
-    alert_func("send success", "#0dff00", 3000);
 }
 
 function error_func(xhr, textStatus, errorThrown) {
     console.log("[Error " + xhr.status + "]: " + textStatus);
     console.log(errorThrown);
-    alert_func(errorThrown, "red", 3000);
+    // alert_func(errorThrown, "red", 3000);
+    isErrorHappen = true;
 }
 
 $("#CenterBoardButton").click(() => {
@@ -69,11 +70,29 @@ $("#CenterBoardButton").click(() => {
     console.log(formData);
 });
 
-$("#build_model").click(() => {
+function Build_Model() {
+    ajax_func(
+        "/model/" + projectName + "/create",
+        "GET",
+        {},
+        successSendFile,
+        error_func,
+        () => {
+            if (isErrorHappen) {
+                alert_func("Fail Build Model", "red", 3000);
+                isErrorHappen = false;
+            } else {
+                alert_func("Success Build Model", "#0dff00", 3000);
+                $("#train_model p").html("Train Model");
+            }
+        }
+    );
+}
+
+function Create_Model_File() {
     let model_package = {
         model_List: ModelPackage(),
     };
-    console.log("build model sending");
     console.log(model_package);
     if (model_package.model_List.length) {
         ajax_func(
@@ -81,19 +100,27 @@ $("#build_model").click(() => {
             "POST",
             model_package,
             successSendFile,
-            error_func
+            error_func,
+            () => {
+                if (isErrorHappen) {
+                    alert_func("Fail Create Model File", "red", 3000);
+                    isErrorHappen = false;
+                } else {
+                    console.log("Success create model file");
+                    Build_Model();
+                }
+            }
         );
     }
-});
+}
 
 $("#train_model").click(() => {
-    ajax_func(
-        "/model/" + projectName + "/create",
-        "GET",
-        {},
-        successSendFile,
-        error_func
-    );
+    if ($("#train_model p").html() == "Train Model") {
+        alert("Train model");
+        $("#train_model p").html("Build Model");
+    } else {
+        Create_Model_File();
+    }
 });
 
 $("#save_graphy").click(() => {
