@@ -3,3 +3,4 @@ projects
 .pytest_cache
 htmlcov
 .coverage
+__pycache__
