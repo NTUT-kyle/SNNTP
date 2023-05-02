@@ -26,10 +26,10 @@ def test_Init_Model(mocker):
     
     mock_init_model.assert_called_once_with()
     
-def test_Create_Model(mocker):
+def test_Build_Model(mocker):
     model_service.assembler = Assembler()
     mock_assemble = mocker.patch('builder.assembler.Assembler.assemble_layers')
-    model_service.Create_Model()
+    model_service.Build_Model()
     
     mock_assemble.assert_called_once_with()
 
@@ -59,7 +59,7 @@ layers = [
     }
 ]
 
-def test_Build_Model(mocker):
+def test_Create_Model_File(mocker):
     mocker.patch(
         'project.project_service.Get_Project_By_Key',
         return_value = project.Project("test1")
@@ -75,9 +75,9 @@ def test_Build_Model(mocker):
     mocker.patch(
         'project.project.Project.reflash_modify_time'
     )
-    result = model_service.Build_Model("test1", layers.copy())
+    result = model_service.Create_Model_File("test1", layers.copy())
     
-    assert "Success Build Model" == result
+    assert "Success Create_Model_File" == result
     
 def test_Build_Model_project_not_exists(mocker):
     mocker.patch(
@@ -85,7 +85,7 @@ def test_Build_Model_project_not_exists(mocker):
         return_value = None
     )
     with pytest.raises(Exception, match="Error Project Name"):
-        model_service.Build_Model("test1", [])
+        model_service.Create_Model_File("test1", [])
         
 def test_Build_Model_save_file_fail(mocker):
     mocker.patch(
@@ -103,9 +103,9 @@ def test_Build_Model_save_file_fail(mocker):
     mocker.patch(
         'project.project.Project.reflash_modify_time'
     )
-    result = model_service.Build_Model("test1", layers.copy())
+    result = model_service.Create_Model_File("test1", layers.copy())
     
-    assert "Fail to Build Model" == result
+    assert "Fail to Create_Model_File" == result
     
 def test_Model_Json_Template():
     model_type = "CNN"

@@ -213,7 +213,7 @@ Flask : 2.2.3
       "loss_function": "poisson",
       "optimizer": "SGD",
       "validation_split": 0.1,
-      "input_shape": "(28, 28, 1)"
+      "input_shape": [28, 28, 1]
     }
 }
 ```

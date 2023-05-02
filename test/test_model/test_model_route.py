@@ -14,7 +14,7 @@ def test_Index(client, mocker):
     assert actual_resp.status_code == 200
     assert actual_resp.data == b'You are in model'
 
-def test_Create_Model(client, mocker):
+def test_Build_Model(client, mocker):
     mocker.patch(
         'model.model_service.Load_Model_File',
     )
@@ -22,19 +22,19 @@ def test_Create_Model(client, mocker):
         'model.model_service.Init_Model',
     )
     mocker.patch(
-        'model.model_service.Create_Model',
+        'model.model_service.Build_Model',
     )
     actual_resp = client.get(
         '/model/{}/create'.format("test1"),
     )
     
     assert actual_resp.status_code == 200
-    assert actual_resp.data == b'Success create Model'
+    assert actual_resp.data == b'Success build Model!'
 
-def test_Build_Model(client, mocker):
-    return_msg = "Success Build Model"
+def test_Create_Model_File(client, mocker):
+    return_msg = "Success Create_Model_File"
     mocker.patch(
-        'model.model_service.Build_Model',
+        'model.model_service.Create_Model_File',
         return_value = return_msg
     )
     actual_resp = client.post(

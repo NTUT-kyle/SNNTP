@@ -15,14 +15,14 @@ def Index():
 
 @modelCon.route("/<projectName>/create", methods = ['GET'])
 @log.log_decorator
-def Create_Model(projectName:str):
+def Build_Model(projectName:str):
     model_service.Load_Model_File(projectName)
     model_service.Init_Model()
-    model_service.Create_Model()
-    return f'Success create Model'
+    model_service.Build_Model()
+    return f'Success build Model!'
 
 @modelCon.route("/<projectName>/build", methods = ['POST'])
 @log.log_decorator
-def Build_Model(projectName:str):
+def Create_Model_File(projectName:str):
     data = request.get_json()
-    return model_service.Build_Model(projectName, data['model_List']);
+    return model_service.Create_Model_File(projectName, data['model_List'])

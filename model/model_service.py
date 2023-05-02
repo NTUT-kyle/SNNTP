@@ -20,10 +20,10 @@ def Load_Model_File(projectName:str):
 def Init_Model():
     assembler.init_model()
     
-def Create_Model():
+def Build_Model():
     assembler.assemble_layers()
 
-def Build_Model(projectName, data):
+def Create_Model_File(projectName, data):
     """
     建立 Model.json 至 Project 中
     param:  projectName -> Project 名稱
@@ -64,8 +64,8 @@ def Build_Model(projectName, data):
     )
     if result:
         projectObj.reflash_modify_time()
-        return "Success Build Model"
-    return "Fail to Build Model"
+        return "Success Create_Model_File"
+    return "Fail to Create_Model_File"
 
 def Model_Json_Template(type:str, name:str, layers:list, 
     batch_size:int, epochs:int, loss_function:str, optimizer:str, validation_split:float, input_shape):
