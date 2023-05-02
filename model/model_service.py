@@ -20,10 +20,10 @@ def Load_Model_File(projectName:str):
 def Init_Model():
     assembler.init_model()
     
-def Create_Model():
+def Build_Model():
     assembler.assemble_layers()
 
-def Build_Model(projectName, data):
+def Create_Model_File(projectName, data):
     """
     建立 Model.json 至 Project 中
     param:  projectName -> Project 名稱
