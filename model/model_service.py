@@ -71,8 +71,8 @@ def Create_Model_File(projectName, data):
     )
     if result:
         projectObj.reflash_modify_time()
-        return "Success Build Model"
-    return "Fail to Build Model"
+        return "Success Create_Model_File"
+    return "Fail to Create_Model_File"
 
 def Model_Json_Template(type:str, name:str, layers:list, 
     batch_size:int, epochs:int, loss_function:str, optimizer:str, validation_split:float, input_shape):
