@@ -2,26 +2,11 @@ function BackToIndex() {
     document.location.href = "/";
 }
 
-function success_index(data) {
-    console.log(data);
-    $("#msgbox").html(data);
-    $("#msgbox").css("background-color", "#46ffac");
-    $("#msgbox").toggle("blind");
-    setTimeout(() => {
-        $("#msgbox").toggle("blind");
-        document.location.href = "/";
-    }, 1500);
-}
-
+let isError = false;
 function error_index(xhr, textStatus, errorThrown) {
     console.log("[Error " + xhr.status + "]: " + textStatus);
     console.log(errorThrown);
-    $("#msgbox").html("[Error " + xhr.status + "]: " + errorThrown);
-    $("#msgbox").css("background-color", "red");
-    $("#msgbox").toggle("blind");
-    setTimeout(() => {
-        $("#msgbox").toggle("blind");
-    }, 1500);
+    isError = true;
 }
 
 /*
@@ -59,16 +44,41 @@ function SelectModel(type) {
 function TypeOKFromBoard() {
     // alert("Select: " + SelectType + "\nName: " + $("#TypeInput").val())
     if ($("#TypeInput").val() == "") {
-        alert("輸入值不能是空的");
+        alert();
+        $("#msgbox").html("[Error]: 輸入值不能是空的");
+        $("#msgbox").css("background-color", "red");
+        $("#msgbox").toggle("blind");
+        setTimeout(() => {
+            $("#msgbox").toggle("blind");
+        }, 1500);
         return;
     }
     ajax_func(
         "project/" + $("#TypeInput").val(),
         "POST",
         { Type: SelectType },
-        success_index,
+        (data) => {
+            console.log(data);
+            $("#msgbox").html(`成功建立 ${data} Project`);
+            $("#msgbox").css("background-color", "#46ffac");
+            $("#msgbox").toggle("blind");
+            setTimeout(() => {
+                $("#msgbox").toggle("blind");
+                document.location.href = "/";
+            }, 1500);
+        },
         error_index,
-        () => {}
+        () => {
+            if (isError) {
+                $("#msgbox").html("[Error]: 建立 Project 錯誤!!!");
+                $("#msgbox").css("background-color", "red");
+                $("#msgbox").toggle("blind");
+                setTimeout(() => {
+                    $("#msgbox").toggle("blind");
+                }, 1500);
+                isError = false;
+            }
+        }
     );
 }
 
@@ -85,10 +95,11 @@ function ModelItem(project_name) {
         "GET",
         {},
         (data) => {
+            console.log(data);
             if (data == "Success") {
                 document.location.href = "/project/" + project_name + "/model";
             } else {
-                $("#msgbox").html("[Error]: Project not exist!!!");
+                $("#msgbox").html("[Error]: Project 不存在!!!");
                 $("#msgbox").css("background-color", "red");
                 $("#msgbox").toggle("blind");
                 setTimeout(() => {
@@ -97,7 +108,11 @@ function ModelItem(project_name) {
             }
         },
         error_index,
-        () => {}
+        () => {
+            if (isError) {
+                isError = false;
+            }
+        }
     );
 }
 
@@ -125,6 +140,7 @@ function ModelDelete(project_name) {
     setTimeout(() => {
         Select_Now = "#DeleteBoard";
     }, 100);
+    $("#deleteProjectName").html(project_name);
     deleteProjectName = project_name;
 }
 
@@ -134,9 +150,27 @@ function DeleteOKFromBoard() {
             "project/" + deleteProjectName,
             "DELETE",
             {},
-            success_index,
+            (data) => {
+                $("#msgbox").html(`成功刪除 ${data} Project`);
+                $("#msgbox").css("background-color", "#46ffac");
+                $("#msgbox").toggle("blind");
+                setTimeout(() => {
+                    $("#msgbox").toggle("blind");
+                    document.location.href = "/";
+                }, 1500);
+            },
             error_index,
-            () => {}
+            () => {
+                if (isError) {
+                    $("#msgbox").html("[Error]: 刪除 Project 錯誤!!!");
+                    $("#msgbox").css("background-color", "red");
+                    $("#msgbox").toggle("blind");
+                    setTimeout(() => {
+                        $("#msgbox").toggle("blind");
+                    }, 1500);
+                    isError = false;
+                }
+            }
         );
     }
 }
@@ -169,9 +203,27 @@ function ModelRenameSend(project_name) {
         "project/" + project_name,
         "PUT",
         { Rename: $("#TypeInput").val() },
-        success_index,
+        (data) => {
+            $("#msgbox").html(`${data}`);
+            $("#msgbox").css("background-color", "#46ffac");
+            $("#msgbox").toggle("blind");
+            setTimeout(() => {
+                $("#msgbox").toggle("blind");
+                document.location.href = "/";
+            }, 1500);
+        },
         error_index,
-        () => {}
+        () => {
+            if (isError) {
+                $("#msgbox").html("[Error]: 已有相同名稱的 Project!!!");
+                $("#msgbox").css("background-color", "red");
+                $("#msgbox").toggle("blind");
+                setTimeout(() => {
+                    $("#msgbox").toggle("blind");
+                }, 1500);
+                isError = false;
+            }
+        }
     );
 }
 

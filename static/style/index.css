@@ -150,6 +150,10 @@
     color: #ffffff;
     font-size: x-large;
 }
+#deleteProjectName {
+    text-decoration: underline;
+    color: #ff908a;
+}
 
 #ProjectExistList {
     margin: 50px auto;
