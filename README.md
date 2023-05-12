@@ -25,7 +25,7 @@ Flask : 2.2.3
 
 1. Complete all required environments
 2. Enter `python -m pipenv shell` in the console to enter the virtual environment
-3. If you want to confirm your current environment, do the first step again, it will show `No module named pipenv`
+3. If you want to confirm your current environment, do the second step again, it will show `No module named pipenv`
 4. Enter `pipenv install` in the console to download & install the packages
 5. If no errors show up, you're all done!
 
