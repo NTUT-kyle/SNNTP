@@ -1,5 +1,8 @@
 # SNNTP
 
+[![Test](https://github.com/NTUT-kyle/SNNTP/actions/workflows/SNNTP_CI.yml/badge.svg?branch=main)](https://github.com/NTUT-kyle/SNNTP/actions/workflows/SNNTP_CI.yml)
+[![Coverage](./.github/coverage.svg)]()
+
 Simple Neural Network Training Platform
 
 Figma: https://www.figma.com/file/oHCtfONsjfdgkAsljYOnYL/SNNTP?node-id=0%3A1&t=IjL9565CJUpxedQd-1
@@ -47,6 +50,14 @@ Flask : 2.2.3
 -   Or you can Enter `.\StartScript.bat` in the console then input `4` to start testing
 -   If you want testing with coverage, enter `pytest --cov` to see the test coverage
 -   If you want more detailed information, you can directly enter `pytest --cov --cov-report=html` to generate a test report in the `htmlcov` folder
+
+## Coverage badge:
+Enter `pytest --cov; rm .github/coverage.svg; coverage-badge -o .github/coverage.svg` to update coverage badge, then push!!
+
+These processes can be divided into 3 parts :
+1. `pytest --cov` : run pytest with coverage, it will generate `.coverage`
+2. `rm .github/coverage.svg` : remove previous coverage badge
+3. `coverage-badge -o .github/coverage.svg` : generate a new coverage badge according to `.coverage`
 
 ---
 
