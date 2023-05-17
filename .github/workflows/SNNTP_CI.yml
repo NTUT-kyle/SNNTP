@@ -31,7 +31,7 @@ jobs:
       run: pipenv install
       
     - name: Test with pytest
-      run: pytest
+      run: pipenv run pytest
 
 # Reference 
 #   https://github.com/actions/setup-python/blob/main/docs/advanced-usage.md#caching-packages
