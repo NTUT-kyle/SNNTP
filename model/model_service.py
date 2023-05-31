@@ -87,3 +87,39 @@ def Model_Json_Template(type:str, name:str, layers:list,
             "input_shape": input_shape
         }
     }
+    
+def Save_Graphy(projectName, data):
+    """
+    儲存 Graphy 至 Project 中
+    param:  projectName -> Project 名稱
+            data -> Graphy List
+    return  msg -> 回傳建置訊息
+            Exception -> 以 Exception Message 當作錯誤原因
+    """
+    projectObj = project_service.Get_Project_By_Key(projectName)
+    if projectObj == None:
+        raise Exception("Error Project Name")
+    
+    isFormatError = False
+    for layer_graphy in data['graphy']:
+        for keyword in ['point_L_con', 'point_R_con', 'posX', 'posY', 'dictValue']:
+            if keyword not in layer_graphy.keys():
+                isFormatError = True
+                break
+        if isFormatError:
+            break
+    if isFormatError:
+        raise Exception("Graphy format not correct!")
+    
+    result = ComMethod.Create_File(
+        f'./projects/{projectName}/',
+        "graphy.json",
+        json.dumps(
+            data,
+            indent=4,
+        )
+    )
+    if result:
+        projectObj.reflash_modify_time()
+        return "Success Save Graphy"
+    return "Fail to Save Graphy"

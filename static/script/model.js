@@ -124,7 +124,28 @@ $("#train_model").click(() => {
 });
 
 $("#save_graphy").click(() => {
-    alert("save graphy");
+    let graphy_package = {
+        graphy: graphyPackage(),
+    };
+    console.log(graphy_package);
+    if (graphy_package.graphy.length) {
+        ajax_func(
+            "/model/" + projectName + "/saveGraphy",
+            "POST",
+            graphy_package,
+            successSendFile,
+            error_func,
+            () => {
+                if (isErrorHappen) {
+                    alert_func("Fail To Save Graphy", "red", 3000);
+                    isErrorHappen = false;
+                } else {
+                    console.log("Success Save Graphy");
+                    alert_func("Success Save Graphy", "Green", 3000);
+                }
+            }
+        );
+    }
 });
 
 /* 
@@ -462,6 +483,31 @@ function getAnotherPoint(vector, point) {
         : vector[0];
 }
 
+function getLayerMenu(Layer) {
+    let tempDict = { layer_type: Layer.attr("name") };
+    Layer
+        .children(".dropItemMenu")
+        .children(".dropItemMenuLine")
+        .each((key, value) => {
+            let temp = $(value).children("input");
+            if (temp.length) {
+                // case for checkbox and normal input
+                if (temp.attr("type") == "checkbox") {
+                    tempDict[temp.attr("name")] = temp.is(":checked");
+                } else if (temp.attr("type") == "number") {
+                    tempDict[temp.attr("name")] = parseFloat(temp.val());
+                } else {
+                    tempDict[temp.attr("name")] = temp.val();
+                }
+            } else {
+                // case for select
+                temp = $(value).children("select");
+                tempDict[temp.attr("name")] = temp.val();
+            }
+        });
+    return tempDict;
+}
+
 function putSetIntoMap(LayerMap, parent1, parent2, point1_id) {
     if (!LayerMap.has(parent1.attr("id"))) {
         LayerMap.set(parent1.attr("id"), {
@@ -470,6 +516,7 @@ function putSetIntoMap(LayerMap, parent1, parent2, point1_id) {
             posY: parent1.position().top,
             point_L_con: [],
             point_R_con: [],
+            dictValue: getLayerMenu(parent1)
         });
     }
     if ($(point1_id).hasClass("dropItemPointLeft")) {
@@ -480,8 +527,24 @@ function putSetIntoMap(LayerMap, parent1, parent2, point1_id) {
     return LayerMap;
 }
 
+/*
+
+{
+    posX: 0,
+    posY: 0,
+    point_L_con: [item_1],
+    point_R_con: [item_2],
+    dictValue: {
+        layer_type: layerName,
+        ...
+    }
+}
+
+*/
+
 function graphyPackage() {
     let LayerMap = new Map();
+    // Find connected item
     connectingLine.forEach((value) => {
         let point_id = value[0];
         let parent = $(point_id).parent();
@@ -493,7 +556,27 @@ function graphyPackage() {
         // set second element value
         LayerMap = putSetIntoMap(LayerMap, ano_parent, parent, ano_point_id);
     });
-    console.log(LayerMap);
+
+    // Find didn't connected item
+    $(".dropItem").each((key, value) => {
+        let element = $(value);
+        if (!LayerMap.has(element.attr('id'))) {
+            LayerMap.set(element.attr("id"), {
+                posX: element.position().left,
+                posY: element.position().top,
+                point_L_con: [],
+                point_R_con: [],
+                dictValue: getLayerMenu(element)
+            });
+        }
+    });
+
+    // Map Convert to List
+    let Result = [];
+    for (const [, value] of LayerMap) {
+        Result.push(value);
+    }
+    return Result;
 }
 
 /*
@@ -534,28 +617,7 @@ function ModelPackage() {
         // get another point and push layer name to layerList
         let ano_point = getAnotherPoint(connectingLine[index], point);
         let parent = $(ano_point).parent();
-        let tempDict = { layer_type: parent.attr("name") };
-        parent
-            .children(".dropItemMenu")
-            .children(".dropItemMenuLine")
-            .each((key, value) => {
-                let temp = $(value).children("input");
-                if (temp.length) {
-                    // case for checkbox and normal input
-                    if (temp.attr("type") == "checkbox") {
-                        tempDict[temp.attr("name")] = temp.is(":checked");
-                    } else if (temp.attr("type") == "number") {
-                        tempDict[temp.attr("name")] = parseFloat(temp.val());
-                    } else {
-                        tempDict[temp.attr("name")] = temp.val();
-                    }
-                } else {
-                    // case for select
-                    temp = $(value).children("select");
-                    tempDict[temp.attr("name")] = temp.val();
-                }
-            });
-        layerList.push(tempDict);
+        layerList.push(getLayerMenu(parent));
 
         // check if ano_point is Output layer point
         if ($(ano_point).attr("id") == $(output_point).attr("id")) break;

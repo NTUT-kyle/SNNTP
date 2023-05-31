@@ -26,3 +26,9 @@ def Build_Model(projectName:str):
 def Create_Model_File(projectName:str):
     data = request.get_json()
     return model_service.Create_Model_File(projectName, data['model_List'])
+
+@modelCon.route("/<projectName>/saveGraphy", methods = ['POST'])
+@log.log_decorator
+def Save_Graphy(projectName:str):
+    data = request.get_json()
+    return model_service.Save_Graphy(projectName, data)
