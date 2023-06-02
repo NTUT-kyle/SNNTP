@@ -128,6 +128,7 @@ $("#save_graphy").click(() => {
         graphy: graphyPackage(),
     };
     console.log(graphy_package);
+    /*
     if (graphy_package.graphy.length) {
         ajax_func(
             "/model/" + projectName + "/saveGraphy",
@@ -146,6 +147,7 @@ $("#save_graphy").click(() => {
             }
         );
     }
+    */
 });
 
 /* 
@@ -167,6 +169,7 @@ $(".layerCategory div div:not(:first-child)").draggable({
     cursor: "move",
 });
 
+let initialProcess = false  // get graphy process
 let initItemId = 0;
 let initPointID = 0; // initPointID for droparea item
 let selectItem = null; // select item for del
@@ -511,7 +514,7 @@ function getLayerMenu(Layer) {
 function putSetIntoMap(LayerMap, parent1, parent2, point1_id) {
     if (!LayerMap.has(parent1.attr("id"))) {
         LayerMap.set(parent1.attr("id"), {
-            name: parent1.attr("name"),
+            name: parent1.attr("id"),
             posX: parent1.position().left,
             posY: parent1.position().top,
             point_L_con: [],
@@ -577,6 +580,262 @@ function graphyPackage() {
         Result.push(value);
     }
     return Result;
+}
+
+function graphyUnpackage(package) {
+    if (!Array.isArray(package)) {
+        return False
+    }
+    let droparea = $('#droparea');
+    let record_connect_line = [];
+
+    // 1. Generate Item On Droparea
+    package.forEach((element) => {
+        // 1. Generate Item On Droparea
+        let layer_type = element.dictValue.layer_type;
+        let item = $(`<div class="${findLayerClassUseLayerName(layer_type)} dropItem">${layer_type}</div>`);
+        // set item attr id, name
+        item.attr("id", element.name);
+        initItemId += 1;
+        item.attr("name", layer_type);
+        // set item position
+        item.css("position", "absolute");
+        item.css("left", element.posX);
+        item.css("top", element.posY);
+
+        // set item html
+        if (layer_type == "Input") {
+            if (isInputLayerPlace) {
+                // Cannot place more than two Input Layer
+                alert_func("無法放置一個以上的 Input Layer", "red", 3000);
+                return;
+            }
+            item.html(`
+                <div></div>
+                ${item.html()}
+                <div id="p${initPointID}" class="dropItemPoint dropItemPointRight"></div>
+                <div class="dropItemMenu">
+                    <div>Setting</div>
+                    <div class="dropItemMenuLine">
+                        <div>Width：</div>
+                        <input type="Number" name="Width" value="${element.dictValue.Width}" />
+                    </div>
+                    <div class="dropItemMenuLine">
+                        <div>Height：</div>
+                        <input type="Number" name="Height" value="${element.dictValue.Height}" />
+                    </div>
+                </div>
+            `);
+            initPointID += 1;
+            isInputLayerPlace = true;
+        } else if (layer_type == "Dense") {
+            if (isOutputLayerPlace) {
+                // Cannot place more than two Output Layer
+                alert_func("無法放置一個以上的 Dense Layer", "red", 3000);
+                return;
+            }
+            item.html(`
+                <div id="p${initPointID}" class="dropItemPoint dropItemPointLeft"></div>
+                ${item.html()}
+                <div></div>
+                <div class="dropItemMenu">
+                    <div>Setting</div>
+                    <div class="dropItemMenuLine">
+                        <div>units：</div>
+                        <input type="number" name="units" value="${element.dictValue.units}" />
+                    </div>
+                    <div class="dropItemMenuLine">
+                        <div>use_bias：</div>
+                        <input type="checkbox" name="use_bias" ${element.dictValue.use_bias == true?"checked":""}/>
+                    </div>
+                </div>
+            `);
+            initPointID += 1;
+            isOutputLayerPlace = true;
+        } else {
+            let jqObject = $(`<div>${layerParameter(item.html())}</div>`);
+            Object.entries(element.dictValue).forEach(([key, val]) => {
+                if (key == "layer_type") return;
+                let findResult = jqObject.find(`input[name=${key}]`);
+                if (findResult.length) {   // Input case
+                    if (findResult.is("input[type='checkbox']")) {
+                        findResult.prop('checked', val);
+                    } else {
+                        findResult.attr('value', val);
+                    }
+                } else {            // Select case
+                    findResult = jqObject.find('select')
+                    if (findResult.length) {
+                        findResult.children(`[value='${val}']`).attr('selected', true);
+                    }
+                }
+            });
+            item.html(`
+                <div id="p${initPointID}" class="dropItemPoint dropItemPointLeft"></div>
+                ${item.html()}
+                <div id="p${
+                    initPointID + 1
+                }" class="dropItemPoint dropItemPointRight"></div>
+                <div class="dropItemMenu">
+                    <div>Setting</div>
+                    ${jqObject.html()}
+                </div>
+            `);
+            initPointID += 2;
+        }
+        
+        // right click menu
+        item.on("contextmenu", (event) => {
+            event.preventDefault();
+            closeDropMenu();
+            $(item).children(".dropItemMenu").css("display", "flex");
+            SettingOpen = $(item).children(".dropItemMenu");
+            $(item).css("z-index", 20);
+            $(item).css("opacity", 1);
+        });
+
+        // click event for drop element
+        item.click((event) => {
+            // disable border if selectItem exist
+            if (selectItem != null) {
+                if ($(selectItem).hasClass("dropItem")) {
+                    $(selectItem).css("border", "1px solid black");
+                } else {
+                    $(selectItem).css("border", "unset");
+                }
+            }
+
+            if ($(event.target).hasClass("dropItemPoint")) {
+                // select item point process
+                // append to dropItemPointDown
+                if (
+                    dropItemPointDown.length > 0 &&
+                    $(event.target).attr("id") ==
+                        dropItemPointDown[0].attr("id")
+                ) {
+                    $(dropItemPointDown[0]).css("background-color", "unset");
+                    dropItemPointDown = [];
+                    return;
+                }
+
+                dropItemPointDown.push($(event.target));
+
+                // if it select two point, make line
+                if (dropItemPointDown.length == 2) {
+                    connectTwoLine(dropItemPointDown[0], dropItemPointDown[1]);
+                } else {
+                    $(event.target).css("background-color", "yellow");
+                }
+                selectItem = null; // prevent del event
+            } else {
+                // select item process
+                if (dropItemPointDown.length > 0) {
+                    // clear value
+                    dropItemPointDown[0].css("background-color", "unset");
+                    dropItemPointDown = [];
+                }
+
+                // check if click dropItem
+                if (
+                    !(
+                        $(event.target).parent().hasClass("dropItemMenu") ||
+                        $(event.target).parent().hasClass("dropItemMenuLine") ||
+                        $(event.target).hasClass("dropItemMenu")
+                    )
+                ) {
+                    // set selectItem to target & set target border
+                    selectItem = event.target;
+                    $(selectItem).css("border", "1px dashed white");
+                }
+            }
+        });
+
+        // drag event for drop element
+        item.draggable({
+            drag: function () {
+                if (connectingLine.length) {
+                    // if has line connected
+                    mySVG.redrawLines();
+                }
+                // check the element size and scale the parent size
+                setDropAreaSize();
+
+                // set scrollbar position
+                let offset = $(this).offset();
+                $(".modelshow").scrollTop(offset.top);
+                $(".modelshow").scrollLeft(offset.left);
+            },
+            cancel: "div .dropItemPoint, input, select",
+            scroll: true,
+            cursor: "move",
+            snap: true,
+        });
+
+        // add drop element to droparea
+        droparea.append(item);
+
+        // record connect
+        record_connect_line.push({
+            left_item: element.point_L_con,
+            right_item: element.point_R_con,
+            this_item: element.name
+        })
+    });
+
+    // 2. Connect Line
+    record_connect_line.forEach((val) => {
+        let item = $('#' + val.this_item)
+        if (val.left_item.length) {
+            let point_L = item.find(".dropItemPointLeft");
+            val.left_item.forEach((each_item) => {
+                let left_item = droparea.find('#' + each_item);
+                connectTwoLine(point_L, left_item.find(".dropItemPointRight"));
+            })
+        }
+        if (val.right_item.length) {
+            let point_R = item.find(".dropItemPointRight");
+            val.right_item.forEach((each_item) => {
+                let right_item = droparea.find('#' + each_item);
+                connectTwoLine(right_item.find(".dropItemPointLeft"), point_R);
+            })
+        }
+    })
+
+    return true;
+}
+
+function findLayerClassUseLayerName(layerName) {
+    if (layerName == "Input") return "input_layer";
+    if (layerName == "Conv2D") return "conv_layer";
+    if (layerName == "Activation") return "activation_layer";
+    if (layerName == "MaxPooling" || layerName == "AveragePooling") return "pooling_layer";
+    if (layerName == "Flatten") return "reshaping_layer";
+    if (layerName == "Dropout") return "regularization_layer";
+    if (layerName == "Dense") return "core_layer";
+    return "";
+}
+
+function getGraphy() {
+    ajax_func(
+        "/model/" + projectName + "/loadGraphy",
+        "POST",
+        "",
+        (data) => {
+            console.log(data);
+            if (graphyUnpackage(data)) {
+                console.log('Loading Success!');
+            } else {
+                console.log('Loading Failure!');
+            }
+        },
+        error_func,
+        () => {
+            if (isErrorHappen) {
+                alert_func("Fail To Load Graphy", "red", 3000);
+                isErrorHappen = false;
+            }
+        }
+    );
 }
 
 /*
@@ -670,11 +929,26 @@ function del_func() {
 
 /*
 
+    Document ready
+
+*/
+
+$(document).ready(function() {
+    // getGraphy();
+    initialProcess = true;
+});
+
+/*
+
     Alert Dialog
 
 */
 
 function alert_func(msg, color, closeTime) {
+    if (!initialProcess) {
+        console.log(msg);
+        return;
+    }
     $("#AlertDialog").css("background-color", color);
     $("#AlertDialog").html(msg);
     $("#AlertDialog").toggle("blind");
