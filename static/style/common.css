@@ -30,3 +30,9 @@ a {
     white-space: nowrap;
     cursor: pointer;
 }
+
+@media screen and (max-width: 1250px) {
+    .Title {
+        font-size: 5rem;
+    }
+}

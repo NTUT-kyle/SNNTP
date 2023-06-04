@@ -50,6 +50,12 @@
     white-space: nowrap;
 }
 
+@media screen and (max-width: 1315px) {
+    .SelectItemChooseList div {
+        font-size: 100%;
+    }
+}
+
 .SelectItemChooseList {
     width: 50%;
     background-color: unset;
