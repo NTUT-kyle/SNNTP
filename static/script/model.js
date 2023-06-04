@@ -128,7 +128,6 @@ $("#save_graphy").click(() => {
         graphy: graphyPackage(),
     };
     console.log(graphy_package);
-    /*
     if (graphy_package.graphy.length) {
         ajax_func(
             "/model/" + projectName + "/saveGraphy",
@@ -147,7 +146,6 @@ $("#save_graphy").click(() => {
             }
         );
     }
-    */
 });
 
 /* 
@@ -822,7 +820,7 @@ function getGraphy() {
         "",
         (data) => {
             console.log(data);
-            if (graphyUnpackage(data)) {
+            if (graphyUnpackage(data.graphy)) {
                 console.log('Loading Success!');
             } else {
                 console.log('Loading Failure!');
@@ -934,8 +932,11 @@ function del_func() {
 */
 
 $(document).ready(function() {
-    // getGraphy();
-    initialProcess = true;
+    getGraphy();
+    setTimeout(() => { 
+        initialProcess = true;
+        setDropAreaSize();
+    }, 1000);
 });
 
 /*

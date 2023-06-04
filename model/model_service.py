@@ -88,6 +88,24 @@ def Model_Json_Template(type:str, name:str, layers:list,
         }
     }
     
+def Load_Graphy(projectName):
+    """
+    讀取 Project 中的 Graphy
+    param:  projectName -> Project 名稱
+            data -> Graphy List
+    return  dict -> 回傳 Graphy
+            Exception -> 以 Exception Message 當作錯誤原因
+    """
+    projectObj = project_service.Get_Project_By_Key(projectName)
+    if projectObj == None:
+        raise Exception("Error Project Name")
+    
+    try:
+        data = ComMethod.Get_File(f'./projects/{projectName}/', 'graphy.json')
+        return json.loads(data)
+    except:
+        return {'graphy': []}
+    
 def Save_Graphy(projectName, data):
     """
     儲存 Graphy 至 Project 中
