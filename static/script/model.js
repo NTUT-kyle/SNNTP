@@ -984,6 +984,15 @@ $(window).on("resize", function () {
     if ($(".modelshow").height() > $(".droparea").height()) {
         $(".droparea").height($(".modelshow").height());
     }
+    if ($("canvas")) {
+        console.log($(".modelshow").width())
+        $("canvas").attr("width", $(".modelshow").width())
+        $("canvas").attr("height", $(".modelshow").height())
+        if (connectingLine.length) {
+            // if has line connected
+            mySVG.redrawLines();
+        }
+    }
 });
 
 /* 
