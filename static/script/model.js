@@ -177,6 +177,20 @@ let isInputLayerPlace = false;
 let isOutputLayerPlace = false;
 let SettingOpen = null;
 
+function dragReflesh(element) {
+    if (connectingLine.length) {
+        // if has line connected
+        mySVG.redrawLines();
+    }
+    // check the element size and scale the parent size
+    setDropAreaSize();
+
+    // set scrollbar position
+    let offset = $(element).offset();
+    $(".modelshow").scrollTop(offset.top);
+    $(".modelshow").scrollLeft(offset.left);
+}
+
 // Set drop event
 $(".droparea").droppable({
     drop: function (event, ui) {
@@ -326,17 +340,16 @@ $(".droparea").droppable({
         // drag event for drop element
         clone.draggable({
             drag: function () {
-                if (connectingLine.length) {
-                    // if has line connected
-                    mySVG.redrawLines();
+                dragReflesh(this);
+            },
+            stop: function () {
+                if (this.position().top < 0) {
+                    this.css('top', 0 + 'px');
                 }
-                // check the element size and scale the parent size
-                setDropAreaSize();
-
-                // set scrollbar position
-                let offset = $(this).offset();
-                $(".modelshow").scrollTop(offset.top);
-                $(".modelshow").scrollLeft(offset.left);
+                if (this.position().left < 0) {
+                    this.css('left', 0 + 'px');
+                }
+                dragReflesh(this);
             },
             cancel: "div .dropItemPoint, input, select",
             scroll: true,
@@ -751,17 +764,16 @@ function graphyUnpackage(package) {
         // drag event for drop element
         item.draggable({
             drag: function () {
-                if (connectingLine.length) {
-                    // if has line connected
-                    mySVG.redrawLines();
+                dragReflesh(this);
+            },
+            stop: function (event, ui) {
+                if (ui.position.top < 0) {
+                    $(this).css('top', 0 + 'px');
                 }
-                // check the element size and scale the parent size
-                setDropAreaSize();
-
-                // set scrollbar position
-                let offset = $(this).offset();
-                $(".modelshow").scrollTop(offset.top);
-                $(".modelshow").scrollLeft(offset.left);
+                if (ui.position.left < 0) {
+                    $(this).css('left', 0 + 'px');
+                }
+                dragReflesh(this);
             },
             cancel: "div .dropItemPoint, input, select",
             scroll: true,
@@ -985,7 +997,6 @@ $(window).on("resize", function () {
         $(".droparea").height($(".modelshow").height());
     }
     if ($("canvas")) {
-        console.log($(".modelshow").width())
         $("canvas").attr("width", $(".modelshow").width())
         $("canvas").attr("height", $(".modelshow").height())
         if (connectingLine.length) {
