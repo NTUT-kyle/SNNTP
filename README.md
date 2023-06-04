@@ -5,6 +5,8 @@
 
 Simple Neural Network Training Platform
 
+This project is just for the course. When the semester ends, this project will stop updating. If you have any needs, please submit an issue.
+
 Figma: https://www.figma.com/file/oHCtfONsjfdgkAsljYOnYL/SNNTP?node-id=0%3A1&t=IjL9565CJUpxedQd-1
 
 NN Framwork : Keras(Based on tanserflow)
@@ -24,7 +26,7 @@ Flask : 2.2.3
     - When the first one is done, Enter `pip install pipenv` in the console.
     - Enter `pipenv --version` in the console to check the version
 
-### Install:
+### Install module:
 
 1. Complete all required environments
 2. Enter `python -m pipenv shell` in the console to enter the virtual environment
