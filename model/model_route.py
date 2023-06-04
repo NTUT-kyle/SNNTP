@@ -37,3 +37,9 @@ def Load_Graphy(projectName:str):
 def Save_Graphy(projectName:str):
     data = request.get_json()
     return model_service.Save_Graphy(projectName, data)
+
+@modelCon.route("/<projectName>/upload", methods = ['POST'])
+@log.log_decorator
+def Upload_File(projectName:str):
+    fileObj = request.files['file']
+    return model_service.Upload_Data(projectName, request.form.get('type'), fileObj)

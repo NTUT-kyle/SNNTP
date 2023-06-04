@@ -13,8 +13,13 @@ $("#CBFileButton").click(() => {
 
 let formData = new FormData();
 $("#CBFile").on("change", function () {
+    if($("#CBFile").val() == '') return;
     formData.delete("file");
     formData.append("file", this.files[0]);
+    formData.delete("type");
+    formData.append("type", uploadStatus);
+    let fileName = $("#CBFile").val().split('\\').pop();
+    $("#CBFileButton").html(fileName == ''?'選擇檔案':fileName)
 });
 
 let uploadStatus = "";
@@ -58,16 +63,30 @@ function error_func(xhr, textStatus, errorThrown) {
 
 $("#CenterBoardButton").click(() => {
     if (uploadStatus == "") return;
-    // ajax_func(
-    //     "/model/" + projectName + "/" + uploadStatus,
-    //     "POST",
-    //     formData,
-    //     successSendFile,
-    //     error_func
-    // );
-    alert(uploadStatus);
-    console.log(uploadStatus);
-    console.log(formData);
+    if ($("#CBFile").val() == "") {
+        alert_func("Choose a zip file to upload!", "yellow", 3000);
+        return;
+    }
+    ajax_func(
+        "/model/" + projectName + "/upload",
+        "POST",
+        formData,
+        (data) => {
+            alert_func(data, "#0dff00", 3000);
+            $("#CenterBoard").css("display", "none");
+            OpenCloseCenterBoard(false, "");
+            $("#CBFile").val('');
+            $("#CBFileButton").html('選擇檔案');
+        },
+        error_func,
+        () => {
+            if (isErrorHappen) {
+                alert_func("Fail Upload File", "red", 3000);
+                isErrorHappen = false;
+            }
+        },
+        true
+    );
 });
 
 function Build_Model() {

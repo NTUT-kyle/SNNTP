@@ -92,7 +92,6 @@ def Load_Graphy(projectName):
     """
     讀取 Project 中的 Graphy
     param:  projectName -> Project 名稱
-            data -> Graphy List
     return  dict -> 回傳 Graphy
             Exception -> 以 Exception Message 當作錯誤原因
     """
@@ -111,7 +110,7 @@ def Save_Graphy(projectName, data):
     儲存 Graphy 至 Project 中
     param:  projectName -> Project 名稱
             data -> Graphy List
-    return  msg -> 回傳建置訊息
+    return  msg -> 回傳訊息
             Exception -> 以 Exception Message 當作錯誤原因
     """
     projectObj = project_service.Get_Project_By_Key(projectName)
@@ -141,3 +140,33 @@ def Save_Graphy(projectName, data):
         projectObj.reflash_modify_time()
         return "Success Save Graphy"
     return "Fail to Save Graphy"
+
+def Upload_Data(projectName, type, fileObj):
+    """
+    上傳資料至 Project 中
+    param:  projectName -> Project 名稱
+            type -> 資料類別 (Training, validation, test)
+    return  msg -> 回傳訊息
+            Exception -> 以 Exception Message 當作錯誤原因
+    """
+    
+    # 現在只允許 zip 檔
+    def allowed_file(filename):
+        return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ['zip'] 
+    
+    projectObj = project_service.Get_Project_By_Key(projectName)
+    if projectObj == None:
+        raise Exception("Error Project Name")
+    
+    if fileObj.filename == '':
+        raise Exception("Error File Name")
+    
+    if fileObj and allowed_file(fileObj.filename):
+        if ComMethod.Check_File_Exist(f'./projects/{projectName}/', f'{type}-{fileObj.filename}'):
+            fileObj.save(f'./projects/{projectName}/{type}-{fileObj.filename}')
+            return 'Success upload file and Replace old one!'
+        else:
+            fileObj.save(f'./projects/{projectName}/{type}-{fileObj.filename}')
+            return 'Success upload new file!'
+    raise Exception('Upload file fail!')
