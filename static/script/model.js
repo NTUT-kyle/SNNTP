@@ -475,7 +475,7 @@ function closeDropMenu() {
 }
 
 function setInputChangeEvent() {
-    $("input").change(() => {
+    $("input:not(#CBFile)").change(() => {
         isGraphySave = false;
     })
 }
