@@ -142,6 +142,7 @@ $("#save_graphy").click(() => {
                 } else {
                     console.log("Success Save Graphy");
                     alert_func("Success Save Graphy", "Green", 3000);
+                    isGraphySave = true;
                 }
             }
         );
@@ -175,6 +176,7 @@ let dropItemPointDown = []; // record select item point
 let connectingLine = []; // record two point vector
 let isInputLayerPlace = false;
 let isOutputLayerPlace = false;
+let isGraphySave = false;
 let SettingOpen = null;
 
 function dragReflesh(element) {
@@ -341,6 +343,7 @@ $(".droparea").droppable({
         clone.draggable({
             drag: function () {
                 dragReflesh(this);
+                isGraphySave = false;
             },
             stop: function () {
                 if (this.position().top < 0) {
@@ -359,6 +362,8 @@ $(".droparea").droppable({
 
         // add drop element to droparea
         $(this).append(clone);
+        setInputChangeEvent();
+        isGraphySave = false;
         who_are_dragging = "";
     },
 });
@@ -407,6 +412,7 @@ function connectTwoLine(p1, p2) {
     $(p1).css("background-color", "unset");
     $(p2).css("background-color", "unset");
     dropItemPointDown = [];
+    isGraphySave = false;
 }
 
 // reset drop area size method
@@ -447,6 +453,12 @@ function closeDropMenu() {
         $(SettingOpen).parent().css("opacity", 0.7);
         SettingOpen = null;
     }
+}
+
+function setInputChangeEvent() {
+    $("input").change(() => {
+        isGraphySave = false;
+    })
 }
 
 // draw p1 to p2 of line
@@ -765,6 +777,7 @@ function graphyUnpackage(package) {
         item.draggable({
             drag: function () {
                 dragReflesh(this);
+                isGraphySave = false;
             },
             stop: function (event, ui) {
                 if (ui.position.top < 0) {
@@ -783,6 +796,7 @@ function graphyUnpackage(package) {
 
         // add drop element to droparea
         droparea.append(item);
+        setInputChangeEvent();
 
         // record connect
         record_connect_line.push({
@@ -834,6 +848,7 @@ function getGraphy() {
             console.log(data);
             if (graphyUnpackage(data.graphy)) {
                 console.log('Loading Success!');
+                isGraphySave = true;
             } else {
                 console.log('Loading Failure!');
             }
@@ -912,10 +927,11 @@ function ModelPackage() {
 function del_func() {
     if (selectItem != null) {
         $(selectItem).remove();
+        isGraphySave = false;
 
-        if ($(selectItem).html().indexOf("Input")) {
+        if ($(selectItem).html().includes("Input")) {
             isInputLayerPlace = false;
-        } else if ($(selectItem).html().indexOf("Dense")) {
+        } else if ($(selectItem).html().includes("Dense")) {
             isOutputLayerPlace = false;
         }
         selectItem = null;
@@ -933,6 +949,7 @@ function del_func() {
             // If it connected, clear dropItemPointDown list
             dropItemPointDown[0].css("background-color", "unset");
             dropItemPointDown = [];
+            isGraphySave = false;
         }
     }
 }
@@ -949,6 +966,19 @@ $(document).ready(function() {
         initialProcess = true;
         setDropAreaSize();
     }, 1000);
+});
+
+/*
+
+    Close event
+
+*/
+
+window.addEventListener('beforeunload', (event) => {
+    if (!isGraphySave) {
+        event.preventDefault();
+        event.returnValue = "";
+    }
 });
 
 /*
