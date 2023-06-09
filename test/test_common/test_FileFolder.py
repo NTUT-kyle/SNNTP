@@ -361,3 +361,76 @@ def test_check_File_Folder_Modify_Time_not_file_folder(mocker):
     
     with pytest.raises(Exception, match="check_File_Folder_Modify_Time 錯誤 : 檔案或資料夾不存在"):
         FileFolder.check_File_Folder_Modify_Time(expect_path)
+
+def test_Extract_Zip_File(mocker):
+    expect_path = "/test/"
+    expect_file = "test.zip"
+    expect_extract_dir = "extract_dir"
+    mocker.patch(
+        "os.path.isfile",
+        return_value = True
+    )
+    mocker.patch(
+        "os.path.isdir",
+        return_value = True
+    )
+    mockDeleteFolder = mocker.patch(
+        "common.FileFolder.Delete_Folder",
+        return_value = True
+    )
+    mock_unpack_archive = mocker.patch("shutil.unpack_archive")
+    result = FileFolder.Extract_Zip_File(
+        expect_path, expect_file, expect_extract_dir
+    )
+    
+    mockDeleteFolder.assert_called_once_with(
+        "", expect_extract_dir
+    )
+    mock_unpack_archive.assert_called_once_with(
+        expect_path + expect_file,
+        extract_dir=expect_extract_dir
+    )
+    assert result
+    
+def test_Extract_Zip_File_Not_Zip(mocker):
+    expect_path = "/test/"
+    expect_file = "test.file"
+    expect_extract_dir = "extract_dir"
+    result = FileFolder.Extract_Zip_File(
+        expect_path, expect_file, expect_extract_dir
+    )
+    assert not result
+    
+def test_Extract_Zip_File_Not_Exist(mocker):
+    expect_path = "/test/"
+    expect_file = "test.zip"
+    expect_extract_dir = "extract_dir"
+    mocker.patch(
+        "os.path.isfile",
+        return_value = False
+    )
+    result = FileFolder.Extract_Zip_File(
+        expect_path, expect_file, expect_extract_dir
+    )
+    assert not result
+    
+def test_Extract_Zip_File_Unpack_Error(mocker):
+    expect_path = "/test/"
+    expect_file = "test.zip"
+    expect_extract_dir = "extract_dir"
+    mocker.patch(
+        "os.path.isfile",
+        return_value = True
+    )
+    mocker.patch(
+        "os.path.isdir",
+        return_value = False
+    )
+    mocker.patch(
+        "shutil.unpack_archive",
+        side_effect = Exception("ERROR")
+    )
+    result = FileFolder.Extract_Zip_File(
+        expect_path, expect_file, expect_extract_dir
+    )
+    assert not result
