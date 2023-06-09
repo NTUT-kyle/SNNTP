@@ -93,6 +93,10 @@ def test_Upload_File(client, mocker):
         'model.model_service.Upload_Data',
         return_value = return_msg
     )
+    mocker.patch(
+        'model.model_service.Extract_Data',
+        return_value = True
+    )
     
     actual_resp = client.post(
         '/model/{}/upload'.format("test1"),

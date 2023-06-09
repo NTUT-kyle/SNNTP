@@ -341,3 +341,53 @@ def test_Upload_Data_Not_Allow_File(mocker):
     
     with pytest.raises(Exception, match="Upload file fail!"):
         model_service.Upload_Data("test1", "Test", fakeFile)
+        
+def test_Extract_Data(mocker):
+    fileType = "Training"
+    mocker.patch(
+        'project.project_service.Get_Project_By_Key',
+        return_value = project.Project("test1")
+    )
+    mocker.patch(
+        'common.FileFolder.Extract_Zip_File',
+        return_value = True
+    )
+    mocker.patch(
+        'project.project.Project.reflash_modify_time'
+    )
+    
+    result = model_service.Extract_Data("test1", fileType)
+    assert result == 'Success Extract Data'
+    
+def test_Extract_Data_project_not_exists(mocker):
+    mocker.patch(
+        'project.project_service.Get_Project_By_Key',
+        return_value = None
+    )
+    
+    with pytest.raises(Exception, match="Error Project Name"):
+        model_service.Extract_Data("test1", "Test")
+
+def test_Extrace_Data_fileType_Error(mocker):
+    fileType = "fakeType"
+    mocker.patch(
+        'project.project_service.Get_Project_By_Key',
+        return_value = project.Project("test1")
+    )
+    
+    with pytest.raises(Exception, match="Error File Type"):
+        model_service.Extract_Data("test1", fileType)
+
+def test_Extrace_Data_Extract_Fail(mocker):
+    fileType = "Training"
+    mocker.patch(
+        'project.project_service.Get_Project_By_Key',
+        return_value = project.Project("test1")
+    )
+    mocker.patch(
+        'common.FileFolder.Extract_Zip_File',
+        return_value = False
+    )
+    
+    with pytest.raises(Exception, match="Fail to Extract Data"):
+        model_service.Extract_Data("test1", fileType)
