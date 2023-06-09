@@ -133,3 +133,211 @@ def test_Model_Json_Template():
     assert result["Model_Setting"]["optimizer"] == optimizer
     assert result["Model_Setting"]["validation_split"] == validation_split
     assert result["Model_Setting"]["input_shape"] == input_shape
+    
+import json
+
+def test_Load_Graphy(mocker):
+    expectDict = {'test': 'test'}
+    mocker.patch(
+        'project.project_service.Get_Project_By_Key',
+        return_value = project.Project("test1")
+    )
+    mocker.patch(
+        'common.FileFolder.Get_File',
+        return_value = json.dumps(expectDict)
+    )
+    
+    result = model_service.Load_Graphy("test1")
+    assert result == expectDict
+    
+def test_Load_Graphy_project_not_exists(mocker):
+    mocker.patch(
+        'project.project_service.Get_Project_By_Key',
+        return_value = None
+    )
+    
+    with pytest.raises(Exception, match="Error Project Name"):
+        model_service.Load_Graphy("test1")
+        
+def test_Load_Graphy_file_not_exists(mocker):
+    mocker.patch(
+        'project.project_service.Get_Project_By_Key',
+        return_value = project.Project("test1")
+    )
+    mocker.patch(
+        'common.FileFolder.Get_File',
+        side_effect = Exception("ERROR")
+    )
+    
+    data = model_service.Load_Graphy("test1")
+    assert data['graphy'] == []
+
+graphy_data = {
+    "graphy": [
+        {
+            "name": "item_0",
+            "posX": 494.21875,
+            "posY": 104,
+            "point_L_con": [
+                "item_1"
+            ],
+            "point_R_con": [
+                "item_4"
+            ],
+            "dictValue": {
+                "layer_type": "Conv2D",
+                "filters": 32,
+                "kernel_size": 3,
+                "strides": 1,
+                "padding": "valid"
+            }
+        },
+    ]
+}
+
+def test_Save_Graphy(mocker):
+    mocker.patch(
+        'project.project_service.Get_Project_By_Key',
+        return_value = project.Project("test1")
+    )
+    mocker.patch(
+        'common.FileFolder.Create_File',
+        return_value = True
+    )
+    mocker.patch(
+        'project.project.Project.reflash_modify_time'
+    )
+    
+    result = model_service.Save_Graphy("test1", graphy_data)
+    assert result == "Success Save Graphy"
+    
+def test_Save_Graphy_project_not_exists(mocker):
+    mocker.patch(
+        'project.project_service.Get_Project_By_Key',
+        return_value = None
+    )
+    
+    with pytest.raises(Exception, match="Error Project Name"):
+        model_service.Save_Graphy("test1", {})
+
+def test_Save_Graphy_Format_Error_Not_List(mocker):
+    fakeData = {'graphy': 123}
+    mocker.patch(
+        'project.project_service.Get_Project_By_Key',
+        return_value = project.Project("test1")
+    )
+    with pytest.raises(Exception, match="Graphy format not correct!"):
+        model_service.Save_Graphy("test1", fakeData)
+
+def test_Save_Graphy_Format_Error_Not_Dict(mocker):
+    fakeData = {'graphy': ["test"]}
+    mocker.patch(
+        'project.project_service.Get_Project_By_Key',
+        return_value = project.Project("test1")
+    )
+    with pytest.raises(Exception, match="Graphy format not correct!"):
+        model_service.Save_Graphy("test1", fakeData)
+        
+def test_Save_Graphy_Format_Error_Not_Exist_Keys(mocker):
+    fakeData = {'graphy': [{}]}
+    mocker.patch(
+        'project.project_service.Get_Project_By_Key',
+        return_value = project.Project("test1")
+    )
+    with pytest.raises(Exception, match="Graphy format not correct!"):
+        model_service.Save_Graphy("test1", fakeData)
+
+def test_Save_Graphy_save_file_fail(mocker):
+    mocker.patch(
+        'project.project_service.Get_Project_By_Key',
+        return_value = project.Project("test1")
+    )
+    mocker.patch(
+        'common.FileFolder.Create_File',
+        return_value = False
+    )
+    mocker.patch(
+        'project.project.Project.reflash_modify_time'
+    )
+    
+    result = model_service.Save_Graphy("test1", graphy_data)
+    assert result == "Fail to Save Graphy"
+    
+class mockFile(object):
+    def __init__(self, filename):
+        self.filename = filename
+        self.saveFileName = None
+        
+    def save(self, filename):
+        self.saveFileName = filename
+
+def test_Upload_Data(mocker):
+    fileType = "Training"
+    fakeFile = mockFile("test_data.zip")
+    mocker.patch(
+        'project.project_service.Get_Project_By_Key',
+        return_value = project.Project("test1")
+    )
+    mocker.patch(
+        'common.FileFolder.Check_File_Exist',
+        return_value = False
+    )
+    
+    result = model_service.Upload_Data("test1", fileType, fakeFile)
+    assert result == "Success upload new file!"
+    assert fakeFile.saveFileName == f"./projects/test1/{fileType}.zip"
+
+def test_Upload_Data_Replace_Old(mocker):
+    fileType = "Validation"
+    fakeFile = mockFile("test_data.zip")
+    mocker.patch(
+        'project.project_service.Get_Project_By_Key',
+        return_value = project.Project("test1")
+    )
+    mocker.patch(
+        'common.FileFolder.Check_File_Exist',
+        return_value = True
+    )
+    
+    result = model_service.Upload_Data("test1", fileType, fakeFile)
+    assert result == "Success upload file and Replace old one!"
+    assert fakeFile.saveFileName == f"./projects/test1/{fileType}.zip"
+
+def test_Upload_Data_project_not_exists(mocker):
+    mocker.patch(
+        'project.project_service.Get_Project_By_Key',
+        return_value = None
+    )
+    
+    with pytest.raises(Exception, match="Error Project Name"):
+        model_service.Upload_Data("test1", "Test", None)
+
+def test_Upload_Data_File_Name_Error(mocker):
+    fakeFile = mockFile("")
+    mocker.patch(
+        'project.project_service.Get_Project_By_Key',
+        return_value = project.Project("test1")
+    )
+    
+    with pytest.raises(Exception, match="Error File Name"):
+        model_service.Upload_Data("test1", "Test", fakeFile)
+        
+def test_Upload_Data_File_Type_Error(mocker):
+    fakeFile = mockFile("test_data.zip")
+    mocker.patch(
+        'project.project_service.Get_Project_By_Key',
+        return_value = project.Project("test1")
+    )
+    
+    with pytest.raises(Exception, match="Error File Type"):
+        model_service.Upload_Data("test1", "fakeType", fakeFile)
+        
+def test_Upload_Data_Not_Allow_File(mocker):
+    fakeFile = mockFile("test_data.txt")
+    mocker.patch(
+        'project.project_service.Get_Project_By_Key',
+        return_value = project.Project("test1")
+    )
+    
+    with pytest.raises(Exception, match="Upload file fail!"):
+        model_service.Upload_Data("test1", "Test", fakeFile)
