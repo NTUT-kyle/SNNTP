@@ -169,3 +169,27 @@ def Upload_Data(projectName, fileType, fileObj):
             fileObj.save(f'./projects/{projectName}/{fileType}.zip')
             return 'Success upload new file!'
     raise Exception('Upload file fail!')
+
+def Extract_Data(projectName, fileType):
+    """
+    解壓縮資料至 Project 中
+    param:  projectName -> Project 名稱
+            type -> 資料類別 (Training, validation, test)
+    return  msg -> 回傳訊息
+            Exception -> 以 Exception Message 當作錯誤原因
+    """
+    projectObj = project_service.Get_Project_By_Key(projectName)
+    if projectObj == None:
+        raise Exception("Error Project Name")
+    if fileType not in ['Training', 'Validation', 'Test']:
+        raise Exception("Error File Type")
+    
+    result = ComMethod.Extract_Zip_File(
+        f'./projects/{projectName}/',
+        f'{fileType}.zip',
+        f'./projects/{projectName}/{fileType}/'
+    )
+    if result:
+        projectObj.reflash_modify_time()
+        return 'Success Extract Data'
+    raise Exception("Fail to Extract Data")

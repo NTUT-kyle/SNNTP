@@ -186,3 +186,25 @@ def check_File_Folder_Modify_Time(path:str) -> str:
         raise Exception("check_File_Folder_Modify_Time 錯誤 : 檔案或資料夾不存在")
     file_time = datetime.fromtimestamp(os.path.getmtime(path))
     return file_time
+
+def Extract_Zip_File(path:str, fileName:str, extractDir:str):
+    """
+    解壓縮 zip 檔案
+    param:  path -> 路徑
+            fileName -> 檔案名稱
+            extractDir -> 解壓縮後的資料夾名稱
+    return: True -> 解壓縮成功
+            False -> 解壓縮失敗
+    """
+    try:
+        if not fileName.endswith(".zip"):       # Check fileName is zip file
+            return False
+        if not os.path.isfile(path + fileName): # Check file is exist
+            return False
+        
+        if os.path.isdir(extractDir):           # Check extractDir is exist
+            Delete_Folder("", extractDir)
+        shutil.unpack_archive(path + fileName, extract_dir=extractDir)
+        return True
+    except Exception as e:
+        return False

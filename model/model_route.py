@@ -42,4 +42,7 @@ def Save_Graphy(projectName:str):
 @log.log_decorator
 def Upload_File(projectName:str):
     fileObj = request.files['file']
-    return model_service.Upload_Data(projectName, request.form.get('type'), fileObj)
+    result_msg = model_service.Upload_Data(projectName, request.form.get('type'), fileObj)
+    if result_msg:
+        model_service.Extract_Data(projectName, request.form.get('type'))
+    return result_msg
