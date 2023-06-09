@@ -1,4 +1,4 @@
-import pytest
+import pytest, io
 
 @pytest.fixture
 def client(mocker):
@@ -43,4 +43,62 @@ def test_Create_Model_File(client, mocker):
     )
     
     assert actual_resp.status_code == 200
-    assert actual_resp.data.decode() == return_msg 
+    assert actual_resp.data.decode() == return_msg
+    
+def test_Load_Graphy(client, mocker):
+    return_msg = "Success Load_Graphy"
+    mocker.patch(
+        'model.model_service.Load_Graphy',
+        return_value = return_msg
+    )
+    actual_resp = client.post(
+        '/model/{}/loadGraphy'.format("test1"),
+    )
+    
+    assert actual_resp.status_code == 200
+    assert actual_resp.data.decode() == return_msg
+    
+def test_Load_Graphy(client, mocker):
+    return_msg = "Success Load_Graphy"
+    mocker.patch(
+        'model.model_service.Load_Graphy',
+        return_value = return_msg
+    )
+    actual_resp = client.post(
+        '/model/{}/loadGraphy'.format("test1"),
+    )
+    
+    assert actual_resp.status_code == 200
+    assert actual_resp.data.decode() == return_msg
+    
+def test_Save_Graphy(client, mocker):
+    return_msg = "Success Save_Graphy"
+    mocker.patch(
+        'model.model_service.Save_Graphy',
+        return_value = return_msg
+    )
+    actual_resp = client.post(
+        '/model/{}/saveGraphy'.format("test1"),
+        json={"graphy": []}
+    )
+    
+    assert actual_resp.status_code == 200
+    assert actual_resp.data.decode() == return_msg
+
+import io
+
+def test_Upload_File(client, mocker):
+    return_msg = "Success Upload_File"
+    mocker.patch(
+        'model.model_service.Upload_Data',
+        return_value = return_msg
+    )
+    
+    actual_resp = client.post(
+        '/model/{}/upload'.format("test1"),
+        content_type = 'multipart/form-data',
+        data = {'file': (io.BytesIO(b"abcdef"), 'test.zip'),}
+    )
+    
+    assert actual_resp.status_code == 200
+    assert actual_resp.data.decode() == return_msg
