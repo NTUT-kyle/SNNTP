@@ -194,7 +194,6 @@ let selectItem = null; // select item for del
 let dropItemPointDown = []; // record select item point
 let connectingLine = []; // record two point vector
 let isInputLayerPlace = false;
-let isOutputLayerPlace = false;
 let isGraphySave = false;
 let SettingOpen = null;
 
@@ -248,30 +247,6 @@ $(".droparea").droppable({
             `);
             initPointID += 1;
             isInputLayerPlace = true;
-        } else if (who_are_dragging == "Dense") {
-            if (isOutputLayerPlace) {
-                // Cannot place more than two Output Layer
-                alert_func("無法放置一個以上的 Dense Layer", "red", 3000);
-                return;
-            }
-            clone.html(`
-                <div id="p${initPointID}" class="dropItemPoint dropItemPointLeft"></div>
-                ${clone.html()}
-                <div></div>
-                <div class="dropItemMenu">
-                    <div>Setting</div>
-                    <div class="dropItemMenuLine">
-                        <div>units：</div>
-                        <input type="number" name="units" value="10" />
-                    </div>
-                    <div class="dropItemMenuLine">
-                        <div>use_bias：</div>
-                        <input type="checkbox" name="use_bias" />
-                    </div>
-                </div>
-            `);
-            initPointID += 1;
-            isOutputLayerPlace = true;
         } else {
             clone.html(`
                 <div id="p${initPointID}" class="dropItemPoint dropItemPointLeft"></div>
@@ -364,12 +339,12 @@ $(".droparea").droppable({
                 dragReflesh(this);
                 isGraphySave = false;
             },
-            stop: function () {
-                if (this.position().top < 0) {
-                    this.css('top', 0 + 'px');
+            stop: function (event, ui) {
+                if (ui.position.top < 0) {
+                    $(this).css('top', 0 + 'px');
                 }
-                if (this.position().left < 0) {
-                    this.css('left', 0 + 'px');
+                if (ui.position.left < 0) {
+                    $(this).css('left', 0 + 'px');
                 }
                 dragReflesh(this);
             },
@@ -670,30 +645,6 @@ function graphyUnpackage(package) {
             `);
             initPointID += 1;
             isInputLayerPlace = true;
-        } else if (layer_type == "Dense") {
-            if (isOutputLayerPlace) {
-                // Cannot place more than two Output Layer
-                alert_func("無法放置一個以上的 Dense Layer", "red", 3000);
-                return;
-            }
-            item.html(`
-                <div id="p${initPointID}" class="dropItemPoint dropItemPointLeft"></div>
-                ${item.html()}
-                <div></div>
-                <div class="dropItemMenu">
-                    <div>Setting</div>
-                    <div class="dropItemMenuLine">
-                        <div>units：</div>
-                        <input type="number" name="units" value="${element.dictValue.units}" />
-                    </div>
-                    <div class="dropItemMenuLine">
-                        <div>use_bias：</div>
-                        <input type="checkbox" name="use_bias" ${element.dictValue.use_bias == true?"checked":""}/>
-                    </div>
-                </div>
-            `);
-            initPointID += 1;
-            isOutputLayerPlace = true;
         } else {
             let jqObject = $(`<div>${layerParameter(item.html())}</div>`);
             Object.entries(element.dictValue).forEach(([key, val]) => {
@@ -950,8 +901,6 @@ function del_func() {
 
         if ($(selectItem).html().includes("Input")) {
             isInputLayerPlace = false;
-        } else if ($(selectItem).html().includes("Dense")) {
-            isOutputLayerPlace = false;
         }
         selectItem = null;
         setDropAreaSize();
