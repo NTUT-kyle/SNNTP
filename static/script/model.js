@@ -613,12 +613,16 @@ function graphyUnpackage(package) {
         let item = $(`<div class="${findLayerClassUseLayerName(layer_type)} dropItem">${layer_type}</div>`);
         // set item attr id, name
         item.attr("id", element.name);
-        initItemId += 1;
         item.attr("name", layer_type);
         // set item position
         item.css("position", "absolute");
         item.css("left", element.posX);
         item.css("top", element.posY);
+        // set max item id
+        let elementId = parseInt(element.name.split('_')[1])
+        if (initItemId < elementId) {
+            initItemId = elementId + 1;
+        }
 
         // set item html
         if (layer_type == "Input") {
