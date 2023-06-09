@@ -117,16 +117,14 @@ def Save_Graphy(projectName, data):
     if projectObj == None:
         raise Exception("Error Project Name")
     
-    isFormatError = False
+    if not isinstance(data['graphy'], list):
+        raise Exception("Graphy format not correct!")
     for layer_graphy in data['graphy']:
+        if not isinstance(layer_graphy, dict):
+            raise Exception("Graphy format not correct!")
         for keyword in ['point_L_con', 'point_R_con', 'posX', 'posY', 'dictValue']:
             if keyword not in layer_graphy.keys():
-                isFormatError = True
-                break
-        if isFormatError:
-            break
-    if isFormatError:
-        raise Exception("Graphy format not correct!")
+                raise Exception("Graphy format not correct!")
     
     result = ComMethod.Create_File(
         f'./projects/{projectName}/',
@@ -141,7 +139,7 @@ def Save_Graphy(projectName, data):
         return "Success Save Graphy"
     return "Fail to Save Graphy"
 
-def Upload_Data(projectName, type, fileObj):
+def Upload_Data(projectName, fileType, fileObj):
     """
     上傳資料至 Project 中
     param:  projectName -> Project 名稱
@@ -158,15 +156,16 @@ def Upload_Data(projectName, type, fileObj):
     projectObj = project_service.Get_Project_By_Key(projectName)
     if projectObj == None:
         raise Exception("Error Project Name")
-    
     if fileObj.filename == '':
         raise Exception("Error File Name")
+    if fileType not in ['Training', 'Validation', 'Test']:
+        raise Exception("Error File Type")
     
     if fileObj and allowed_file(fileObj.filename):
-        if ComMethod.Check_File_Exist(f'./projects/{projectName}/', f'{type}-{fileObj.filename}'):
-            fileObj.save(f'./projects/{projectName}/{type}-{fileObj.filename}')
+        if ComMethod.Check_File_Exist(f'./projects/{projectName}/', f'{type}.zip'):
+            fileObj.save(f'./projects/{projectName}/{fileType}.zip')
             return 'Success upload file and Replace old one!'
         else:
-            fileObj.save(f'./projects/{projectName}/{type}-{fileObj.filename}')
+            fileObj.save(f'./projects/{projectName}/{fileType}.zip')
             return 'Success upload new file!'
     raise Exception('Upload file fail!')
