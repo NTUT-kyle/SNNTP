@@ -43,3 +43,13 @@ def Save_Graphy(projectName:str):
 def Upload_File(projectName:str):
     fileObj = request.files['file']
     return model_service.Upload_Data(projectName, request.form.get('type'), fileObj)
+
+@modelCon.route("/<projectName>/train", methods = ['POST'])
+@log.log_decorator
+def Train_Model(projectName:str):
+    return model_service.Train_Model(projectName)
+
+@modelCon.route("/checkModelState", methods = ['POST'])
+@log.log_decorator
+def Check_Model_State():
+    return model_service.Check_Model_State()
