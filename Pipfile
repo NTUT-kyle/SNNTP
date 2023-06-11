@@ -14,6 +14,7 @@ pytest-cov = "4.0.0"
 pytest-mock = "3.10.0"
 colorama = "0.4.6"
 coverage-badge = "*"
+pandas = "2.0.2"
 
 [dev-packages]
 
