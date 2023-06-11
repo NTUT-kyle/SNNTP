@@ -182,7 +182,10 @@ def Train_Model(projectName):
     model_trainer.load_model(assembler.get_result())
     model_trainer.load_data()
     model_trainer.addObserver(training_observer)
-    model_trainer.train()
+    try:
+        model_trainer.train()
+    except:
+        raise Exception('Model cannot train!')
     return 'Model start training!'
 
 def Check_Model_State():

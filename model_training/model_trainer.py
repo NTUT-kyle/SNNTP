@@ -21,14 +21,9 @@ class Model_trainer:
         self.x_test, self.y_test = self.dataset_loader.get_dataset()
         
     def train(self):
-        print("Model_trainer training start")
-        print(self.x_train.shape)
-        print(self.y_train.shape)
-        print(self.y_train)
         self.model.model.compile(loss = self.model.loss_function, optimizer = self.model.optimizer, metrics=["accuracy"])
         self.model.model.fit(self.x_train, self.y_train, batch_size = self.model.batch_size, epochs = self.model.epochs, validation_split = self.model.validation_split)
         self.notifyObserversTrainingComplete()
-        print("Model_trainer training complete")
 
     def addObserver(self, observer):
         self.trainingObserver = observer
