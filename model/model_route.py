@@ -1,6 +1,7 @@
 from flask import Blueprint, request
 import common.log as log
 import model.model_service as model_service
+from flask import jsonify
 
 """
 Model Controller
@@ -49,7 +50,7 @@ def Upload_File(projectName:str):
 def Train_Model(projectName:str):
     return model_service.Train_Model(projectName)
 
-@modelCon.route("/checkModelState", methods = ['POST'])
+@modelCon.route("/getModelState", methods = ['POST'])
 @log.log_decorator
-def Check_Model_State():
-    return model_service.Check_Model_State()
+def Get_Training_Model_State():
+    return jsonify(model_service.Get_Model_State())
