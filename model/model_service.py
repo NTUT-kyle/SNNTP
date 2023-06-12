@@ -2,19 +2,18 @@ from builder.assembler import Assembler
 import project.project_service as project_service
 import common.FileFolder as ComMethod
 from model_training.model_trainer import Model_trainer
-from model_training.training_observer import Training_observer
 import datetime, json
 
 assembler = None
+model_trainer = None
 
 def Init_ModelService():
     """
     初始化 
     """
-    global assembler, training_observer
+    global assembler, model_trainer
     assembler = Assembler()
-    training_observer = Training_observer()
-    
+    model_trainer = Model_trainer()
     return assembler
     
 def Load_Model_File(projectName:str):
@@ -175,21 +174,14 @@ def Upload_Data(projectName, type, fileObj):
     raise Exception('Upload file fail!')
 
 def Train_Model(projectName):
-    training_observer.init_observer()
-    model_trainer = Model_trainer()
     model_trainer.set_project_name(projectName)
-    model_trainer.set_num_class(10)
     model_trainer.load_model(assembler.get_result())
     model_trainer.load_data()
-    model_trainer.addObserver(training_observer)
     try:
         model_trainer.train()
     except:
         raise Exception('Model cannot train!')
     return 'Model start training!'
 
-def Check_Model_State():
-    if(training_observer.get_training_status()):
-        return 'Model is training'
-    else:
-        return 'Model finish train'
+def Get_Model_State():
+    return model_trainer.get_training_description()

@@ -1,9 +1,9 @@
 from model_training.dataset_loader import Dataset_loader
-from tensorflow.keras.utils import to_categorical
-
+from model_training.model_training_callback import Model_training_callback
 class Model_trainer:
     def __init__(self):
         self.dataset_loader = Dataset_loader()
+        self.callback = Model_training_callback()
         
     def load_model(self, model):
         self.model = model
@@ -22,11 +22,10 @@ class Model_trainer:
         
     def train(self):
         self.model.model.compile(loss = self.model.loss_function, optimizer = self.model.optimizer, metrics=["accuracy"])
-        self.model.model.fit(self.x_train, self.y_train, batch_size = self.model.batch_size, epochs = self.model.epochs, validation_split = self.model.validation_split)
-        self.notifyObserversTrainingComplete()
+        self.model.model.fit(self.x_train, self.y_train, batch_size = self.model.batch_size, epochs = self.model.epochs, validation_split = self.model.validation_split, callbacks = [self.callback])
 
-    def addObserver(self, observer):
-        self.trainingObserver = observer
-        
-    def notifyObserversTrainingComplete(self):
-        self.trainingObserver.notify_training_complete()
+    def get_training_description(self):
+        if(self.callback.get_is_training()):
+            return {'is_training':True, 'current_epoch':self.callback.get_current_epoch(), 'training_time':self.callback.get_training_time()}
+        else:
+            return {'is_training':False}
