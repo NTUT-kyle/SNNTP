@@ -152,7 +152,10 @@
                 initVal: ["valid", "same"],
             },
         ],
-        Dense: [{ name: "use_bias", type: "checkbox", initVal: 0 }],
+        Dense: [
+            { name: "units", type: "number", initVal: 10 },
+            { name: "use_bias", type: "checkbox", initVal: 0 }
+        ],
         Flatten: [],
         Dropout: [
             {
