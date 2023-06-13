@@ -1,17 +1,19 @@
 from builder.assembler import Assembler
 import project.project_service as project_service
 import common.FileFolder as ComMethod
-
+from model_training.model_trainer import Model_trainer
 import datetime, json
 
 assembler = None
+model_trainer = None
 
 def Init_ModelService():
     """
     初始化 
     """
-    global assembler 
+    global assembler, model_trainer
     assembler = Assembler()
+    model_trainer = Model_trainer()
     return assembler
     
 def Load_Model_File(projectName:str):
@@ -193,3 +195,24 @@ def Extract_Data(projectName, fileType):
         projectObj.reflash_modify_time()
         return 'Success Extract Data'
     raise Exception("Fail to Extract Data")
+
+def Train_Model(projectName):
+    model_trainer.set_project_name(projectName)
+    model_trainer.load_model(assembler.get_result())
+    model_trainer.load_data()
+    try:
+        model_trainer.train()
+    except:
+        raise Exception('Model cannot train!')
+    return 'Model start training!'
+
+def Get_Model_State():
+    return model_trainer.get_training_description()
+
+def Evaluate_Model(projectName):
+    if not ComMethod.Check_Folder_Exist(f'./projects/{projectName}/', 'evaluation'):
+        ComMethod.Create_Folder(f'./projects/{projectName}/', 'evaluation')
+        
+    model_trainer.set_project_name(projectName)
+    model_trainer.save_evaluate_image()
+    return 'Finish evaluation of model'
