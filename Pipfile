@@ -15,7 +15,8 @@ pytest-mock = "3.10.0"
 colorama = "0.4.6"
 coverage-badge = "*"
 pandas = "2.0.2"
-
+matplotlib = "3.7.1"
+scikit-learn = "1.2.2"
 [dev-packages]
 
 [requires]
