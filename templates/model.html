@@ -97,6 +97,30 @@
     <div id="CBContent" class="CenterBoardContent"></div>
     <div id="CenterBoardButton">Upload</div>
 </div>
+<div id="TrainingBoard">
+    <div id="TrainingBoardText">Training Board</div>
+    <div id="TrainingChart">
+        <img src={{ url_for('static', filename='assets/etcd_raft.png') }} title="etcd raft"/>
+        <img src={{ url_for('static', filename='assets/etcd_raft.png') }} title="etcd raft"/>
+    </div>
+    <div id="TrainingStatus">
+        <p>Training Status : </p>
+        <span> Test </span>
+    </div>
+    <div id="TrainingBar">
+        <p>Training Prograss : </p>
+        <div class="g-container">
+            <div class="g-progress"></div>
+        </div>
+        <!-- epoch -->
+    </div>
+    <div id="TrainingButtonList">
+        <div>Export Model</div>
+        <div>Export Training Data</div>
+        <div>Stop Training</div>
+    </div>
+</div>
+<div id="TrainingBoardBack"></div>
 <div id="AlertDialog">Message</div>
 <script>
     /* Layer Parameter */

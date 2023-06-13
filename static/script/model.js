@@ -167,6 +167,28 @@ $("#save_graphy").click(() => {
 
 /* 
 
+    Training Board Function
+
+*/
+
+let TrainingBoard_IsOpen = false;
+
+function TrainingBoardOpenClose(openOrNot) {
+    if (openOrNot) {
+        if (TrainingBoard_IsOpen) return;
+        $("#TrainingBoard, #TrainingBoardBack").fadeIn();
+        $("#TrainingBoard, #TrainingBoardBack").css("display", "block");
+        setTimeout(() => {
+            TrainingBoard_IsOpen = true;
+        }, 300);
+    } else {
+        TrainingBoard_IsOpen = false;
+        $("#TrainingBoard, #TrainingBoardBack").fadeOut();
+    }
+}
+
+/* 
+
     Drag and drop 
 
 */
