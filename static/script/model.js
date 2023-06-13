@@ -27,9 +27,6 @@ let CenterBoard_IsOpen = false;
 $("#ChooseTrain").click(() => {
     OpenCloseCenterBoard(true, "Training");
 });
-$("#ChooseValidation").click(() => {
-    OpenCloseCenterBoard(true, "Validation");
-});
 $("#ChooseTest").click(() => {
     OpenCloseCenterBoard(true, "Test");
 });
@@ -1059,7 +1056,7 @@ $(document).on("click", function (event) {
 
     // Center board
     if (!CenterBoard_IsOpen) return;
-    let target = "#CenterBoard, #ChooseTrain, #ChooseValidation, #ChooseTest";
+    let target = "#CenterBoard, #ChooseTrain, #ChooseTest";
     if (!$(event.target).closest(target).length) {
         $("#CenterBoard").css("display", "none");
         OpenCloseCenterBoard(false, "");

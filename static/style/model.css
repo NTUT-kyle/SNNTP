@@ -50,7 +50,7 @@
     white-space: nowrap;
 }
 
-@media screen and (max-width: 1315px) {
+@media screen and (max-width: 825px) {
     .SelectItemChooseList div {
         font-size: 100%;
     }
