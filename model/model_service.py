@@ -185,3 +185,11 @@ def Train_Model(projectName):
 
 def Get_Model_State():
     return model_trainer.get_training_description()
+
+def Evaluate_Model(projectName):
+    if not ComMethod.Check_Folder_Exist(f'./projects/{projectName}/', 'evaluation'):
+        ComMethod.Create_Folder(f'./projects/{projectName}/', 'evaluation')
+        
+    model_trainer.set_project_name(projectName)
+    model_trainer.save_evaluate_image()
+    return 'Finish evaluation of model'

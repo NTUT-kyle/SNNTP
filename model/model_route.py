@@ -54,3 +54,8 @@ def Train_Model(projectName:str):
 @log.log_decorator
 def Get_Training_Model_State():
     return jsonify(model_service.Get_Model_State())
+
+@modelCon.route("/<projectName>/evaluate", methods = ['POST'])
+@log.log_decorator
+def Evaluate_Model(projectName:str):
+    return model_service.Evaluate_Model(projectName)
