@@ -130,9 +130,25 @@ function Create_Model_File() {
     }
 }
 
+function TrainModel() {
+    ajax_func(
+        "/model/" + projectName + "/train",
+        "POST",
+        {},
+        (data) => {
+            console.log(data);
+            alert_func("Success Training Model", "#0dff00", 3000);   
+        },
+        (xhr, textStatus, errorThrown) => {
+            alert_func(xhr.responseText, "red", 3000);
+        },
+        () => {}
+    );
+}
+
 $("#train_model").click(() => {
     if ($("#train_model p").html() == "Train Model") {
-        alert("Train model");
+        TrainModel();
         $("#train_model p").html("Build Model");
     } else {
         Create_Model_File();
