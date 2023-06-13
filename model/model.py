@@ -21,3 +21,4 @@ class Model(object):
     
     def get_full_description(self) -> str:
         return self.model.summary()
+    
