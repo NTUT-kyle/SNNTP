@@ -6,6 +6,7 @@
   <link rel="stylesheet" href={{ url_for('static', filename='style/model.css') }}/>
   <link rel="stylesheet" href={{ url_for('static', filename='style/layer.css') }}/>
   <script type="text/javascript" src={{ url_for('static', filename='script/jquery.connectingLine.js') }}></script>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 {% endblock %}
 
 {% block content %}
@@ -98,21 +99,41 @@
     <div id="CenterBoardButton">Upload</div>
 </div>
 <div id="TrainingBoard">
+    <div id="BackToIndex">
+        <img src={{ url_for('static', filename='assets/undo.png') }} title="Back to Index">
+    </div>
     <div id="TrainingBoardText">Training Board</div>
-    <div id="TrainingChart">
-        <img src={{ url_for('static', filename='assets/etcd_raft.png') }} title="etcd raft"/>
-        <img src={{ url_for('static', filename='assets/etcd_raft.png') }} title="etcd raft"/>
-    </div>
-    <div id="TrainingStatus">
-        <p>Training Status : </p>
-        <span> Test </span>
-    </div>
-    <div id="TrainingBar">
-        <p>Training Prograss : </p>
-        <div class="g-container">
-            <div class="g-progress"></div>
+    <div id="TrainingContent">
+        <div>
+            <p>Project Name : </p>
+            <span> {{projectName}} </span>
         </div>
-        <!-- epoch -->
+        <div>
+            <p>Start Time : </p>
+            <span> XXXX/XX/XX XX:XX:XX </span>
+        </div>
+        <div>
+            <p>Status : </p>
+            <span> Test </span>
+        </div>
+        <div>
+            <p>Prograss : </p>
+            <div id="TrainingProgress"></div>
+        </div>
+        <div>
+            <p>Epoch : </p>
+            <div id="TrainingEpoch"></div>
+        </div>
+        <div>
+            <p>Accuracy : </p>
+            <span> 0% </span>
+            <img id="AccChart" src={{ url_for('static', filename='assets/bar-chart.png') }} title="Accuracy Chart">
+        </div>
+        <div>
+            <p>Loss : </p>
+            <span> 0% </span>
+            <img id="LossChart" src={{ url_for('static', filename='assets/bar-chart.png') }} title="Loss Chart">
+        </div>
     </div>
     <div id="TrainingButtonList">
         <div>Export Model</div>
@@ -120,6 +141,7 @@
         <div>Stop Training</div>
     </div>
 </div>
+<div id="TrainingImage"><img src="/model/test/getImage?name=Acc" title="Test"></div>
 <div id="TrainingBoardBack"></div>
 <div id="AlertDialog">Message</div>
 <script>

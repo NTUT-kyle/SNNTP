@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 import common.log as log
 import model.model_service as model_service
-from flask import jsonify
+from flask import jsonify, send_file
 
 """
 Model Controller
@@ -62,3 +62,9 @@ def Get_Training_Model_State():
 @log.log_decorator
 def Evaluate_Model(projectName:str):
     return model_service.Evaluate_Model(projectName)
+
+@modelCon.route("/<projectName>/getImage", methods = ['GET'])
+@log.log_decorator
+def Get_Image(projectName:str):
+    imageName = request.args.get('name')
+    return send_file(model_service.Get_Image(projectName, imageName), mimetype='image/png')

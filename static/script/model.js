@@ -187,6 +187,8 @@ $("#save_graphy").click(() => {
 
 */
 
+$("#BackToIndex").on("click", BackToIndex); // On Training Board
+
 let TrainingBoard_IsOpen = false;
 
 function TrainingBoardOpenClose(openOrNot) {
@@ -202,6 +204,44 @@ function TrainingBoardOpenClose(openOrNot) {
         $("#TrainingBoard, #TrainingBoardBack").fadeOut();
     }
 }
+
+$("#TrainingProgress").progressbar({
+    value: 20,
+    change: () => {
+        $("#TrainingProgress").find( ".ui-progressbar-value" ).text($("#TrainingProgress").progressbar( "value" ) + "%" );
+    },
+    complete: () => {
+        $("#TrainingProgress").find( ".ui-progressbar-value" ).text("Prograss Done!");
+    }
+})
+
+$("#TrainingEpoch").progressbar({
+    value: 50,
+    change: () => {
+        $("#TrainingEpoch").find( ".ui-progressbar-value" ).text($("#TrainingEpoch").progressbar( "value" ) + "%" );
+    },
+    complete: () => {
+        $("#TrainingEpoch").find( ".ui-progressbar-value" ).text("Training Done!");
+    }
+})
+
+$("#AccChart").on("click", () => {
+    $("#TrainingImage").fadeIn();
+    $("#TrainingImage img").attr("src", `/model/${projectName}/getImage?=acc.png`);
+    $("#TrainingImage img").attr("title", "acc");
+    $("#TrainingImage").css("display", "flex");
+});
+
+$("#LossChart").on("click", () => {
+    $("#TrainingImage").fadeIn();
+    $("#TrainingImage img").attr("src", `/model/${projectName}/getImage?=loss.png`);
+    $("#TrainingImage img").attr("title", "loss");
+    $("#TrainingImage").css("display", "flex");
+});
+
+$("#TrainingImage").on("click", () => {
+    $("#TrainingImage").fadeOut();
+});
 
 /* 
 

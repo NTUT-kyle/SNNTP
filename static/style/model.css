@@ -364,6 +364,25 @@ canvas {
     opacity: 0.35;
 }
 
+#BackToIndex {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 1rem;
+    cursor: pointer;
+    border-top-right-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+}
+
+#BackToIndex:hover {
+    background-color: #ffffff;
+}
+
+#BackToIndex img {
+    width: 64px;
+    height: 64px;
+}
+
 #TrainingBoardText {
     font-size: 6rem;
     font-weight: 500;
@@ -381,55 +400,55 @@ canvas {
     justify-content: space-around;
 }
 
-#TrainingChart {
+#TrainingContent {
     display: flex;
-    justify-content: space-around;
-    color: #ffffff;
-}
-
-#TrainingChart img {
-    display: block;
-    width: 45%;
-    margin: auto;
-}
-
-#TrainingStatus {
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    overflow: overlay;
     color: #ffffff;
     font-size: 3rem;
-    display: flex;
-    padding-left: 3rem;
-    height: 5rem;
-    align-items: center;
-}
-
-#TrainingStatus span {
     margin-left: 3rem;
 }
 
-#TrainingBar {
-    color: #ffffff;
-    font-size: 3rem;
+#TrainingContent div {
     display: flex;
-    padding-left: 3rem;
-    height: 5rem;
+    flex-direction: row;
     align-items: center;
+    justify-content: left;
 }
 
-#TrainingBar p {
-    margin-right: 3rem;
+#TrainingContent div p {
+    width: 300px;
 }
 
-#TrainingBar div {
+#TrainingContent div img {
+    margin-left: 3rem;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+}
+
+#TrainingProgress {
     width: 50%;
     height: 3rem;
-    border-radius: 25px;
-    background: #eee;
+    overflow: hidden;
+    text-align: left;
 }
-#TrainingBar div div {
+
+#TrainingProgress .ui-progressbar-value {
+    background-color: #39fa53;
+}
+
+#TrainingEpoch {
     width: 50%;
-    height: inherit;
-    border-radius: 25px 0 0 25px;
-    background: #0f0;
+    height: 3rem;
+    overflow: hidden;
+    text-align: left;
+}
+
+#TrainingEpoch .ui-progressbar-value {
+    background-color: #39fa53;
 }
 
 #TrainingButtonList div {
@@ -448,4 +467,20 @@ canvas {
 #TrainingButtonList div:hover {
     color: #000000;
     background-color: #40ffd2;
+}
+
+#TrainingImage {
+    display: none;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    width: 100%;
+    height: 100%;
+}
+
+#TrainingImage img {
+    display: block;
+    margin: auto;
 }

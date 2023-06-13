@@ -216,3 +216,9 @@ def Evaluate_Model(projectName):
     model_trainer.set_project_name(projectName)
     model_trainer.save_evaluate_image()
     return 'Finish evaluation of model'
+
+def Get_Image(projectName, imageName):
+    if imageName in ['acc', 'loss']:
+        if ComMethod.Check_File_Exist(f'./projects/{projectName}/evaluation/', f'{imageName}.png'):
+            return f'./projects/{projectName}/evaluation/{imageName}.png'
+    return "./static/assets/unknown.png"
