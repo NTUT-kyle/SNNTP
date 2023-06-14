@@ -62,16 +62,16 @@ class TestDatasetLoader:
         mock_reshape.assert_called_once_with(features,  (-1, 28, 28, 1))
         assert np.array_equal(result, expect_features)
     
-    # def test_convert_labels(self, dataset_loader, mocker):
-    #     expext_labels = np.array([0, 1, 2])
-    #     mock_convert_labels = mocker.patch(
-    #         "tensorflow.keras.utils.to_categorical",
-    #         return_value = np.array([0, 1, 2])
-    #     )
-    #     dataset_loader.set_num_classes(10)
-    #     result = dataset_loader.convert_labels(labels)
-    #     # mock_convert_labels.assert_called_once_with(labels, 10)
-    #     assert np.array_equal(result, expext_labels)
+    def test_convert_labels(self, dataset_loader, mocker):
+        expext_labels = np.array([0, 1, 2])
+        mock_convert_labels = mocker.patch(
+            "model_training.dataset_loader.to_categorical",
+            return_value = expext_labels
+        )
+        dataset_loader.set_num_classes(10)
+        result = dataset_loader.convert_labels(labels)
+        # mock_convert_labels.assert_called_once_with(labels, 10)
+        assert np.array_equal(result, expext_labels)
     
     def test_get_dataset(self, dataset_loader, mocker):
         expect_dataset = np.array([0, 1, 2])
