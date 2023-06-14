@@ -75,20 +75,22 @@ def test_load_data_training_data_not_exist(model_trainer, mocker):
     
     assert str(exc.value) == "Training data not exist!"
 
-# def test_load_data_test_data_not_exist(model_trainer):
-#     model_trainer.set_project_name("test_project")
+def test_load_data_test_data_not_exist(model_trainer, mocker):
+    model_trainer.set_project_name("test_project")
+    x_test = [0,1,2]
+    y_test = [0,1,2]
+    mock_get_dataset = mocker.patch(
+        "model_training.dataset_loader.Dataset_loader.get_dataset",
+        return_value = (x_test, y_test)
+    )
+    mocker.patch(
+        "common.FileFolder.Check_File_Exist",
+        side_effect = [True, False]
+    )
 
-#     # Create dummy training data in the expected path
-#     training_data_path = f"./projects/{model_trainer.projectName}/Training/"
-#     os.makedirs(training_data_path, exist_ok=True)
-#     with open(os.path.join(training_data_path, "training_data.csv"), "w") as f:
-#         f.write("dummy training data")
-
-#     # Test when test data does not exist
-#     with pytest.raises(Exception) as exc:
-#         model_trainer.load_data()
-    
-#     assert str(exc.value) == "Test data not exist!"
+    # Test when test data does not exist
+    with pytest.raises(Exception, match="Test data not exist!"):
+        model_trainer.load_data()
     
 def test_train(model_trainer, mocker):
     mock_check_file_exist = mocker.patch("common.FileFolder.Check_File_Exist"
