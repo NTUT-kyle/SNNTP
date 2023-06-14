@@ -7,7 +7,7 @@ class Dataset_loader:
     def set_csv_path(self, csv_path):
         self.csv_path = csv_path
         
-    def set_num_classes(self, num_classes) -> int: 
+    def set_num_classes(self, num_classes) : 
         self.num_classes = num_classes
 
     def get_dataset(self):

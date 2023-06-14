@@ -34,6 +34,7 @@ class Model_trainer:
         self.history = self.model.model.fit(self.x_train, self.y_train, batch_size = self.model.batch_size, epochs = self.model.epochs, validation_split = self.model.validation_split, callbacks = [self.callback])
 
     def get_training_description(self):
+        self.callback.get_logs()
         if(self.callback.get_training_state() == "training"):
             return {'training_state':self.callback.get_training_state(), 'current_epoch':self.callback.get_current_epoch(), 'training_time':self.callback.get_training_time()}
         else:
@@ -43,7 +44,7 @@ class Model_trainer:
         current_time = time.strftime("%m_%d_%H_%M_%S", time.localtime())
         folder_name = f'result_{current_time}'
         ComMethod.Create_Folder(f'./projects/{self.projectName}/evaluation/', folder_name)
-        model_evaluator = Model_evaluator(self.model, self.history, self.x_test, self.y_test, self.projectName, folder_name)
+        model_evaluator = Model_evaluator(self.model.model, self.history, self.x_test, self.y_test, self.projectName, folder_name)
         model_evaluator.generate_acc()
         model_evaluator.generate_loss()
         model_evaluator.generate_evaluation_metrics()

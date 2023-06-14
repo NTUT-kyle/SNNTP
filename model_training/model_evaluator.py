@@ -16,7 +16,9 @@ class Model_evaluator:
         self.folderPath = f'./projects/{projectName}/evaluation/{folderName}/'
         
     def save_image(self, name):
-        plt.gca().xaxis.set_major_locator(MaxNLocator(integer=True))
+        axes = plt.gca()
+        if axes!=None:
+            axes.xaxis.set_major_locator(MaxNLocator(integer=True))
         plt.savefig(self.folderPath + name)
         plt.clf()
         
