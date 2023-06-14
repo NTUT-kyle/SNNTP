@@ -86,6 +86,12 @@ $("#CenterBoardButton").click(() => {
     );
 });
 
+/* 
+
+    Training & Model Function
+
+*/
+
 function Build_Model() {
     ajax_func(
         "/model/" + projectName + "/create",
@@ -100,6 +106,8 @@ function Build_Model() {
             } else {
                 alert_func("Success Build Model", "#0dff00", 3000);
                 $("#train_model p").html("Train Model");
+                TrainingBoardOpenClose(false);
+                $("#TrainingSetting").fadeOut();
             }
         }
     );
@@ -108,6 +116,13 @@ function Build_Model() {
 function Create_Model_File() {
     let model_package = {
         model_List: ModelPackage(),
+        model_parameter: {
+            batch_size: parseInt($("#SettingBatchSize").val()), 
+            epochs: parseInt($("#SettingEpoch").val()),
+            optimizer: $("#SettingOptimizer").val(),
+            loss: $("#SettingLoss").val(),
+            validation_split: parseFloat($("#SettingValidationSplit").val()),
+        }
     };
     console.log(model_package);
     if (model_package.model_List.length) {
@@ -130,29 +145,215 @@ function Create_Model_File() {
     }
 }
 
+let trainingProcessObject;
+let isTrainingStart = false;
+
+function trainingProcess() {
+    ajax_func(
+        "/model/getModelState",
+        "GET",
+        {},
+        (data) => {
+            console.log(data);
+            if (data.training_state == "init") {
+                $("#TrainingStatus").html("Initialization");
+            } else if (data.training_state == "training") {
+                $("#TrainingStatus").html("Training...");
+                $("#TrainingTime").html((data.training_time).toFixed(2) + " s");
+                $("#TrainingEpoch").progressbar("value", data.current_epoch - 1);
+                $("#TrainingEpochCount").html(
+                    data.current_epoch + " / " +
+                    $("#TrainingEpoch").progressbar("option", "max") + " | " +
+                    $("#TrainingEpoch").find( ".ui-progressbar-value" ).text()
+                );
+            }
+        },
+        error_func,
+        () => {
+            if (isErrorHappen) {
+                alert_func("Fail Get Training Process", "red", 3000);
+                $("#TrainingStatus").html("Training Fail");
+                isErrorHappen = false;
+            }
+        }
+    );
+}
+
 function TrainModel() {
+    $("#TrainingStartTime").html(new Date().toLocaleString());
+    TrainingBoardOpenClose(true);
+    trainingProcessObject = setInterval(trainingProcess, 1000);
+    trainingProcess();
+
     ajax_func(
         "/model/" + projectName + "/train",
         "POST",
         {},
         (data) => {
             console.log(data);
-            alert_func("Success Training Model", "#0dff00", 3000);   
+            alert_func("Success Training Model", "#0dff00", 3000);
+            $("#TrainingStatus").html("Finish Training");
+            let progressBarMax = $("#TrainingEpoch").progressbar("option", "max")
+            $("#TrainingEpoch").progressbar("value", progressBarMax);
+            $("#TrainingEpochCount").html(
+                progressBarMax + " / " + progressBarMax + " | " + "100.00 %"
+            );
+            clearInterval(trainingProcessObject);
+            evalutionProcess();
         },
         (xhr, textStatus, errorThrown) => {
-            alert_func(xhr.responseText, "red", 3000);
+            if (xhr.responseText == "Training data not exist!") {
+                alert_func(xhr.responseText, "yellow", 3000);
+            } else if (xhr.responseText == "Test data not exist!") {
+                alert_func(xhr.responseText, "yellow", 3000);
+            } else {
+                alert_func(xhr.responseText, "red", 3000);
+                $("#train_model p").html("Build Model");
+            }
+            $("#TrainingStatus").html("Training Fail" + xhr.responseText);
+            clearInterval(trainingProcessObject);
         },
         () => {}
     );
 }
 
+function evalutionProcess() {
+    let isEvalutionSuccess = false;
+    ajax_func(
+        "/model/" + projectName + "/evaluate",
+        "POST",
+        {},
+        successSendFile,
+        error_func,
+        () => {
+            if (isErrorHappen) {
+                alert_func("Fail To Evalution", "red", 3000);
+                isErrorHappen = false;
+            } else {
+                console.log("Success Evalution");
+                alert_func("Success Evalution", "Green", 3000);
+                isEvalutionSuccess = true;
+            }
+        }
+    );
+}
+
+$("#ModelSetting").click(() => {
+    $("#TrainingSetting, #TrainingBoardBack").fadeIn();
+    $("#TrainingSetting").css("display", "flex");
+});
+
 $("#train_model").click(() => {
     if ($("#train_model p").html() == "Train Model") {
         TrainModel();
-        $("#train_model p").html("Build Model");
     } else {
-        Create_Model_File();
+        $("#TrainingSetting, #TrainingBoardBack").fadeIn();
+        $("#TrainingSetting").css("display", "flex");
     }
+});
+
+$("#TrainingSettingBtn").on("click", () => {
+    if ($("#TrainingSetting input").val() == "") {
+        alert_func("Input not allow empty value", "yellow", 3000);
+        return;
+    }
+
+    let batch_size = parseInt($("#SettingBatchSize").val());
+    let epochs = parseInt($("#SettingEpoch").val());
+    let loss = $("#SettingLoss").val();
+    let optimizer = $("#SettingOptimizer").val();
+    let validation_split = parseFloat($("#SettingValidationSplit").val());
+
+    $("#TrainingModelDetail").children("optgroup").each((key, value)=>{
+        let frontText = ""
+        if (key == 0) frontText = `BatchSize: ${batch_size}`;
+        if (key == 1) frontText = `Epoch: ${epochs}`;
+        if (key == 2) frontText = `Loss: ${loss}`;
+        if (key == 3) frontText = `Optimizer: ${optimizer}`;
+        if (key == 4) frontText = `Validation Split: ${validation_split}`;
+        $(value).attr("label", frontText)
+    })
+    
+    $("#TrainingEpoch").progressbar("option", "max", parseInt($("#SettingEpoch").val()));
+    $("#TrainingEpoch").progressbar("value", false);
+    $("#TrainingEpochCount").html(
+        0 + " / " + 
+        $("#TrainingEpoch").progressbar("option", "max") + " | " +
+        $("#TrainingEpoch").find( ".ui-progressbar-value" ).text()
+    );
+    $("#TrainingStatus").html("Initialization");
+    Create_Model_File();
+});
+
+function exportModel() {
+    // ajax_func(
+    //     "/model/" + projectName + "/exportModel",
+    //     "POST",
+    //     {},
+    //     (data, textStatus) => {
+    //         const content = Buffer.from(data, "hex");
+    //         let file = new Blob([content], {type: "application/zip"});
+    //         let a = document.createElement("a");
+    //         a.href = URL.createObjectURL(file);
+    //         a.download = "model.zip";
+    //         a.style.display = "none";
+    //         document.body.appendChild(a);
+    //         a.click();
+    //     },
+    //     (xhr, textStatus, errorThrown) => {
+    //         alert_func(xhr.responseText, "red", 3000);
+    //     },
+    //     () => {}
+    // )
+
+    $.ajax({
+        url: "/model/" + projectName + "/exportModel",
+        type: 'POST',
+        data: JSON.stringify({}),  
+        contentType: 'application/json', 
+        xhrFields:{
+            responseType: 'blob'
+        },
+        success: function(data){
+            let a = document.createElement("a");
+            let url = window.URL || window.webkitURL;
+            a.href = url.createObjectURL(data);
+            a.download = 'model.zip';
+            a.style.display = "none";
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(function(){  
+                document.body.removeChild(a);
+                url.revokeObjectURL(a.href);
+            }, 1);
+        },
+        error:function(){}
+    });
+}
+
+$("#TrainingExportBtn").on("click", () => {
+    ajax_func(
+        "/model/" + projectName + "/checkExportModelExist",
+        "POST",
+        {},
+        (data) => {
+            if (data == "Model has been exported.") {
+                exportModel();
+            } else if (data == "Model has not been exported.") {
+                exportModel();
+            } else {
+                console.log(data);
+            }
+            
+        },
+        error_func,
+        () => {
+            if (isErrorHappen) {
+                alert_func("Fail To Export Model", "red", 3000);
+                isErrorHappen = false;
+            }
+        }
+    );
 });
 
 $("#save_graphy").click(() => {
@@ -205,42 +406,51 @@ function TrainingBoardOpenClose(openOrNot) {
     }
 }
 
-$("#TrainingProgress").progressbar({
-    value: 20,
-    change: () => {
-        $("#TrainingProgress").find( ".ui-progressbar-value" ).text($("#TrainingProgress").progressbar( "value" ) + "%" );
-    },
-    complete: () => {
-        $("#TrainingProgress").find( ".ui-progressbar-value" ).text("Prograss Done!");
-    }
-})
-
 $("#TrainingEpoch").progressbar({
-    value: 50,
+    value: false,
     change: () => {
-        $("#TrainingEpoch").find( ".ui-progressbar-value" ).text($("#TrainingEpoch").progressbar( "value" ) + "%" );
+        let target = $("#TrainingEpoch");
+        target.find( ".ui-progressbar-value" )
+            .text(
+                (
+                    target.progressbar("value") * 100 /
+                    target.progressbar("option", "max")
+                ).toFixed(2) + "%"
+            );
     },
     complete: () => {
-        $("#TrainingEpoch").find( ".ui-progressbar-value" ).text("Training Done!");
+        $("#TrainingEpoch").find( ".ui-progressbar-value" ).text("Prograss Done!");
     }
 })
 
 $("#AccChart").on("click", () => {
     $("#TrainingImage").fadeIn();
-    $("#TrainingImage img").attr("src", `/model/${projectName}/getImage?=acc.png`);
+    $("#TrainingImage img").attr("src", `/model/${projectName}/getImage?name=acc&rand=${new Date().getTime()}`);
     $("#TrainingImage img").attr("title", "acc");
     $("#TrainingImage").css("display", "flex");
 });
 
 $("#LossChart").on("click", () => {
     $("#TrainingImage").fadeIn();
-    $("#TrainingImage img").attr("src", `/model/${projectName}/getImage?=loss.png`);
+    $("#TrainingImage img").attr("src", `/model/${projectName}/getImage?name=loss&rand=${new Date().getTime()}`);
+    $("#TrainingImage img").attr("title", "loss");
+    $("#TrainingImage").css("display", "flex");
+});
+
+$("#MetricsChart").on("click", () => {
+    $("#TrainingImage").fadeIn();
+    $("#TrainingImage img").attr("src", `/model/${projectName}/getImage?name=metrics&rand=${new Date().getTime()}`);
     $("#TrainingImage img").attr("title", "loss");
     $("#TrainingImage").css("display", "flex");
 });
 
 $("#TrainingImage").on("click", () => {
     $("#TrainingImage").fadeOut();
+});
+
+$("#TrainingBoardBack").on("click", () => {
+    TrainingBoardOpenClose(false);
+    $("#TrainingSetting").fadeOut();
 });
 
 /* 
@@ -945,15 +1155,17 @@ function ModelPackage() {
         },
     ];
 
+    if (index == -1) {
+        alert_func("Input 需要連通", "red", 3000);
+        return [];
+    }
+
     // traverse the entire path
     while (index != -1) {
         // get another point and push layer name to layerList
         let ano_point = getAnotherPoint(connectingLine[index], point);
         let parent = $(ano_point).parent();
         layerList.push(getLayerMenu(parent));
-
-        // check if ano_point is Output layer point
-        if ($(ano_point).attr("id") == $(output_point).attr("id")) break;
 
         // set item left point or right point
         if ($(ano_point).hasClass("dropItemPointLeft")) {
@@ -964,30 +1176,33 @@ function ModelPackage() {
 
         index = getConnectElementIndex(point);
     }
-
-    if (index == -1) {
-        alert_func("Input, Dense Layer 兩者間需要連通", "red", 3000);
-        return [];
-    }
     return layerList;
 }
 
 // key del method
 function del_func() {
     if (selectItem != null) {
+        connectingLine.forEach((value, index) => {
+            if (
+                $(value[0]).attr("id") == $(selectItem).find(".dropItemPointLeft").attr("id") ||
+                $(value[1]).attr("id") == $(selectItem).find(".dropItemPointRight").attr("id")
+            ) {
+                connectingLine.splice(index, 1);
+            }
+        });
         $(selectItem).remove();
         isGraphySave = false;
 
         if ($(selectItem).html().includes("Input")) {
             isInputLayerPlace = false;
         }
-        selectItem = null;
         setDropAreaSize();
         // redraw canvas
         if (connectingLine.length) {
             // if has line connected
             mySVG.redrawLines();
         }
+        selectItem = null;
     }
 
     if (dropItemPointDown.length > 0) {

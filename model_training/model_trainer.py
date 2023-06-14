@@ -19,14 +19,14 @@ class Model_trainer:
         self.dataset_loader.set_num_classes(num_class)
         
     def load_data(self):
-        if not ComMethod.Check_File_Exist(f"./projects/{self.projectName}/training_data/", "training_data.csv"):
+        if not ComMethod.Check_File_Exist(f"./projects/{self.projectName}/Training/", "training_data.csv"):
             raise Exception("Training data not exist!")
-        self.dataset_loader.set_csv_path(f"./projects/{self.projectName}/training_data/training_data.csv")
+        self.dataset_loader.set_csv_path(f"./projects/{self.projectName}/Training/training_data.csv")
         self.x_train, self.y_train = self.dataset_loader.get_dataset()
         
-        if not ComMethod.Check_File_Exist(f"./projects/{self.projectName}/test_data/", "test_data.csv"):
+        if not ComMethod.Check_File_Exist(f"./projects/{self.projectName}/Test/", "test_data.csv"):
             raise Exception("Test data not exist!")
-        self.dataset_loader.set_csv_path(f"./projects/{self.projectName}/test_data/test_data.csv")
+        self.dataset_loader.set_csv_path(f"./projects/{self.projectName}/Test/test_data.csv")
         self.x_test, self.y_test = self.dataset_loader.get_dataset()
         
     def train(self):
