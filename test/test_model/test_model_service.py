@@ -59,6 +59,12 @@ layers = [
     }
 ]
 
+para = {"batch_size": 128,
+      "epochs": 10,
+      "loss": "poisson",
+      "optimizer": "SGD",
+      "validation_split": 0.1}
+
 def test_Create_Model_File(mocker):
     mocker.patch(
         'project.project_service.Get_Project_By_Key',
@@ -75,7 +81,7 @@ def test_Create_Model_File(mocker):
     mocker.patch(
         'project.project.Project.reflash_modify_time'
     )
-    result = model_service.Create_Model_File("test1", layers.copy())
+    result = model_service.Create_Model_File("test1", layers.copy(), para)
     
     assert "Success Create_Model_File" == result
     
@@ -85,7 +91,7 @@ def test_Build_Model_project_not_exists(mocker):
         return_value = None
     )
     with pytest.raises(Exception, match="Error Project Name"):
-        model_service.Create_Model_File("test1", [])
+        model_service.Create_Model_File("test1", [], para)
         
 def test_Build_Model_save_file_fail(mocker):
     mocker.patch(
@@ -103,7 +109,7 @@ def test_Build_Model_save_file_fail(mocker):
     mocker.patch(
         'project.project.Project.reflash_modify_time'
     )
-    result = model_service.Create_Model_File("test1", layers.copy())
+    result = model_service.Create_Model_File("test1", layers.copy(), para)
     
     assert "Fail to Create_Model_File" == result
     

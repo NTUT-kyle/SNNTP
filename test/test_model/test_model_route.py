@@ -39,7 +39,7 @@ def test_Create_Model_File(client, mocker):
     )
     actual_resp = client.post(
         '/model/{}/build'.format("test1"),
-        json={"model_List": []}
+        json={"model_List": [], "model_parameter": []}
     )
     
     assert actual_resp.status_code == 200
