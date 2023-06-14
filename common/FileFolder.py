@@ -208,3 +208,17 @@ def Extract_Zip_File(path:str, fileName:str, extractDir:str):
         return True
     except Exception as e:
         return False
+    
+def Compress_To_Zip(path:str, fileName:str, outputFileName:str):
+    """
+    壓縮 zip 檔案
+    param:  path -> 路徑
+            fileName -> 檔案名稱
+    return: True -> 壓縮成功
+            False -> 壓縮失敗
+    """
+    try:
+        shutil.make_archive(path + outputFileName, 'zip', path, fileName)
+        return True
+    except Exception as e:
+        return False

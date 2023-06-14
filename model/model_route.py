@@ -27,7 +27,8 @@ def Build_Model(projectName:str):
 @log.log_decorator
 def Create_Model_File(projectName:str):
     data = request.get_json()
-    return model_service.Create_Model_File(projectName, data['model_List'])
+    return model_service.Create_Model_File(
+        projectName, data['model_List'], data['model_parameter'])
 
 @modelCon.route("/<projectName>/loadGraphy", methods = ['POST'])
 @log.log_decorator
@@ -54,7 +55,7 @@ def Upload_File(projectName:str):
 def Train_Model(projectName:str):
     return model_service.Train_Model(projectName)
 
-@modelCon.route("/getModelState", methods = ['POST'])
+@modelCon.route("/getModelState", methods = ['GET'])
 @log.log_decorator
 def Get_Training_Model_State():
     return jsonify(model_service.Get_Model_State())
@@ -74,10 +75,9 @@ def Get_Image(projectName:str):
 @log.log_decorator
 def Export_Model(projectName:str):
     model_service.Export_Model(projectName)
-    return send_from_directory(f'./projects/{projectName}/', 'model.h5', as_attachment=True)
+    return send_from_directory(f'./projects/{projectName}/', 'model.zip', as_attachment=True)
 
-@modelCon.route("/checkExportModelExist", methods = ['POST'])
+@modelCon.route("/<projectName>/checkExportModelExist", methods = ['POST'])
 @log.log_decorator
-def Check_File_Exist():
-    data = request.get_json()
-    return model_service.Check_Export_Model_Exist(data['export_path'])
+def Check_File_Exist(projectName:str):
+    return model_service.Check_Export_Model_Exist(projectName)

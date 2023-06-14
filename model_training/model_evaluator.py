@@ -69,5 +69,5 @@ class Model_evaluator:
         # Adjust the layout
         plt.tight_layout()
 
-        self.save_image('evaluation_metrics.png')
+        self.save_image('metrics.png')
         

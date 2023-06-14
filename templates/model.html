@@ -88,6 +88,7 @@
             </div> -->
         </div>
         <div id="save_graphy" class="layerCategoryBottom">Save</div>
+        <div id="ModelSetting" class="layerCategoryBottom">Model</div>
     </div>
 </div>
 
@@ -97,6 +98,46 @@
     <input id="CBFile" type="file" name="data" accept=".zip" placeholder="Select a file">
     <div id="CBContent" class="CenterBoardContent"></div>
     <div id="CenterBoardButton">Upload</div>
+</div>
+<div id="TrainingSetting">
+    <div id="TrainingSettingText">Model Setting</div>
+    <div>
+        <p>Batch size : </p>
+        <input id="SettingBatchSize" type="number" value="128">
+    </div>
+    <div>
+        <p>Epoch : </p>
+        <input id="SettingEpoch" type="number" value="10">
+    </div>
+    <div>
+        <p>Loss function : </p>
+        <select id="SettingLoss">
+            <option>poisson</option>
+            <option>binary_crossentropy</option>
+            <option>categorical_crossentropy</option>
+            <option>sparse_categorical_crossentropy</option>
+        </select>
+    </div>
+    <div>
+        <p>Optimizer : </p>
+        <select id="SettingOptimizer">
+            <option selected>SGD</option>
+            <option>RMSprop</option>
+            <option>Adam</option>
+            <option>AdamW</option>
+            <option>Adadelta</option>
+            <option>Adagrad</option>
+            <option>Adamax</option>
+            <option>Adafactor</option>
+            <option>Nadam</option>
+            <option>Ftrl</option>
+        </select>
+    </div>
+    <div>
+        <p>Validation split : </p>
+        <input id="SettingValidationSplit" type="number" step="0.1" value="0.1">
+    </div>
+    <div id="TrainingSettingBtn">Build Model</div>
 </div>
 <div id="TrainingBoard">
     <div id="BackToIndex">
@@ -109,37 +150,48 @@
             <span> {{projectName}} </span>
         </div>
         <div>
+            <p>Model Detail : </p>
+            <select id="TrainingModelDetail">
+                <option>Click to see Details</option>
+                <optgroup label="BatchSize: 0"></optgroup>
+                <optgroup label="Epoch: 0"> </optgroup>
+                <optgroup label="Loss: poisson"> </optgroup>
+                <optgroup label="Optimizer: SGD"> </optgroup>
+                <optgroup label="Validation Split: 0.1"> </optgroup>
+            </select>
+        </div>
+        <div>
             <p>Start Time : </p>
-            <span> XXXX/XX/XX XX:XX:XX </span>
+            <span id="TrainingStartTime"> XXXX/XX/XX XX:XX:XX </span>
         </div>
         <div>
             <p>Status : </p>
-            <span> Test </span>
+            <span id="TrainingStatus"> Test </span>
         </div>
         <div>
-            <p>Prograss : </p>
-            <div id="TrainingProgress"></div>
+            <p>Training Time : </p>
+            <span id="TrainingTime"> 0 </span>
         </div>
         <div>
             <p>Epoch : </p>
+            <span id="TrainingEpochCount"> 0 / 0</span>
             <div id="TrainingEpoch"></div>
         </div>
         <div>
             <p>Accuracy : </p>
-            <span> 0% </span>
             <img id="AccChart" src={{ url_for('static', filename='assets/bar-chart.png') }} title="Accuracy Chart">
         </div>
         <div>
             <p>Loss : </p>
-            <span> 0% </span>
             <img id="LossChart" src={{ url_for('static', filename='assets/bar-chart.png') }} title="Loss Chart">
         </div>
+        <div>
+            <p>Metrics : </p>
+            <img id="MetricsChart" src={{ url_for('static', filename='assets/bar-chart.png') }} title="Metrics Chart">
+        </div>
     </div>
-    <div id="TrainingButtonList">
-        <div>Export Model</div>
-        <div>Export Training Data</div>
-        <div>Stop Training</div>
-    </div>
+    <div id="TrainingExportBtn">Export Model</div>
+    <input id="folderSelector" type="file" webkitdirectory directory multiple="false" style="display:none" >
 </div>
 <div id="TrainingImage"><img src="/model/test/getImage?name=Acc" title="Test"></div>
 <div id="TrainingBoardBack"></div>

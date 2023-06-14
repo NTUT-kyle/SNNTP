@@ -27,7 +27,7 @@ def Build_Model():
     assembler.assemble_layers()
     return "Success Build Model"
 
-def Create_Model_File(projectName, data):
+def Create_Model_File(projectName, data, param):
     """
     建立 Model.json 至 Project 中
     param:  projectName -> Project 名稱
@@ -52,8 +52,8 @@ def Create_Model_File(projectName, data):
         
     data_json = Model_Json_Template(
         projectObj.model_type, projectName, data,
-        batch_size = 128, epochs = 10, loss_function = "poisson",
-        optimizer = "SGD", validation_split = 0.1,
+        batch_size = param['batch_size'], epochs = param['epochs'], loss_function = param['loss'],
+        optimizer = param['optimizer'], validation_split = param['validation_split'],
         input_shape = [iw, ih, 1]
     )
     
@@ -219,12 +219,15 @@ def Evaluate_Model(projectName):
     return 'Finish evaluation of model'
 
 def Get_Image(projectName, imageName):
-    if imageName in ['acc', 'loss']:
-        if ComMethod.Check_File_Exist(f'./projects/{projectName}/evaluation/', f'{imageName}.png'):
-            return f'./projects/{projectName}/evaluation/{imageName}.png'
+    if imageName in ['acc', 'loss', 'metrics']:
+        folders = ComMethod.Get_All_Folder_From_Path(f'./projects/{projectName}/evaluation/')
+        target = sorted(folders, reverse=True)[0]
+        if ComMethod.Check_File_Exist(f'./projects/{projectName}/evaluation/{target}/', f'{imageName}.png'):
+            return f'./projects/{projectName}/evaluation/{target}/{imageName}.png'
     return "./static/assets/unknown.png"
 
 def Export_Model(projectName):
+    ComMethod.Delete_File(f'./projects/{projectName}/', 'model.h5')
     model_trainer.export_model(projectName)
     timeout = 5  # Timeout in seconds
     start_time = time.time()
@@ -232,9 +235,10 @@ def Export_Model(projectName):
         if time.time() - start_time > timeout:
             raise Exception("Export model failed or timed out!")
         time.sleep(1)  # Wait for 1 second before checking again
+    ComMethod.Compress_To_Zip(f'./projects/{projectName}/', 'model.h5', "model")
 
-def Check_Export_Model_Exist(exportPath):
-    if(ComMethod.Check_File_Exist(f'{exportPath}/', 'model.h5')):
+def Check_Export_Model_Exist(projectName):
+    if ComMethod.Check_File_Exist(f'./projects/{projectName}/', 'model.h5'):
         return 'Model has been exported.'
     else:
         return 'Model has not been exported.'
