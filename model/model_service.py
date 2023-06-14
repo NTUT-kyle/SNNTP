@@ -205,7 +205,7 @@ def Train_Model(projectName):
         model_trainer.train()
     except:
         raise Exception('Model cannot train!')
-    return 'Model start training!'
+    return 'Model finish training'
 
 def Get_Model_State():
     return model_trainer.get_training_description()
