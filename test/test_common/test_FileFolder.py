@@ -434,3 +434,89 @@ def test_Extract_Zip_File_Unpack_Error(mocker):
         expect_path, expect_file, expect_extract_dir
     )
     assert not result
+    
+def test_Compress_To_Zip(mocker):
+    expect_path = "/test/"
+    expect_file = "test.file"
+    expect_output_file = "output.zip"
+    mock_isfile = mocker.patch(
+        "os.path.isfile",
+        return_value = True
+    )
+    mock_isdir = mocker.patch(
+        "os.path.isdir",
+        return_value = True
+    )
+    mock_make_archive = mocker.patch("shutil.make_archive")
+    result = FileFolder.Compress_To_Zip(
+        expect_path, expect_file, expect_output_file
+    )
+    
+    mock_isfile.assert_called_once_with(expect_path + expect_file)
+    mock_isdir.assert_called_once_with(expect_path)
+    mock_make_archive.assert_called_once_with(
+        expect_path + expect_output_file,
+        "zip",
+        expect_path,
+        expect_file
+    )
+    assert result
+    
+def test_Compress_To_Zip_No_File(mocker):
+    expect_path = "/test/"
+    expect_file = "test.file"
+    expect_output_file = "output.zip"
+    mock_isfile = mocker.patch(
+        "os.path.isfile",
+        return_value = False
+    )
+    result = FileFolder.Compress_To_Zip(
+        expect_path, expect_file, expect_output_file
+    )
+    
+    mock_isfile.assert_called_once_with(expect_path + expect_file)
+    assert not result
+    
+def test_Compress_To_Zip_No_Dir(mocker):
+    expect_path = "/test/"
+    expect_file = "test.file"
+    expect_output_file = "output.zip"
+    mock_isfile = mocker.patch(
+        "os.path.isfile",
+        return_value = True
+    )
+    mock_isdir = mocker.patch(
+        "os.path.isdir",
+        return_value = False
+    )
+    result = FileFolder.Compress_To_Zip(
+        expect_path, expect_file, expect_output_file
+    )
+    
+    mock_isfile.assert_called_once_with(expect_path + expect_file)
+    mock_isdir.assert_called_once_with(expect_path)
+    assert not result
+    
+def test_Compress_To_Zip_Archive_Error(mocker):
+    expect_path = "/test/"
+    expect_file = "test.file"
+    expect_output_file = "output.zip"
+    mock_isfile = mocker.patch(
+        "os.path.isfile",
+        return_value = True
+    )
+    mock_isdir = mocker.patch(
+        "os.path.isdir",
+        return_value = True
+    )
+    mocker.patch(
+        "shutil.make_archive",
+        side_effect = Exception("ERROR")
+    )
+    result = FileFolder.Compress_To_Zip(
+        expect_path, expect_file, expect_output_file
+    )
+    
+    mock_isfile.assert_called_once_with(expect_path + expect_file)
+    mock_isdir.assert_called_once_with(expect_path)
+    assert not result

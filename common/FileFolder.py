@@ -218,6 +218,10 @@ def Compress_To_Zip(path:str, fileName:str, outputFileName:str):
             False -> 壓縮失敗
     """
     try:
+        if not os.path.isfile(path + fileName):
+            return False
+        if not os.path.isdir(path):
+            return False
         shutil.make_archive(path + outputFileName, 'zip', path, fileName)
         return True
     except Exception as e:
