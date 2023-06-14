@@ -106,3 +106,20 @@ def test_Upload_File(client, mocker):
     
     assert actual_resp.status_code == 200
     assert actual_resp.data.decode() == return_msg
+    
+def test_Train_Model(client, mocker):
+    return_msg = 'Model finish training'
+    mocker.patch(
+        'model.model_service.Train_Model',
+        return_value = return_msg
+    )
+    
+    actual_resp = client.post(
+        '/model/{}/train'.format("test1"),
+    )
+    
+    assert actual_resp.status_code == 200
+    assert actual_resp.data.decode() == return_msg
+    
+# def test_Get_Training_Model_State(client, mocker):
+    
