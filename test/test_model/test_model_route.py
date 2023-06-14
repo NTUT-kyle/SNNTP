@@ -1,4 +1,4 @@
-import pytest, io
+import pytest, io, json
 
 @pytest.fixture
 def client(mocker):
@@ -39,7 +39,7 @@ def test_Create_Model_File(client, mocker):
     )
     actual_resp = client.post(
         '/model/{}/build'.format("test1"),
-        json={"model_List": []}
+        json={"model_List": [], "model_parameter": {}}
     )
     
     assert actual_resp.status_code == 200
@@ -121,5 +121,70 @@ def test_Train_Model(client, mocker):
     assert actual_resp.status_code == 200
     assert actual_resp.data.decode() == return_msg
     
-# def test_Get_Training_Model_State(client, mocker):
+def test_Get_Training_Model_State(client, mocker):
+    return_dict = {'state': 'finish'}
+    mocker.patch(
+        'model.model_service.Get_Model_State',
+        return_value = return_dict
+    )
     
+    actual_resp = client.get('/model/getModelState',)
+    
+    assert actual_resp.status_code == 200
+    assert json.loads(actual_resp.data.decode())['state'] == return_dict['state']
+    
+def test_Evaluate_Model(client, mocker):
+    return_msg = 'Model finish evaluate'
+    mocker.patch(
+        'model.model_service.Evaluate_Model',
+        return_value = return_msg
+    )
+    
+    actual_resp = client.post('/model/{}/evaluate'.format("test1"),)
+    
+    assert actual_resp.status_code == 200
+    assert actual_resp.data.decode() == return_msg
+    
+def test_Get_Image(client, mocker):
+    mocker.patch(
+        'model.model_service.Get_Image',
+        return_value = '123'
+    )
+    mocker.patch(
+        'model.model_route.send_file',
+        return_value = b'123'
+    )
+    
+    actual_resp = client.get(
+        '/model/{}/getImage?name=123'.format("test1"),
+    )
+    
+    assert actual_resp.status_code == 200
+    assert actual_resp.data == b'123'
+    
+def test_Export_Model(client, mocker):
+    mocker.patch('model.model_service.Export_Model',)
+    mocker.patch(
+        'model.model_route.send_from_directory',
+        return_value = b'123'
+    )
+    
+    actual_resp = client.post(
+        '/model/{}/exportModel'.format("test1"),
+    )
+    
+    assert actual_resp.status_code == 200
+    assert actual_resp.data == b'123'
+    
+def test_Check_File_Exist(client, mocker):
+    mocker.patch(
+        'model.model_service.Check_Export_Model_Exist',
+        return_value = "Model has been exported."
+    )
+    
+    actual_resp = client.post(
+        '/model/{}/checkExportModelExist'.format("test1"),
+    )
+    
+    assert actual_resp.status_code == 200
+    assert actual_resp.data.decode() == 'Model has been exported.'
