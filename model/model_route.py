@@ -2,6 +2,7 @@ from flask import Blueprint, request
 import common.log as log
 import model.model_service as model_service
 from flask import jsonify, send_file
+from flask import send_from_directory
 
 """
 Model Controller
@@ -68,3 +69,15 @@ def Evaluate_Model(projectName:str):
 def Get_Image(projectName:str):
     imageName = request.args.get('name')
     return send_file(model_service.Get_Image(projectName, imageName), mimetype='image/png')
+
+@modelCon.route("/<projectName>/exportModel", methods = ['POST'])
+@log.log_decorator
+def Export_Model(projectName:str):
+    model_service.Export_Model(projectName)
+    return send_from_directory(f'./projects/{projectName}/', 'model.h5', as_attachment=True)
+
+@modelCon.route("/checkExportModelExist", methods = ['POST'])
+@log.log_decorator
+def Check_File_Exist():
+    data = request.get_json()
+    return model_service.Check_Export_Model_Exist(data['export_path'])

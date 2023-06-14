@@ -3,6 +3,7 @@ import project.project_service as project_service
 import common.FileFolder as ComMethod
 from model_training.model_trainer import Model_trainer
 import datetime, json
+import time
 
 assembler = None
 model_trainer = None
@@ -222,3 +223,18 @@ def Get_Image(projectName, imageName):
         if ComMethod.Check_File_Exist(f'./projects/{projectName}/evaluation/', f'{imageName}.png'):
             return f'./projects/{projectName}/evaluation/{imageName}.png'
     return "./static/assets/unknown.png"
+
+def Export_Model(projectName):
+    model_trainer.export_model(projectName)
+    timeout = 5  # Timeout in seconds
+    start_time = time.time()
+    while not ComMethod.Check_File_Exist(f'./projects/{projectName}/', 'model.h5'):
+        if time.time() - start_time > timeout:
+            raise Exception("Export model failed or timed out!")
+        time.sleep(1)  # Wait for 1 second before checking again
+
+def Check_Export_Model_Exist(exportPath):
+    if(ComMethod.Check_File_Exist(f'{exportPath}/', 'model.h5')):
+        return 'Model has been exported.'
+    else:
+        return 'Model has not been exported.'
