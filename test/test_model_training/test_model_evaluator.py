@@ -37,6 +37,26 @@ class TestModelEvaluator:
         mock_clf = mocker.patch("matplotlib.pyplot.clf", return_value=None)
         # mock_clf = mocker.patch("matplotlib.axis.XAxis.set_major_locator", return_value=None)
         model_evaluator.save_image("test")
+        
+    def test_save_image_when_axes_not_none(self, model_evaluator, mocker):
+        class mock_xaxis(object):
+            def set_major_locator(self, value):
+                pass
+        
+        class mock_axes(object):
+            def __init__(self):
+                self.xaxis = mock_xaxis()
+        
+        mock_gca = mocker.patch("matplotlib.pyplot.gca", return_value=mock_axes())
+        mocker.patch("model_training.model_evaluator.MaxNLocator", return_value=None)
+        mock_savefig = mocker.patch("matplotlib.pyplot.savefig", return_value=None)
+        mock_clf = mocker.patch("matplotlib.pyplot.clf", return_value=None)
+        
+        model_evaluator.save_image("test")
+        
+        assert mock_gca.call_count == 1
+        assert mock_savefig.call_count == 1
+        assert mock_clf.call_count == 1
     
     def test_generate_acc(self, model_evaluator, mocker):
         mock_plot = mocker.patch("matplotlib.pyplot.plot")
@@ -58,11 +78,11 @@ class TestModelEvaluator:
         
     def test_generate_evaluation_metrics(self, model_evaluator, mocker):
         mock_pred = mocker.patch("tensorflow.keras.Model.predict")
-        mock_accuracy_score = mocker.patch("sklearn.metrics.accuracy_score", return_value=1)
-        mock_precision_score = mocker.patch("sklearn.metrics.precision_score", return_value=1)
-        mock_recall_score = mocker.patch("sklearn.metrics.recall_score", return_value=1)
-        mock_f1_score = mocker.patch("sklearn.metrics.f1_score", return_value=1)
-        mock_roc_auc_score = mocker.patch("sklearn.metrics.roc_auc_score", return_value=1)
+        mock_accuracy_score = mocker.patch("model_training.model_evaluator.accuracy_score", return_value=1)
+        mock_precision_score = mocker.patch("model_training.model_evaluator.precision_score", return_value=1)
+        mock_recall_score = mocker.patch("model_training.model_evaluator.recall_score", return_value=1)
+        mock_f1_score = mocker.patch("model_training.model_evaluator.f1_score", return_value=1)
+        mock_roc_auc_score = mocker.patch("model_training.model_evaluator.roc_auc_score", return_value=1)
         
         mock_title = mocker.patch("matplotlib.pyplot.title")
         mock_xlabel = mocker.patch("matplotlib.pyplot.xlabel")
