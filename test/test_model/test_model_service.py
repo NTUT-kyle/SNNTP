@@ -397,3 +397,211 @@ def test_Extrace_Data_Extract_Fail(mocker):
     
     with pytest.raises(Exception, match="Fail to Extract Data"):
         model_service.Extract_Data("test1", fileType)
+        
+def test_Train_Model(mocker):
+    mocker.patch(
+        'project.project_service.Get_Project_By_Key',
+        return_value = project.Project("test1")
+    )
+    mocker.patch('model_training.model_trainer.Model_trainer.set_project_name',)
+    mocker.patch('builder.assembler.Assembler.get_result')
+    mocker.patch('model_training.model_trainer.Model_trainer.load_model',)
+    mocker.patch('model_training.model_trainer.Model_trainer.load_data',)
+    mocker.patch('model_training.model_trainer.Model_trainer.train',)
+    
+    result = model_service.Train_Model("test1")
+    assert result == "Model finish training"
+    
+def test_Train_Model_project_not_exists(mocker):
+    mocker.patch(
+        'project.project_service.Get_Project_By_Key',
+        return_value = None
+    )
+    
+    with pytest.raises(Exception, match="Error Project Name"):
+        model_service.Train_Model("test1")
+    
+def test_Train_Model_error_when_training(mocker):
+    mocker.patch(
+        'project.project_service.Get_Project_By_Key',
+        return_value = project.Project("test1")
+    )
+    mocker.patch('model_training.model_trainer.Model_trainer.set_project_name',)
+    mocker.patch('builder.assembler.Assembler.get_result')
+    mocker.patch('model_training.model_trainer.Model_trainer.load_model',)
+    mocker.patch('model_training.model_trainer.Model_trainer.load_data',)
+    mocker.patch(
+        'model_training.model_trainer.Model_trainer.train',
+        side_effect = Exception("ERROR")
+    )
+    
+    with pytest.raises(Exception, match="Model cannot train!"):
+        model_service.Train_Model("test1")
+        
+def test_Get_Model_State(mocker):
+    return_dict = {'training_state':'training', 'current_epoch':0, 'training_time':0}
+    mocker.patch(
+        'model_training.model_trainer.Model_trainer.get_training_description',
+        return_value = return_dict
+    )
+    
+    result = model_service.Get_Model_State()
+    assert result == return_dict
+    
+def test_Evaluate_Model(mocker):
+    mocker.patch(
+        'common.FileFolder.Check_Folder_Exist',
+        return_value = False
+    )
+    mockCreateFolder = mocker.patch('common.FileFolder.Create_Folder')
+    mocker.patch('model_training.model_trainer.Model_trainer.set_project_name')
+    mocker.patch('model_training.model_trainer.Model_trainer.save_evaluate_image')
+    
+    result = model_service.Evaluate_Model("test1")
+    assert mockCreateFolder.call_count == 1
+    assert result == "Finish evaluation of model"
+    
+def test_Evaluate_Model_Exist_Folder(mocker):
+    mocker.patch(
+        'common.FileFolder.Check_Folder_Exist',
+        return_value = True
+    )
+    mockCreateFolder = mocker.patch('common.FileFolder.Create_Folder')
+    mocker.patch('model_training.model_trainer.Model_trainer.set_project_name')
+    mocker.patch('model_training.model_trainer.Model_trainer.save_evaluate_image')
+    
+    result = model_service.Evaluate_Model("test1")
+    assert mockCreateFolder.call_count == 0
+    assert result == "Finish evaluation of model"
+    
+def test_Get_Image_acc_Case(mocker):
+    projectName = "test1"
+    target = "XXX"
+    imageName = "acc"
+    mocker.patch(
+        'common.FileFolder.Get_All_Folder_From_Path',
+        return_value = [target]
+    )
+    mocker.patch(
+        'common.FileFolder.Check_File_Exist',
+        return_value = True
+    )
+    
+    result = model_service.Get_Image(projectName, imageName)
+    assert result == f'./projects/{projectName}/evaluation/{target}/{imageName}.png'
+    
+def test_Get_Image_loss_Case(mocker):
+    projectName = "test1"
+    target = "XXX"
+    imageName = "loss"
+    mocker.patch(
+        'common.FileFolder.Get_All_Folder_From_Path',
+        return_value = [target]
+    )
+    mocker.patch(
+        'common.FileFolder.Check_File_Exist',
+        return_value = True
+    )
+    
+    result = model_service.Get_Image(projectName, imageName)
+    assert result == f'./projects/{projectName}/evaluation/{target}/{imageName}.png'
+    
+def test_Get_Image_metrics_Case(mocker):
+    projectName = "test1"
+    target = "XXX"
+    imageName = "metrics"
+    mocker.patch(
+        'common.FileFolder.Get_All_Folder_From_Path',
+        return_value = [target]
+    )
+    mocker.patch(
+        'common.FileFolder.Check_File_Exist',
+        return_value = True
+    )
+    
+    result = model_service.Get_Image(projectName, imageName)
+    assert result == f'./projects/{projectName}/evaluation/{target}/{imageName}.png'
+    
+def test_Get_Image_unknown_Case(mocker):
+    projectName = "test1"
+    target = "XXX"
+    imageName = "abcdef"
+    mocker.patch(
+        'common.FileFolder.Get_All_Folder_From_Path',
+        return_value = [target]
+    )
+    mocker.patch(
+        'common.FileFolder.Check_File_Exist',
+        return_value = True
+    )
+    
+    result = model_service.Get_Image(projectName, imageName)
+    assert result == "./static/assets/unknown.png"
+    
+def test_Export_Model(mocker):
+    projectName = "test1"
+    mocker.patch(
+        'common.FileFolder.Delete_File'
+    )
+    mocker.patch(
+        'model_training.model_trainer.Model_trainer.export_model'
+    )
+    mocker.patch(
+        'common.FileFolder.Check_File_Exist',
+        return_value = True
+    )
+    mockCompress = mocker.patch('common.FileFolder.Compress_To_Zip')
+    
+    
+    model_service.Export_Model(projectName)
+    mockCompress.assert_called_once_with(
+        f'./projects/{projectName}/',
+        'model.h5', "model"
+    )
+
+def test_Export_Model_Timeout(mocker):
+    projectName = "test1"
+    mocker.patch(
+        'common.FileFolder.Delete_File'
+    )
+    mocker.patch(
+        'model_training.model_trainer.Model_trainer.export_model'
+    )
+    mocker.patch(
+        'common.FileFolder.Check_File_Exist',
+        return_value = False
+    )
+    mockCompress = mocker.patch('common.FileFolder.Compress_To_Zip')
+    
+    with pytest.raises(Exception, match="Export model failed or timed out!"):
+        model_service.Export_Model(projectName)
+        
+def test_Check_Export_Model_Exist_is_Exist(mocker):
+    projectName = "test1"
+    mockCheckFileExist = mocker.patch(
+        'common.FileFolder.Check_File_Exist',
+        return_value = True
+    )
+    
+    result = model_service.Check_Export_Model_Exist(projectName)
+    
+    assert result == "Model has been exported."
+    mockCheckFileExist.assert_called_once_with(
+        f'./projects/{projectName}/',
+        'model.h5'
+    )
+    
+def test_Check_Export_Model_Exist_not_Exist(mocker):
+    projectName = "test1"
+    mockCheckFileExist = mocker.patch(
+        'common.FileFolder.Check_File_Exist',
+        return_value = False
+    )
+    
+    result = model_service.Check_Export_Model_Exist(projectName)
+    
+    assert result == "Model has not been exported."
+    mockCheckFileExist.assert_called_once_with(
+        f'./projects/{projectName}/',
+        'model.h5'
+    )

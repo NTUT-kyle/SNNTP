@@ -198,6 +198,9 @@ def Extract_Data(projectName, fileType):
     raise Exception("Fail to Extract Data")
 
 def Train_Model(projectName):
+    projectObj = project_service.Get_Project_By_Key(projectName)
+    if projectObj == None:
+        raise Exception("Error Project Name")
     model_trainer.set_project_name(projectName)
     model_trainer.load_model(assembler.get_result())
     model_trainer.load_data()
