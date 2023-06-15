@@ -222,7 +222,8 @@ def Evaluate_Model(projectName):
     return 'Finish evaluation of model'
 
 def Get_Image(projectName, imageName):
-    if imageName in ['acc', 'loss', 'metrics']:
+    if ComMethod.Check_Folder_Exist(f'./projects/{projectName}/', 'evaluation') and \
+       imageName in ['acc', 'loss', 'metrics']:
         folders = ComMethod.Get_All_Folder_From_Path(f'./projects/{projectName}/evaluation/')
         target = sorted(folders, reverse=True)[0]
         if ComMethod.Check_File_Exist(f'./projects/{projectName}/evaluation/{target}/', f'{imageName}.png'):

@@ -479,6 +479,10 @@ def test_Get_Image_acc_Case(mocker):
     target = "XXX"
     imageName = "acc"
     mocker.patch(
+        'common.FileFolder.Check_Folder_Exist',
+        return_value = True
+    )
+    mocker.patch(
         'common.FileFolder.Get_All_Folder_From_Path',
         return_value = [target]
     )
@@ -494,6 +498,10 @@ def test_Get_Image_loss_Case(mocker):
     projectName = "test1"
     target = "XXX"
     imageName = "loss"
+    mocker.patch(
+        'common.FileFolder.Check_Folder_Exist',
+        return_value = True
+    )
     mocker.patch(
         'common.FileFolder.Get_All_Folder_From_Path',
         return_value = [target]
@@ -511,6 +519,10 @@ def test_Get_Image_metrics_Case(mocker):
     target = "XXX"
     imageName = "metrics"
     mocker.patch(
+        'common.FileFolder.Check_Folder_Exist',
+        return_value = True
+    )
+    mocker.patch(
         'common.FileFolder.Get_All_Folder_From_Path',
         return_value = [target]
     )
@@ -521,11 +533,27 @@ def test_Get_Image_metrics_Case(mocker):
     
     result = model_service.Get_Image(projectName, imageName)
     assert result == f'./projects/{projectName}/evaluation/{target}/{imageName}.png'
+
+def test_Get_Image_unknown_Case_When_Folder_not_found(mocker):
+    projectName = "test1"
+    target = "acc"
+    imageName = "abcdef"
+    mocker.patch(
+        'common.FileFolder.Check_Folder_Exist',
+        return_value = False
+    )
     
-def test_Get_Image_unknown_Case(mocker):
+    result = model_service.Get_Image(projectName, imageName)
+    assert result == "./static/assets/unknown.png"
+
+def test_Get_Image_unknown_Case_When_target_not_found(mocker):
     projectName = "test1"
     target = "XXX"
     imageName = "abcdef"
+    mocker.patch(
+        'common.FileFolder.Check_Folder_Exist',
+        return_value = True
+    )
     mocker.patch(
         'common.FileFolder.Get_All_Folder_From_Path',
         return_value = [target]
